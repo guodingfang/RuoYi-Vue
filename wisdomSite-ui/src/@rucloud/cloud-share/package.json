@@ -1,0 +1,59 @@
+{
+  "_from": "@rucloud/cloud-share",
+  "_id": "@rucloud/cloud-share@1.0.3",
+  "_inBundle": false,
+  "_integrity": "sha1-xSTSywhpGYGhPI+rhg7meuTfqmg=",
+  "_location": "/@rucloud/cloud-share",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@rucloud/cloud-share",
+    "name": "@rucloud/cloud-share",
+    "escapedName": "@rucloud%2fcloud-share",
+    "scope": "@rucloud",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/",
+    "/@rucloud/cloud-components"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/@rucloud/cloud-share/download/@rucloud/cloud-share-1.0.3.tgz?cache=0&sync_timestamp=1583831074045&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40rucloud%2Fcloud-share%2Fdownload%2F%40rucloud%2Fcloud-share-1.0.3.tgz",
+  "_shasum": "c524d2cb08691981a13c8fab860ee67ae4dfaa68",
+  "_spec": "@rucloud/cloud-share",
+  "_where": "/Users/zhouhexiang/Desktop/F/vue-admin",
+  "author": {
+    "name": "wQueryLoveMm",
+    "email": "1121292341@qq.com"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "cloud share",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist",
+    "global.d.ts",
+    "packages"
+  ],
+  "gitHead": "487e60ffa3ff78c617feb6077a8077048a5aca6b",
+  "homepage": "",
+  "license": "ISC",
+  "main": "index.js",
+  "name": "@rucloud/cloud-share",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "cross-env PKG_DIR=utils rollup  -c rollup.config.js",
+    "coverage": "jest --watch --coverage",
+    "dev": "cross-env PKG_DIR=utils rollup  -c -w rollup.config.js",
+    "test": "jest --watch"
+  },
+  "version": "1.0.3"
+}

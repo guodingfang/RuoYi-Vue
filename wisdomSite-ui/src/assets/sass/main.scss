@@ -1,0 +1,75 @@
+@mixin placeholder {
+  &::-webkit-input-placeholder {
+    @content;
+  }
+
+  &::-moz-placeholder {
+    @content;
+  }
+
+  &:-ms-input-placeholder {
+    @content;
+  }
+}
+
+@mixin flex($j, $a, $d: false, $w: false) {
+  display: flex;
+  justify-content: $j;
+  align-items: $a;
+  @if ($d) {
+    flex-direction: $d;
+  }
+  @if ($w) {
+    flex-wrap: $w;
+  }
+}
+
+// @mixin more() {
+//   cursor: pointer;
+//   color: #2680eb;
+//   font-size: $--medium-font-size;
+//   @content;
+// }
+
+// @mixin tableHeader(
+//   $b: $--table-header-bgcolor,
+//   $s: $--medium-font-size,
+//   $c: $--table-header-color
+// ) {
+//   & ::v-deep .el-table__header-wrapper th {
+//     background-color: $b;
+//     .cell {
+//       font-size: $s;
+//       color: $c;
+//     }
+//   }
+// }
+// @mixin font($s) {
+//   font-size: $s;
+// }
+
+// @mixin fsmall() {
+//   @include font($--small-font-size);
+// }
+
+// @mixin fmedium() {
+//   @include font($--medium-font-size);
+// }
+
+// @mixin flarge() {
+//   @include font($--large-font-size);
+// }
+
+@mixin textover() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin b($block) {
+  $B: $namespace+'-'+$block !global;
+
+  .#{$B} {
+    @content;
+  }
+}

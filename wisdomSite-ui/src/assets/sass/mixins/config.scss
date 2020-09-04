@@ -1,0 +1,10 @@
+$element-separator: "__";
+$modifier-separator: "--";
+$state-prefix: "is-";
+
+// module 细致划分
+$namespace: "rc"; // 通用模块 公共组件 可单独抽出来做基础组件 类似于 element 的el
+$innernamespace: "rm"; // 内部模块 业务模块
+$innermodulenamespace: "rim"; // 业务模块 内部细节
+$inneratomspace: "ra"; // 原子类标识 不可轻易改动
+$innerglobalspace: "rg"; // 全局类

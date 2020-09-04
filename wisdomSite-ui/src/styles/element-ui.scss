@@ -1,0 +1,18 @@
+.rc-form {
+  .is-form-warp {
+    display: flex;
+    flex-wrap: wrap;
+    .el-form-item {
+      width: 49%;
+      .el-date-editor {
+        width: 100%;
+      }
+    }
+    .el-form-item:nth-of-type(2n) {
+      margin-left: 2%;
+    }
+    // .el-form-item__content{
+    //   width: 100%;
+    // }
+  }
+}

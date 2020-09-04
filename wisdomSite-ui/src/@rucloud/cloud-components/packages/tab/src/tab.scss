@@ -1,0 +1,111 @@
+@include b(tab) {
+  font-size: 14px;
+  @include when(left) {
+    @include flex(flex-start, stretch);
+    @include e(header) {
+      position: relative;
+      @include flex(flex-start, flex-start, column);
+
+      &::before {
+        position: absolute;
+        background-color: #cccccc;
+        content: "";
+        top: 0;
+        width: 2px;
+        bottom: 0;
+        right: 0;
+      }
+    }
+
+    @include e(item) {
+      margin-right: 0;
+      padding: 2px 20px 6px 0;
+      min-width: 80px;
+      text-align: right;
+      height: auto;
+      line-height: 1;
+      &:not(:last-of-type) {
+        margin-bottom: 8px;
+      }
+      &.active {
+        color: $--color-primary;
+        &::before {
+          transform: scale(1);
+          background: $--color-primary;
+        }
+      }
+
+      &::before {
+        position: absolute;
+        content: "";
+        transition: 0.2s;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        height: auto;
+        left: auto;
+        transform: scale(0);
+        background: #cccccc;
+      }
+    }
+
+    @include e(content) {
+      overflow: hidden;
+      flex: 1;
+    }
+  }
+  @at-root {
+    @include e(header) {
+      overflow: hidden;
+      background: #fff;
+      padding: 0 32px;
+      @include flex(flex-start, center);
+    }
+
+    // @include e(header-wrap) {
+    // }
+
+    @include e(item) {
+      position: relative;
+      color: #666666;
+      // padding: 0 20px;
+      text-align: center;
+      font-size: 14px;
+      height: 37px;
+      line-height: 38px;
+      cursor: pointer;
+      // min-width: 120px;
+      margin-right: 42px;
+      @include textover();
+      &.disabled {
+        cursor: not-allowed;
+        &:hover {
+          color: #666666;
+        }
+      }
+      &:hover {
+        color: $--color-primary;
+      }
+      &.active {
+        color: $--color-primary;
+        &::before {
+          bottom: 0;
+          width: 100%;
+          transform: scale(1);
+        }
+      }
+      &::before {
+        position: absolute;
+        content: "";
+        transition: 0.2s;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        transform: scale(0);
+        background: $--color-primary;
+      }
+    }
+  }
+}

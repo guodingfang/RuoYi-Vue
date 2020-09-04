@@ -1,0 +1,79 @@
+$eq-h-height: 88px;
+.er-right-pop {
+  position: fixed;
+  // top: $h-height + $t-height + 28px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: #ffffff;
+  width: 30%;
+  min-width: 800px;
+  z-index: $eq-detail;
+  box-shadow: 0 0 10px #cccccc;
+}
+.er-right-pop__header {
+  @include flex(flex-start, center);
+  position: relative;
+  // background: $--color-primary;
+  background: #FAFAFB;
+  // height: $eq-h-height;
+  height: 60px;
+  line-height: 60px;
+  padding-left: 24px;
+  .el-icon-close {
+    position: absolute;
+    right: 24px;
+    top: 20px;
+    color: #555966;
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
+
+.er-right-pop-operate {
+  position: absolute;
+  top: 27px;
+  right: 88px;
+}
+
+.er-right-pop__content {
+  height: calc(100% - #{$eq-h-height});
+}
+
+.er-right-pop-des {
+  @include flex(flex-start, center);
+  img {
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+  }
+  .des-wrap {
+    height: 40px;
+    @include flex(space-between, flex-start, column);
+  }
+}
+
+.er-right-pop-des__icon {
+  height: 40px;
+  width: 40px;
+  margin-right: 8px;
+  border-radius: 100%;
+  background-color: $--color-primary;
+  @include flex(center, center);
+  svg {
+    color: #fff;
+    font-size: 24px;
+  }
+}
+
+.er-right-pop-des__title {
+  font-size: 18px;
+  color: #343437;;
+  font-weight: bolder;
+  margin: 0;
+}
+.er-right-pop-des__label {
+  font-size: 14px;
+  color: #808492;
+}

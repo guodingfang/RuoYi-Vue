@@ -1,0 +1,91 @@
+// .er-tableown__drag {
+//   padding: 0 10px;
+//   font-size: 14px;
+//   color: #333333;
+// }
+
+// .er-tableown-dragitem {
+//   position: relative;
+//   padding: 5px 25px;
+//   width: 130px;
+//   border: 1px solid #ccc;
+//   display: inline-block;
+//   margin: 0 10px 10px 0;
+//   border-radius: 5px;
+//   @include textover();
+//   &.hidden {
+//     opacity: 0.3;
+//   }
+//   &:hover {
+//     border-color: $--color-primary;
+//     color: $--color-primary;
+//   }
+//   .er-tableown-dragitem--left {
+//     position: absolute;
+//     left: 5px;
+//     &.active {
+//       color: $--color-primary;
+//     }
+//   }
+
+//   .er-tableown-dragitem--middle {
+//     cursor: move;
+//   }
+
+//   .er-tableown-dragitem--right {
+//     position: absolute;
+//     right: 5px;
+//   }
+//   .er-tableown__drag__tags {
+//     .drag-container {
+//       @include flex(center, center);
+//     }
+//   }
+// }
+
+// .er-tableown__drag__operate {
+//   margin-bottom: 20px;
+//   &.forbidden {
+//     position: relative;
+//     // opacity: 0.3;
+//     &::before {
+//       content: '';
+//       transition: 0.3s;
+//       position: absolute;
+//       background: rgba(255, 255, 255, 0.8);
+//       z-index: 10;
+//       left: 5px;
+//       right: 5px;
+//       top: 5px;
+//       bottom: 5px;
+//     }
+//   }
+// }
+
+// .er-tableown__drag__operate_card {
+//   p {
+//     margin-bottom: 10px;
+//   }
+//   .card-tags-name {
+//     display: inline-block;
+//     color: $--color-primary;
+//     font-weight: 700;
+//     margin-bottom: 15px;
+//     border: 1px solid $--color-primary;
+//     border-radius: 4px;
+//     padding: 4px 6px;
+//   }
+//   .card-label {
+//     display: inline-block;
+//     // width: 60px;
+//     text-align: right;
+//     margin-right: 15px;
+//   }
+//   .el-radio {
+//     margin-right: 15px;
+//   }
+// }
+// .er-tableown-drag-operate {
+//   margin-top: 20px;
+//   @include flex(center, center);
+// }

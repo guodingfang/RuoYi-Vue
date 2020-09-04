@@ -1,0 +1,33 @@
+{
+  "name": "@rucloud/cloud-components",
+  "version": "1.0.2",
+  "description": "云平台组件库",
+  "keywords": [
+    "云平台",
+    "组件库"
+  ],
+  "author": "wQueryLoveMm <1121292341@qq.com>",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib",
+    "packages"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "jest --clearCache && vue-cli-service test:unit --watch",
+    "coverage": "jest --clearCache && vue-cli-service test:unit --watch --coverage"
+  },
+  "dependencies": {
+    "@rucloud/cloud-share": "^1.0.2"
+  },
+  "vuePlugins": {
+    "resolveFrom": "../../"
+  }
+}

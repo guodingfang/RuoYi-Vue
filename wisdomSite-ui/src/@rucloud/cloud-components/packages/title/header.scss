@@ -1,0 +1,19 @@
+.er-title {
+  @include flex(flex-start, center);
+  // color: $--color-primary;
+  font-size: 18px;
+  font-weight: bold;
+  color:rgba(52,52,55,1);
+  padding: 10px 0;
+  line-height: 40px;
+  margin: 0;
+}
+.top{
+  // padding: 24px 0 0;
+}
+.er-title__icon {
+  width: 4px;
+  height: 18px;
+  background: $--color-primary;
+  margin-right: 8px;
+}

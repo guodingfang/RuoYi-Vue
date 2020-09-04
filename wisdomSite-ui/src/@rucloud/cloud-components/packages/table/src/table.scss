@@ -1,0 +1,42 @@
+// $padding: 15px;
+// $size: 3px;
+// $lay_tb_slot: 10px;
+
+// .er-tableown__operate {
+//   // padding: 14px 0 24px;
+//   padding: 0 0 8px;
+//   @include flex(flex-start, center);
+// }
+// .er-tableown__pagination {
+//   padding: $padding 0;
+//   @include flex(flex-end, center);
+//   overflow-x: auto;
+//   margin-right: 20px;
+// }
+// .er-tableown__table {
+//   position: relative;
+//   .el-divider {
+//     background-color: $--color-primary;
+//   }
+//   .el-table--mini th,
+//   .el-table--mini td {
+//     padding: $size 0;
+//   }
+//   .el-loading-mask {
+//     z-index: $table-loading-index;
+//   }
+// }
+// .er-tableown__setting-btn {
+//   position: absolute;
+//   // height: 40px;
+//   width: 40px;
+//   right: 0;
+//   top: 0;
+//   // background-color: $--table-header-background-color;
+//   z-index: 10;
+//   border: 1px solid $--table-border-color;
+//   border-bottom: none;
+//   color: $--color-primary;
+//   @include flex(center, center);
+//   cursor: pointer;
+// }
