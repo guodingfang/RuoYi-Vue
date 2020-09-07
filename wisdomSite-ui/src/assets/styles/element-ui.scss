@@ -95,3 +95,35 @@
 .el-button--text {
   color: #09a17b !important;
 }
+
+.el-calendar {
+  .el-calendar__header,
+  .el-calendar__body {
+    padding: 0;
+  }
+  .el-calendar__header {
+    padding-bottom: 6px;
+    .el-button-group {
+      .el-button {
+        padding: 6px 6px !important;
+        box-sizing: border-box !important;
+      }
+    }
+  }
+  .el-calendar__body {
+    .el-calendar-table {
+      .el-calendar-day {
+        height: 31px;
+        width: 31px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        >p {
+          margin: 0;
+          padding: 4px;
+        }
+      }
+    }
+  }
+}

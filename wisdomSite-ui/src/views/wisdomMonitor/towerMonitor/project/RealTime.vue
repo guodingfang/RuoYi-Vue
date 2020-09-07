@@ -132,6 +132,7 @@
         });
         console.log(posList)
         this.imgUrl = process.env.VUE_APP_BASE_PIC + fieldlayoutAddress;
+        // console.log('this.imgUrl', this.imgUrl);
         this.picWidth = width;
         let elements = [];
         let zoom = this.mapWidth / Number(width);

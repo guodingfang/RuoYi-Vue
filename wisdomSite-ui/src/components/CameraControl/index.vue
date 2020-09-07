@@ -28,7 +28,20 @@
       </div>
       <div class="zoom-box mt20">
         <button class="control-btn zoom" @click="doCapture">抓拍</button>
-        <button class="control-btn zoom">回放</button>
+        <button class="control-btn zoom" @click="playBack">回放</button>
+      </div>
+      <div class="mt20">
+        <el-calendar>
+          <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
+          <template
+            slot="dateCell"
+            slot-scope="{date, data}"
+          >
+            <p :class="data.isSelected ? 'is-selected' : ''">
+              {{ data.day.split('-').slice(1)[1] }}
+            </p>
+          </template>
+        </el-calendar>
       </div>
       <p class="mt20">操作信息</p>
       <el-input type="textarea" :rows="10"></el-input>
@@ -152,7 +165,9 @@
         }).then(res => {
         })*/
           this.downloadIamge()
-
+      },
+      playBack() {
+        // this.getPlayUrl();
       },
       downloadIamge(imgsrc, name) {
         let _this = this
@@ -201,7 +216,7 @@
       font-size: 14px;
       border: 1px solid #09a17b;
       margin-left: 5px;
-      padding: 0 20px;
+      padding: 0 16px;
       .ctrl-group{
         display: flex;
         justify-content: space-between;
@@ -235,5 +250,10 @@
         }
       }
     }
+  }
+  .is-selected {
+    background-color: #09a17b !important;
+    border-radius: 50%;
+    color: #fff;
   }
 </style>
