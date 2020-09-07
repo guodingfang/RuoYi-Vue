@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsQualityBrightspotManageMapper">
+    
+    <resultMap type="WsQualityBrightspotManage" id="WsQualityBrightspotManageResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="brightspotPosition"    column="brightSpot_position"    />
+        <result property="brightspotDescribe"    column="brightSpot_describe"    />
+        <!--<result property="brightspotImageAddres"    column="brightSpot_image_addres"    />-->
+        <result property="uploadPersonId"    column="upload_person_id"    />
+        <result property="uploadDate"    column="upload_date"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="projectName"    column="projectName"    />
+        <result property="uploadPersonName"    column="uploadPersonName"    />
+    </resultMap>
+
+    <sql id="selectWsQualityBrightspotManageVo">
+        select id, project_id, brightSpot_position, brightSpot_describe, brightSpot_image_addres, upload_person_id, upload_date, is_delete, created_by, created_time, updated_by, updated_time from t_ws_quality_brightspot_manage
+    </sql>
+
+    <select id="selectWsQualityBrightspotManageList" parameterType="WsQualityBrightspotManage" resultMap="WsQualityBrightspotManageResult">
+       select t.id,t.project_id,t2.project_name as projectName,t.brightSpot_position,t.brightSpot_describe,t3.nick_name as uploadPersonName,t.upload_date from t_ws_quality_brightspot_manage t
+       left join t_ws_project t2 on t.project_id = t2.id
+       left join sys_user t3 on t.upload_person_id = t3.user_id
+        <where>
+            1=1
+            <if test="wsQualityBrightspotManage.projectId != null "> and t.project_id = #{wsQualityBrightspotManage.projectId}</if>
+            <if test="wsQualityBrightspotManage.isDelete != null  and wsQualityBrightspotManage.isDelete != ''"> and t.is_delete = #{wsQualityBrightspotManage.isDelete}</if>
+            <if test="projectIds != null "> and t.project_id in
+                <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+                    #{projectId}
+                </foreach></if>
+        </where>
+    </select>
+    
+    <select id="selectWsQualityBrightspotManageById" parameterType="WsQualityBrightspotManage" resultMap="WsQualityBrightspotManageResult">
+        select t.id,t.project_id,t2.project_name as projectName,t.brightSpot_position,t.brightSpot_describe,t3.nick_name as uploadPersonName,t.upload_date from t_ws_quality_brightspot_manage t
+        left join t_ws_project t2 on t.project_id = t2.id
+        left join sys_user t3 on t.upload_person_id = t3.user_id
+        where t.id = #{id}
+    </select>
+        
+    <insert id="insertWsQualityBrightspotManage" parameterType="WsQualityBrightspotManage" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_quality_brightspot_manage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="brightspotPosition != null  and brightspotPosition != ''">brightSpot_position,</if>
+            <if test="brightspotDescribe != null  and brightspotDescribe != ''">brightSpot_describe,</if>
+            <!--<if test="brightspotImageAddres != null  and brightspotImageAddres != ''">brightSpot_image_addres,</if>-->
+            <if test="uploadPersonId != null ">upload_person_id,</if>
+            <if test="uploadDate != null ">upload_date,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="brightspotPosition != null  and brightspotPosition != ''">#{brightspotPosition},</if>
+            <if test="brightspotDescribe != null  and brightspotDescribe != ''">#{brightspotDescribe},</if>
+           <!-- <if test="brightspotImageAddres != null  and brightspotImageAddres != ''">#{brightspotImageAddres},</if>-->
+            <if test="uploadPersonId != null ">#{uploadPersonId},</if>
+            <if test="uploadDate != null ">#{uploadDate},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsQualityBrightspotManage" parameterType="WsQualityBrightspotManage">
+        update t_ws_quality_brightspot_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="brightspotPosition != null  and brightspotPosition != ''">brightSpot_position = #{brightspotPosition},</if>
+            <if test="brightspotDescribe != null  and brightspotDescribe != ''">brightSpot_describe = #{brightspotDescribe},</if>
+            <!--<if test="brightspotImageAddres != null  and brightspotImageAddres != ''">brightSpot_image_addres = #{brightspotImageAddres},</if>-->
+            <if test="uploadPersonId != null ">upload_person_id = #{uploadPersonId},</if>
+            <if test="uploadDate != null ">upload_date = #{uploadDate},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsQualityBrightspotManageById" parameterType="Long">
+        delete from t_ws_quality_brightspot_manage where id = #{id}
+    </delete>
+
+    <delete id="deleteWsQualityBrightspotManageByIds" parameterType="String">
+        update t_ws_quality_brightspot_manage
+        <trim prefix="SET" suffixOverrides=",">
+            is_delete = 'Y'
+        </trim>
+            where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

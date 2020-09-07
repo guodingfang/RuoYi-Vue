@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsAreaMapper">
+
+    <resultMap type="WsArea" id="WsAreaResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="comment"    column="comment"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="countyName"    column="county_name"    />
+        <result property="countyCode"    column="county_code"    />
+        <result property="cityName"    column="city_name"    />
+        <result property="cityCode"    column="city_code"    />
+        <result property="provinceName"    column="province_name"    />
+        <result property="provinceCode"    column="province_code"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+    </resultMap>
+
+    <sql id="selectWsAreaVo">
+        select id, parent_id, code, name, ancestors, comment, updated_time, created_time from t_ws_area
+    </sql>
+
+    <select id="selectWsAreaList" parameterType="WsArea" resultMap="WsAreaResult">
+        <include refid="selectWsAreaVo"/>
+        <where>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="ancestors != null  and ancestors != ''"> and ancestors = #{ancestors}</if>
+            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+        </where>
+    </select>
+
+    <select id="selectWsAreaById" parameterType="Integer" resultMap="WsAreaResult">
+        <include refid="selectWsAreaVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectThreeLevelAreaByCode" parameterType="String" resultMap="WsAreaResult">
+        SELECT county.code county_code,county.name county_name, city.code city_code ,city.name city_name ,province.code province_code ,province.name province_name,county.code code
+        from t_ws_area as  county
+        INNER JOIN t_ws_area as city  on county.PARENT_ID = city.id
+        INNER JOIN t_ws_area province on city.PARENT_ID=province.id
+        where county.code = #{code}
+    </select>
+
+    <insert id="insertWsArea" parameterType="WsArea">
+        insert into t_ws_area(
+            <if test="id != null ">id,</if>
+            <if test="parentId != null ">parent_id,</if>
+            <if test="code != null  and code != ''">code,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="ancestors != null  and ancestors != ''">ancestors,</if>
+            <if test="comment != null  and comment != ''">comment,</if>
+            updated_time,created_time
+        )values (
+            <if test="id != null ">#{id},</if>
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="code != null  and code != ''">#{code},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="ancestors != null  and ancestors != ''">#{ancestors},</if>
+            <if test="comment != null  and comment != ''">#{comment},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+    <update id="updateWsArea" parameterType="WsArea">
+        update t_ws_area set
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="code != null  and code != ''">code = #{code},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="ancestors != null  and ancestors != ''">ancestors = #{ancestors},</if>
+            <if test="comment != null  and comment != ''">comment = #{comment},</if>
+            updated_time = sysdate()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsAreaById" parameterType="Integer">
+        delete from t_ws_area where id = #{id}
+    </delete>
+
+    <delete id="deleteWsAreaByIds" parameterType="String">
+        delete from t_ws_area where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectChidrenAreaList" parameterType="String"  resultMap="WsAreaResult">
+        select  * from  t_ws_area
+
+        <where>
+            <choose>
+                <when test="code!=null and code !=''">
+                    parent_id = (select a.id from t_ws_area a WHERE a.code =#{code} )
+                </when>
+                <otherwise>
+                    parent_id = 0
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+
+
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsQualityCheckPhotoMapper">
+    
+    <resultMap type="WsQualityCheckPhoto" id="WsQualityCheckPhotoResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="checkManagerId"    column="check_manager_id"    />
+        <result property="checkRepairId"    column="check_repair_id"    />
+        <result property="checkVerifyId"    column="check_verify_id"    />
+        <result property="acceptanceId"    column="acceptance_id"    />
+        <result property="brightspotId"    column="brightSpot_id"    />
+        <result property="qualityType"    column="quality_type"    />
+        <result property="photoAddres"    column="photo_addres"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsQualityCheckPhotoVo">
+        select id, project_id, check_manager_id,check_repair_id,check_verify_id, acceptance_id, brightSpot_id, quality_type, photo_addres, created_time, updated_time from t_ws_quality_check_photo
+    </sql>
+
+    <select id="selectWsQualityCheckPhotoList" parameterType="WsQualityCheckPhoto" resultMap="WsQualityCheckPhotoResult">
+        <include refid="selectWsQualityCheckPhotoVo"/>
+        <where>  
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="checkManagerId != null "> and check_manager_id = #{checkManagerId}</if>
+            <if test="checkRepairId != null "> and check_repair_id = #{checkRepairId}</if>
+            <if test="checkVerifyId != null "> and check_verify_id = #{checkVerifyId}</if>
+            <if test="acceptanceId != null "> and acceptance_id = #{acceptanceId}</if>
+            <if test="brightspotId != null "> and brightSpot_id = #{brightspotId}</if>
+            <if test="qualityType != null "> and quality_type = #{qualityType}</if>
+            <if test="photoAddres != null  and photoAddres != ''"> and photo_addres = #{photoAddres}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsQualityCheckPhotoById" parameterType="Integer" resultMap="WsQualityCheckPhotoResult">
+        <include refid="selectWsQualityCheckPhotoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWsQualityCheckPhoto" parameterType="WsQualityCheckPhoto" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_quality_check_photo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="checkManagerId != null ">check_manager_id,</if>
+            <if test="checkRepairId != null ">check_repair_id,</if>
+            <if test="checkVerifyId != null ">check_verify_id,</if>
+            <if test="acceptanceId != null ">acceptance_id,</if>
+            <if test="brightspotId != null ">brightSpot_id,</if>
+            <if test="qualityType != null ">quality_type,</if>
+            <if test="photoAddres != null  and photoAddres != ''">photo_addres,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="checkManagerId != null ">#{checkManagerId},</if>
+            <if test="checkRepairId != null ">#{checkRepairId},</if>
+            <if test="checkVerifyId != null ">#{checkVerifyId},</if>
+            <if test="acceptanceId != null ">#{acceptanceId},</if>
+            <if test="brightspotId != null ">#{brightspotId},</if>
+            <if test="qualityType != null ">#{qualityType},</if>
+            <if test="photoAddres != null  and photoAddres != ''">#{photoAddres},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsQualityCheckPhoto" parameterType="WsQualityCheckPhoto">
+        update t_ws_quality_check_photo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="checkManagerId != null ">check_manager_id = #{checkManagerId},</if>
+            <if test="checkRepairId != null ">check_repair_id = #{checkRepairId},</if>
+            <if test="checkVerifyId != null ">check_verify_id = #{checkVerifyId},</if>
+            <if test="acceptanceId != null ">acceptance_id = #{acceptanceId},</if>
+            <if test="brightspotId != null ">brightSpot_id = #{brightspotId},</if>
+            <if test="qualityType != null ">quality_type = #{qualityType},</if>
+            <if test="photoAddres != null  and photoAddres != ''">photo_addres = #{photoAddres},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsQualityCheckPhotoById" parameterType="Integer">
+        delete from t_ws_quality_check_photo where id = #{id}
+    </delete>
+
+    <delete id="deleteWsQualityCheckPhotoByIds" parameterType="String">
+        delete from t_ws_quality_check_photo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectWsQualityCheckPhotoByCheckManagerId" parameterType="WsQualityCheckPhoto" resultMap="WsQualityCheckPhotoResult">
+        select photo_addres from t_ws_quality_check_photo
+        <where>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="checkManagerId != null "> and check_manager_id = #{checkManagerId}</if>
+            <if test="checkRepairId != null "> and check_repair_id = #{checkRepairId}</if>
+            <if test="checkVerifyId != null "> and check_verify_id = #{checkVerifyId}</if>
+            <if test="acceptanceId != null "> and acceptance_id = #{acceptanceId}</if>
+            <if test="brightspotId != null "> and brightSpot_id = #{brightspotId}</if>
+            <if test="qualityType != null "> and quality_type = #{qualityType}</if>
+        </where>
+    </select>
+</mapper>

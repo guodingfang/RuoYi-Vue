@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsProjectFieldLayoutMapper">
+
+    <resultMap type="WsProjectFieldLayout" id="WsProjectFieldLayoutResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="equipmentType"    column="equipment_type"    />
+        <result property="fieldlayoutAddress"    column="fieldLayout_address"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="width"    column="width"    />
+        <result property="height"    column="height"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsProjectFieldLayoutVo">
+        select id, project_id, equipment_type, fieldLayout_address, is_delete, created_by, created_time, updated_by, updated_time,height,width from t_ws_project_field_layout
+    </sql>
+
+    <select id="selectWsProjectFieldLayoutList" parameterType="WsProjectFieldLayout" resultMap="WsProjectFieldLayoutResult">
+        <include refid="selectWsProjectFieldLayoutVo"/>
+        <where>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="equipmentType != null "> and equipment_type = #{equipmentType}</if>
+            <if test="fieldlayoutAddress != null  and fieldlayoutAddress != ''"> and fieldLayout_address = #{fieldlayoutAddress}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+
+    <select id="selectWsProjectFieldLayoutById" parameterType="Integer" resultMap="WsProjectFieldLayoutResult">
+        <include refid="selectWsProjectFieldLayoutVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectWsProjectFieldLayoutByProjecAndType"  resultMap="WsProjectFieldLayoutResult">
+        <include refid="selectWsProjectFieldLayoutVo"/>
+        where project_id = #{projectId} and equipment_type = #{equipmentType} and is_delete='0'
+    </select>
+
+    <insert id="insertWsProjectFieldLayout" parameterType="WsProjectFieldLayout" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_project_field_layout (
+            <if test="projectId != null ">project_id,</if>
+            <if test="equipmentType != null ">equipment_type,</if>
+            <if test="fieldlayoutAddress != null  and fieldlayoutAddress != ''">fieldLayout_address,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="width != null">width,</if>
+            <if test="height != null">height,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            updated_time,created_time
+         )values(
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="equipmentType != null ">#{equipmentType},</if>
+            <if test="fieldlayoutAddress != null  and fieldlayoutAddress != ''">#{fieldlayoutAddress},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="width != null">#{width},</if>
+            <if test="height != null">#{height},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+    <update id="updateWsProjectFieldLayout" parameterType="WsProjectFieldLayout">
+        update t_ws_project_field_layout set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="equipmentType != null ">equipment_type = #{equipmentType},</if>
+            <if test="fieldlayoutAddress != null  and fieldlayoutAddress != ''">fieldLayout_address = #{fieldlayoutAddress},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="width != null">width = #{width},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsProjectFieldLayoutById" parameterType="Integer">
+        delete from t_ws_project_field_layout where id = #{id}
+    </delete>
+
+    <delete id="deleteWsProjectFieldLayoutByIds" parameterType="String">
+        delete from t_ws_project_field_layout where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="removeWsProjectFieldLayoutByProjectAndType" >
+        update t_ws_project_field_layout set
+        is_delete='0' ,updated_time=sysdate()
+        where project_id=#{projectId} and  equipment_type=#{equipmentType}
+    </update>
+
+    <select id="selectWsProjectFieldLayoutByProjectAndType"  parameterType="com.jlkj.project.ws.intelligence.domain.WsProjectFieldLayout" resultMap="WsProjectFieldLayoutResult">
+        select id, project_id, equipment_type, fieldLayout_address, is_delete, created_by, created_time, updated_by, updated_time,height,width from t_ws_project_field_layout
+        where project_id=#{projectId} and  equipment_type=#{equipmentType} and is_delete='0'
+    </select>
+
+</mapper>

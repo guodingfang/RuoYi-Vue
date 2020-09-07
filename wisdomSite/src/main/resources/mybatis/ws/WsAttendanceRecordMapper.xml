@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsAttendanceRecordMapper">
+
+    <resultMap type="WsAttendanceRecord" id="WsAttendanceRecordResult">
+        <result property="id"    column="id"    />
+        <result property="teamPersonId"    column="team_person_id"    />
+        <result property="machineId"    column="machine_id"    />
+        <result property="attendanceTime"    column="attendance_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="personName"    column="personName"    />
+        <result property="idNumber"    column="idNumber"    />
+        <result property="unitName"    column="unitName"    />
+        <result property="teamName"    column="teamName"    />
+        <result property="workTypeName"    column="workTypeName"    />
+        <result property="machineName"    column="machineName"    />
+        <result property="projectId"    column="projectId"    />
+        <result property="unitId"    column="unitId"    />
+        <result property="teamId"    column="teamId"    />
+        <result property="personId"    column="personId"    />
+        <result property="attenDate"    column="attenDate"    />
+
+    </resultMap>
+
+    <resultMap type="WsAttendanceRecordVO" id="WsAttendanceRecordVOResult">
+        <result property="id"    column="id"    />
+        <result property="teamPersonId"    column="team_person_id"    />
+        <result property="machineId"    column="machine_id"    />
+        <result property="monthOfDay"    column="month_of_day"    />
+        <result property="manHour"    column="man_hour"    />
+        <result property="personName"    column="person_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="mobilePhone"    column="mobile_phone"    />
+        <result property="workTypeName"    column="work_type_name"    />
+        <result property="workType"    column="work_type"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="hourOfDay"    column="hour_of_day"    />
+        <result property="attendanceTime"    column="attendance_time"    />
+        <result property="direction"    column="direction"    />
+    </resultMap>
+
+    <resultMap type="WsAttendanceRecordDetailVO" id="WsAttendanceRecordDetailVOResult">
+        <result property="teamPersonId"    column="team_person_id"    />
+        <result property="monthOfDay"    column="month_of_day"    />
+        <result property="workTypeName"    column="work_type_name"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="direction"    column="direction"    />
+        <result property="attendanceTime"    column="attendance_time"    />
+
+    </resultMap>
+
+    <sql id="selectWsAttendanceRecordVo">
+        select id, team_person_id, machine_id, attendance_time, updated_time, created_time from t_ws_attendance_record
+    </sql>
+
+    <select id="selectWsAttendanceRecordList" parameterType="WsAttendanceRecordVO" resultMap="WsAttendanceRecordVOResult">
+        select ar.attendance_time ,date_format(ar.attendance_time,'%e') month_of_day,tp.id team_person_id,
+        if(
+            ISNULL(min(if(am.direction=1,ar.attendance_time,NULL))) or ISNULL(max(if(am.direction=2,ar.attendance_time,NULL)))  or (max(if(am.direction=2,ar.attendance_time,NULL)) &lt; min(if(am.direction=1,ar.attendance_time,NULL))),
+            0,
+            format(TIMESTAMPDIFF(SECOND,min(if(am.direction=1,ar.attendance_time,null)),max(if(am.direction=2,ar.attendance_time,NULL)))/60/60,1)
+        ) man_hour,
+        tp.name person_name,tp.sex sex,tp.id_number id_number,tp.mobile_phone mobile_phone,
+        dd.dict_label work_type_name,
+        pt.name team_name,
+        pu.unit_name unit_name,
+        p.project_name project_name
+        from t_ws_team_person tp
+        left join t_ws_attendance_record ar on tp.id =  ar.team_person_id
+        left join t_ws_attendance_machine am on ar.machine_id = am.id
+        left join sys_dict_data dd on tp.work_type = dd.dict_code
+        left join t_ws_participating_team pt on tp.team_id = pt.id
+        left join t_ws_project_participating_unit pu on tp.unit_id = pu.id
+        left join t_ws_project p on tp.project_id = p.id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="teamPersonId != null "> and tp.id = #{teamPersonId}</if>
+            <if test="personType != null "> and tp.person_type = #{personType}</if>
+            <if test="projectId != null "> and tp.project_id = #{projectId}</if>
+            <if test="unitId != null "> and tp.unit_id = #{unitId}</if>
+            <if test="teamId != null "> and tp.team_id = #{teamId}</if>
+            <if test="workType != null "> and tp.work_type = #{workType}</if>
+        </trim>
+        group by month_of_day,tp.id
+        having ((ar.attendance_time between  #{beginTime} and  #{endTime}) or ISNULL(ar.attendance_time))
+
+    </select>
+
+    <select id="selectAttendanceReportForms" parameterType="WsAttendanceRecordVO" resultMap="WsAttendanceRecordVOResult">
+         select date_format(ar.attendance_time,'%e') month_of_day,
+        if(
+            ISNULL(min(if(am.direction=1,ar.attendance_time,NULL))) or ISNULL(max(if(am.direction=2,ar.attendance_time,NULL)))  or (max(if(am.direction=2,ar.attendance_time,NULL)) &lt; min(if(am.direction=1,ar.attendance_time,NULL))),
+            0,
+            format(TIMESTAMPDIFF(SECOND,min(if(am.direction=1,ar.attendance_time,null)),max(if(am.direction=2,ar.attendance_time,NULL)))/60/60,1)
+        ) man_hour,
+        ar.team_person_id team_person_id
+        from t_ws_attendance_record ar
+        left join t_ws_attendance_machine am on ar.machine_id = am.id
+        where (ar.attendance_time between  #{beginTime} and  #{endTime})
+        group by month_of_day,team_person_id
+
+    </select>
+
+    <select id="selectWsAttendanceRecordDetailList" parameterType="WsAttendanceRecordDetailVO" resultMap="WsAttendanceRecordDetailVOResult">
+        select ar.attendance_time ,date_format(ar.attendance_time,'%e') month_of_day,tp.id team_person_id,
+        dd.dict_label work_type_name,
+        am.direction direction,
+        pt.name team_name,
+        pu.unit_name unit_name
+        from t_ws_team_person tp
+        left join t_ws_attendance_record ar on tp.id =  ar.team_person_id
+        left join t_ws_attendance_machine am on ar.machine_id = am.id
+        left join sys_dict_data dd on tp.work_type = dd.dict_code
+        left join t_ws_participating_team pt on tp.team_id = pt.id
+        left join t_ws_project_participating_unit pu on tp.unit_id = pu.id
+        where tp.id = #{teamPersonId } and (ar.attendance_time between  #{beginTime} and #{endTime})
+        order by  ar.attendance_time asc
+    </select>
+
+    <!-- 获取整点出勤数据 -->
+    <select id="selectPersonHourPointAttendance" parameterType="WsAttendanceRecordVO" resultMap="WsAttendanceRecordVOResult">
+        select ar.attendance_time ,date_format(ar.attendance_time,'%k') hour_of_day,ar.team_person_id,direction
+        from t_ws_attendance_record  ar
+        left join t_ws_team_person tp on tp.id =  ar.team_person_id
+        left join t_ws_attendance_machine am on ar.machine_id = am.id
+        where tp.project_id=#{projectId}
+        <if test="beginTime!=null and beginTime!='' and endTime!=null and endTime!=''">
+            and (ar.attendance_time between  #{beginTime} and #{endTime})
+        </if>
+        <if test="personType!=null and personType!=''">
+            and tp.person_type=#{personType}
+        </if>
+    </select>
+
+
+    <select id="selectWsAttendanceRecordById" parameterType="Integer" resultMap="WsAttendanceRecordResult">
+        <include refid="selectWsAttendanceRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWsAttendanceRecord" parameterType="WsAttendanceRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_attendance_record(
+            <if test="teamPersonId != null ">team_person_id,</if>
+            <if test="machineId != null ">machine_id,</if>
+            <if test="attendanceTime != null ">attendance_time,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+            <if test="createdTime != null ">created_time,</if>
+            updated_time,created_time
+            )values (
+            <if test="teamPersonId != null ">#{teamPersonId},</if>
+            <if test="machineId != null ">#{machineId},</if>
+            <if test="attendanceTime != null ">#{attendanceTime},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+    <update id="updateWsAttendanceRecord" parameterType="WsAttendanceRecord">
+        update t_ws_attendance_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="teamPersonId != null ">team_person_id = #{teamPersonId},</if>
+            <if test="machineId != null ">machine_id = #{machineId},</if>
+            <if test="attendanceTime != null ">attendance_time = #{attendanceTime},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsAttendanceRecordById" parameterType="Integer">
+        delete from t_ws_attendance_record where id = #{id}
+    </delete>
+
+    <delete id="deleteWsAttendanceRecordByIds" parameterType="String">
+        delete from t_ws_attendance_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectAttendanceRecordList" parameterType="WsAttendanceRecord" resultMap="WsAttendanceRecordResult">
+        select t2.name as personName,t2.id_number as idNumber,t5.unit_name as unitName,t4.name as teamName,t6.dict_label as workTypeName,t2.mobile_phone as mobilePhone,date_format(t.attendance_time,'%Y-%m-%d %H:%i:%s') as attendance_time,
+        CASE t3.direction WHEN 1 THEN '进场' ELSE '出场' END as direction,
+        t3.name as machineName from t_ws_attendance_record t
+        left join t_ws_team_person t2 on t.team_person_id = t2.id
+        left join t_ws_attendance_machine t3 on t.machine_id = t3.id
+        left join t_ws_participating_team t4 on t2.team_id = t4.id
+        left join t_ws_project_participating_unit t5 on t2.unit_id = t5.id
+        left join sys_dict_data t6 on t2.work_type = t6.dict_value and t6.dict_type = 'ws_work_type'
+        <where>
+            1=1
+            <if test="wsAttendanceRecord.projectId != null and wsAttendanceRecord.projectId != '' "> and t2.project_id = #{wsAttendanceRecord.projectId}</if>
+            <if test="wsAttendanceRecord.unitId != null and wsAttendanceRecord.unitId != ''"> and t2.unit_id = #{wsAttendanceRecord.unitId}</if>
+            <if test="wsAttendanceRecord.teamId != null and wsAttendanceRecord.teamId != ''"> and t2.team_id = #{wsAttendanceRecord.teamId}</if>
+            <if test="wsAttendanceRecord.personId != null and wsAttendanceRecord.personId != null"> and t2.id = #{wsAttendanceRecord.personId}</if>
+            <if test="wsAttendanceRecord.attenDate != null and wsAttendanceRecord.attenDate != ''">
+                and DATE_FORMAT(t.attendance_time,'%Y-%m-%d') = #{wsAttendanceRecord.attenDate}
+            </if>
+            <if test="projectIds != null ">
+                and t2.project_id in
+                <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+                    #{projectId}
+                </foreach>
+             </if>
+            order by t.attendance_time desc
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsProjectMilestoneplanMapper">
+    
+    <resultMap type="WsProjectMilestoneplan" id="WsProjectMilestoneplanResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="milepostName"    column="milepost_name"    />
+        <result property="milepostSort"    column="milepost_sort"    />
+        <result property="milepostDate"    column="milepost_date"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+
+    <resultMap type="MoveSortVO" id="WsProjectMilestoneplanResultVO">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="projectId"    />
+        <result property="milepostSort"    column="milepostSort"    />
+    </resultMap>
+
+    <sql id="selectWsProjectMilestoneplanVo">
+        select id, project_id, milepost_name, milepost_sort, milepost_date, created_by, created_time, updated_by, updated_time from t_ws_project_milestoneplan
+    </sql>
+
+    <select id="selectWsProjectMilestoneplanList" parameterType="WsProjectMilestoneplan" resultMap="WsProjectMilestoneplanResult">
+        <include refid="selectWsProjectMilestoneplanVo"/>
+        <where>  
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="milepostName != null "> and milepost_name = #{milepostName}</if>
+            <if test="milepostSort != null "> and milepost_sort = #{milepostSort}</if>
+            <if test="milepostDate != null "> and milepost_date = #{milepostDate}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsProjectMilestoneplanById" parameterType="int" resultMap="WsProjectMilestoneplanResult">
+        <include refid="selectWsProjectMilestoneplanVo"/>
+        where project_id = #{projectId}
+    </select>
+
+    <select id="selectWsProjectMilestoneplanByName" parameterType="WsProjectMilestoneplan" resultMap="WsProjectMilestoneplanResult">
+        <include refid="selectWsProjectMilestoneplanVo"/>
+        where milepost_name = #{milepostName} and project_id = #{projectId} and id !=#{id}
+    </select>
+
+    <select id="selectMaxSort"  resultType="int">
+      select max(milepost_sort) from `t_ws_project_milestoneplan`
+    </select>
+
+    <select id="selectWsProjectMilestoneplanByProjectIdOrder" parameterType="Integer" resultMap="WsProjectMilestoneplanResult">
+        <include refid="selectWsProjectMilestoneplanVo"/>
+        where  project_id = #{projectId}
+        order by milepost_sort desc
+    </select>
+
+    <insert id="insertWsProjectMilestoneplan" parameterType="WsProjectMilestoneplan" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_project_milestoneplan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="milepostName != null ">milepost_name,</if>
+            <if test="milepostSort != null ">milepost_sort,</if>
+            <if test="milepostDate != null ">milepost_date,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="milepostName != null ">#{milepostName},</if>
+            <if test="milepostSort != null ">#{milepostSort},</if>
+            <if test="milepostDate != null ">#{milepostDate},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsProjectMilestoneplanById" parameterType="WsProjectMilestoneplan">
+        update t_ws_project_milestoneplan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="milepostName != null ">milepost_name = #{milepostName},</if>
+            <if test="milepostSort != null ">milepost_sort = #{milepostSort},</if>
+            <if test="milepostDate != null ">milepost_date = #{milepostDate},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="removeWsProjectMilestoneplan" parameterType="java.util.List">
+        update t_ws_project_milestoneplan
+        SET milepost_sort =
+        <foreach collection="list" item="item" index="index"
+                 separator=" " open="case" close="end">
+            when id = #{item.id} then #{item.milepostSort}
+        </foreach>
+
+        where id in (
+        <foreach collection="list" item="item"
+                 separator=",">
+            #{item.id}
+        </foreach>
+        )
+    </update>
+
+
+    <delete id="deleteWsProjectMilestoneplanById" parameterType="int">
+        delete from t_ws_project_milestoneplan where id = #{id}
+    </delete>
+
+    <delete id="deleteWsProjectMilestoneplanByIds" parameterType="String">
+        delete from t_ws_project_milestoneplan where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsQualityCheckManagerMapper">
+    
+    <resultMap type="com.jlkj.project.ws.domain.WsQualityCheckManager" id="WsQualityCheckManagerResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="checkPosition"    column="check_position"    />
+        <result property="qualityProblemLevel"    column="quality_problem_level"    />
+        <result property="qualityProblemId"    column="quality_problem_id"    />
+        <result property="comment"    column="comment"    />
+        <result property="checkPositionId"    column="check_position_id"    />
+        <result property="checkDate"    column="check_date"    />
+        <!--<result property="checkPositionAddres"    column="check_position_addres"    />-->
+        <result property="repairPersonId"    column="repair_person_id"    />
+        <result property="repairLimitDate"    column="repair_limit_date"    />
+        <result property="verifyPersonId"    column="verify_person_id"    />
+        <result property="status"    column="status"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="kssj"    column="kssj"    />
+        <result property="jssj"    column="jssj"    />
+        <result property="qualityProblemLevelName"    column="qualityProblemLevelName"    />
+        <result property="statusName"    column="statusName"    />
+        <result property="projectName"    column="projectName"    />
+        <result property="checkPositionName"    column="checkPositionName"    />
+        <result property="repairPersonName"    column="repairPersonName"    />
+        <result property="verifyPersonName"    column="verifyPersonName"    />
+        <result property="qualityProblemName"    column="qualityProblemName"    />
+        <result property="rectificationRequirements"    column="rectification_requirements"    />
+        <result property="repairDate"    column="repairDate"    />
+        <result property="projectUnitName"    column="projectUnitName"    />
+    </resultMap>
+
+    <sql id="selectWsQualityCheckManagerVo">
+        select id, project_id, check_position, quality_problem_level, quality_problem_id, comment, check_position_id, check_date, check_position_addres, repair_person_id, repair_limit_date, verify_person_id, status, is_delete, created_by, created_time, updated_by, updated_time from t_ws_quality_check_manager
+    </sql>
+
+    <select id="selectWsQualityCheckManagerList" parameterType="com.jlkj.project.ws.domain.WsQualityCheckManager" resultMap="WsQualityCheckManagerResult">
+        SELECT t.id,t.status,t3.dict_label as statusName,t.repair_limit_date,t.project_id,t4.project_name as projectName,t5.nick_name as checkPositionName,t.check_date,t.check_position,t2.dict_label as qualityProblemLevelName,t8.problem_type_name as qualityProblemName,t.comment,t6.nick_name as repairPersonName,t7.nick_name as verifyPersonName,
+         (SELECT t9.repair_date from t_ws_quality_check_repair t9 where t.id = t9.checkManager_id ORDER BY t9.repair_date DESC LIMIT 1) as repairDate from t_ws_quality_check_manager t
+        left join sys_dict_data t2 on t.quality_problem_level = t2.dict_value and t2.dict_type = 'quality_problem_level'
+        left join sys_dict_data t3 on t.status = t3.dict_value and t3.dict_type = 'qualityCheck_status'
+        left join t_ws_project t4 on t.project_id = t4.id
+        left join sys_user t5 on t.check_position_id = t5.user_id
+        left join sys_user t6 on t.repair_person_id = t6.user_id
+        left join sys_user t7 on t.verify_person_id = t7.user_id
+        left join t_ws_quality_problem_type t8 on t.quality_problem_id = t8.id
+        <where>
+            1=1
+            <if test="wsQualityCheckManager.projectId != null "> and t.project_id = #{wsQualityCheckManager.projectId}</if>
+            <if test="wsQualityCheckManager.status != null "> and t.status = #{wsQualityCheckManager.status}</if>
+            <if test="wsQualityCheckManager.kssj != null and wsQualityCheckManager.kssj != ''">
+                and DATE_FORMAT(t.check_date,'%Y-%m-%d') >= #{wsQualityCheckManager.kssj}
+            </if>
+            <if test="wsQualityCheckManager.jssj != null and wsQualityCheckManager.jssj != ''">
+                and <![CDATA[DATE_FORMAT(t.check_date,'%Y-%m-%d') <= #{wsQualityCheckManager.jssj}]]>
+            </if>
+            <if test="wsQualityCheckManager.repairPersonId != null "> and t.repair_person_id = #{wsQualityCheckManager.repairPersonId}</if>
+            <if test="wsQualityCheckManager.verifyPersonId != null "> and t.verify_person_id = #{wsQualityCheckManager.verifyPersonId}</if>
+            and t.is_delete = 'N'
+            <if test="projectIds != null "> and t.project_id in
+            <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+                #{projectId}
+            </foreach></if>
+             order by t.repair_limit_date desc
+        </where>
+    </select>
+
+    <select id="selectWsQualityCheckManagerById" parameterType="com.jlkj.project.ws.domain.WsQualityCheckManager" resultMap="WsQualityCheckManagerResult">
+        SELECT t.id,t.status,t3.dict_label as statusName,t.repair_limit_date,t.project_id,t4.project_name as projectName,t5.nick_name as checkPositionName,t.check_date,t.check_position,t2.dict_label as qualityProblemLevelName,t8.problem_type_name as qualityProblemName,t.comment,t6.nick_name as repairPersonName,t7.nick_name as verifyPersonName,t.rectification_requirements,t.repair_person_id,t.verify_person_id,t9.enterprise_name as projectUnitName from t_ws_quality_check_manager t
+        left join sys_dict_data t2 on t.quality_problem_level = t2.dict_value and t2.dict_type = 'quality_problem_level'
+        left join sys_dict_data t3 on t.status = t3.dict_value and t3.dict_type = 'qualityCheck_status'
+        left join t_ws_project t4 on t.project_id = t4.id
+        left join sys_user t5 on t.check_position_id = t5.user_id
+        left join sys_user t6 on t.repair_person_id = t6.user_id
+        left join sys_user t7 on t.verify_person_id = t7.user_id
+        left join t_ws_quality_problem_type t8 on t.quality_problem_id = t8.id
+        left join sys_enterprise AS t9  ON t9.enterprise_id = t4.project_unit_id
+
+        <where>
+            1=1
+            and t.id = #{id}
+        </where>
+    </select>
+
+    <insert id="insertWsQualityCheckManager" parameterType="com.jlkj.project.ws.domain.WsQualityCheckManager" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_quality_check_manager
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="checkPosition != null  and checkPosition != ''">check_position,</if>
+            <if test="qualityProblemLevel != null ">quality_problem_level,</if>
+            <if test="qualityProblemId != null ">quality_problem_id,</if>
+            <if test="comment != null  and comment != ''">comment,</if>
+            <if test="rectificationRequirements != null  and rectificationRequirements != ''">rectification_requirements,</if>
+            <if test="checkPositionId != null ">check_position_id,</if>
+            <if test="checkDate != null ">check_date,</if>
+           <!-- <if test="checkPositionAddres != null  and checkPositionAddres != ''">check_position_addres,</if>-->
+            <if test="repairPersonId != null ">repair_person_id,</if>
+            <if test="repairLimitDate != null ">repair_limit_date,</if>
+            <if test="verifyPersonId != null ">verify_person_id,</if>
+            <if test="status != null ">status,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="checkPosition != null  and checkPosition != ''">#{checkPosition},</if>
+            <if test="qualityProblemLevel != null ">#{qualityProblemLevel},</if>
+            <if test="qualityProblemId != null ">#{qualityProblemId},</if>
+            <if test="comment != null  and comment != ''">#{comment},</if>
+            <if test="rectificationRequirements != null  and rectificationRequirements != ''">#{rectificationRequirements},</if>
+            <if test="checkPositionId != null ">#{checkPositionId},</if>
+            <if test="checkDate != null ">#{checkDate},</if>
+           <!-- <if test="checkPositionAddres != null  and checkPositionAddres != ''">#{checkPositionAddres},</if>-->
+            <if test="repairPersonId != null ">#{repairPersonId},</if>
+            <if test="repairLimitDate != null ">#{repairLimitDate},</if>
+            <if test="verifyPersonId != null ">#{verifyPersonId},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsQualityCheckManager" parameterType="com.jlkj.project.ws.domain.WsQualityCheckManager">
+        update t_ws_quality_check_manager
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="checkPosition != null  and checkPosition != ''">check_position = #{checkPosition},</if>
+            <if test="qualityProblemLevel != null ">quality_problem_level = #{qualityProblemLevel},</if>
+            <if test="qualityProblemId != null ">quality_problem_id = #{qualityProblemId},</if>
+            <if test="comment != null  and comment != ''">comment = #{comment},</if>
+            <if test="rectificationRequirements != null  and rectificationRequirements != ''">rectification_requirements = #{rectificationRequirements},</if>
+            <if test="checkPositionId != null ">check_position_id = #{checkPositionId},</if>
+            <if test="checkDate != null ">check_date = #{checkDate},</if>
+           <!-- <if test="checkPositionAddres != null  and checkPositionAddres != ''">check_position_addres = #{checkPositionAddres},</if>-->
+            <if test="repairPersonId != null ">repair_person_id = #{repairPersonId},</if>
+            <if test="repairLimitDate != null ">repair_limit_date = #{repairLimitDate},</if>
+            <if test="verifyPersonId != null ">verify_person_id = #{verifyPersonId},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsQualityCheckManagerById" parameterType="Long">
+        delete from t_ws_quality_check_manager where id = #{id}
+    </delete>
+
+    <delete id="deleteWsQualityCheckManagerByIds" parameterType="String">
+        delete from t_ws_quality_check_manager where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectWsQualityProblemTypeByIdList" parameterType="com.jlkj.project.ws.domain.WsQualityCheckManager" resultMap="WsQualityCheckManagerResult">
+        SELECT t.id from t_ws_quality_check_manager t
+        <where>
+            1=1
+            and t.quality_problem_id = #{qualityProblemId}
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsAttendanceZoneMapper">
+
+    <resultMap type="WsAttendanceZone" id="WsAttendanceZoneResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="name"    column="name"    />
+        <result property="machineContact"    column="machine_contact"    />
+        <result property="machineNumber"    column="machine_number"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <collection property="machines" ofType="WsAttendanceMachine">
+            <result property="name"    column="machine_name"    />
+            <result property="serialNumber"    column="serial_number"    />
+        </collection>
+    </resultMap>
+
+    <sql id="selectWsAttendanceZoneVo">
+        select id, project_id, name, updated_time, created_time from t_ws_attendance_zone
+    </sql>
+
+    <sql id="selectWsAttendanceZoneVo2">
+        select z.id, z.project_id, z.name,group_concat(am.name) machine_contact,
+        am.name machine_name, am.serial_number
+        from t_ws_attendance_zone z
+        left join t_ws_attendance_machine am on z.id = am.zone_id
+    </sql>
+
+    <select id="selectWsAttendanceZoneList"  resultMap="WsAttendanceZoneResult">
+        <include refid="selectWsAttendanceZoneVo"/>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="wsAttendanceZone.projectId != null "> and z.project_id = #{wsAttendanceZone.projectId}</if>
+            <if test="wsAttendanceZone.name != null  and wsAttendanceZone.name != ''"> and z.name like concat('%', #{wsAttendanceZone.name}, '%')</if>
+            <if test="dataScope !=null  and dataScope.size>0">
+                and project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectWsAttendanceZoneWithMachineList"  resultMap="WsAttendanceZoneResult">
+        <include refid="selectWsAttendanceZoneVo2"/>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="wsAttendanceZone.projectId != null "> and z.project_id = #{wsAttendanceZone.projectId}</if>
+            <if test="dataScope !=null  and dataScope.size>0">
+                and z.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+        </trim>
+         group by z.id
+    </select>
+
+
+    <select id="selectWsAttendanceZoneById" parameterType="Integer" resultMap="WsAttendanceZoneResult">
+        <include refid="selectWsAttendanceZoneVo2"/>
+        where z.id = #{id}
+    </select>
+
+
+    <select id="statisticsMachineOfByZone" parameterType="WsAttendanceZone" resultMap="WsAttendanceZoneResult">
+        select count(am.id) machine_number,IFNULL(az.name,"默认分区") name,am.zone_id id
+         from  t_ws_attendance_machine am
+         left join t_ws_attendance_zone az on az.id = am.zone_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId !=null"> and am.project_id=#{projectId} </if>
+        </trim>
+         group by am.id
+         UNION(
+        select count(am.id) machine_number,"全部区域" name , null id
+         from  t_ws_attendance_machine am
+         left join t_ws_attendance_zone az on az.id = am.zone_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId !=null"> and am.project_id=#{projectId} </if>
+        </trim>
+        )
+    </select>
+
+
+    <insert id="insertWsAttendanceZone" parameterType="WsAttendanceZone" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_attendance_zone(
+            <if test="projectId != null ">project_id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            updated_time,created_time
+         )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+    <update id="updateWsAttendanceZone" parameterType="WsAttendanceZone">
+        update t_ws_attendance_zone set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            updated_time = sysdate()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsAttendanceZoneById" parameterType="Integer">
+        delete from t_ws_attendance_zone where id = #{id}
+    </delete>
+
+    <delete id="deleteWsAttendanceZoneByIds" parameterType="String">
+        delete from t_ws_attendance_zone where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="existedAttendanceMachine" parameterType="Integer" resultType="Integer">
+        select count(m.zone_id)  from t_ws_attendance_zone z
+        left join t_ws_attendance_machine m on z.id = m.zone_id
+        where  z.id = #{id}
+    </select>
+
+</mapper>

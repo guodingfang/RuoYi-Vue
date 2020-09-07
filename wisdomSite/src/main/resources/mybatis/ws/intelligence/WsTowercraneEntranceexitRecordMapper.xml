@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsTowercraneEntranceexitRecordMapper">
+    
+    <resultMap type="WsTowercraneEntranceexitRecord" id="WsTowercraneEntranceexitRecordResult">
+        <result property="id"    column="id"    />
+        <result property="towercraneEquipmentId"    column="towerCrane_equipment_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="enterData"    column="enter_data"    />
+        <result property="exitData"    column="exit_data"    />
+        <result property="presence"    column="presence"    />
+    </resultMap>
+
+    <sql id="selectWsTowercraneEntranceexitRecordVo">
+        select id, towerCrane_equipment_id, project_id, enter_data, exit_data, presence from t_ws_towercrane_entranceexit_record
+    </sql>
+
+    <select id="selectWsTowercraneEntranceexitRecordList" parameterType="WsTowercraneEntranceexitRecord" resultMap="WsTowercraneEntranceexitRecordResult">
+        <include refid="selectWsTowercraneEntranceexitRecordVo"/>
+        <where>  
+            <if test="towercraneEquipmentId != null "> and towerCrane_equipment_id = #{towercraneEquipmentId}</if>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="enterData != null "> and enter_data = #{enterData}</if>
+            <if test="exitData != null "> and exit_data = #{exitData}</if>
+            <if test="presence != null "> and presence = #{presence}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsTowercraneEntranceexitRecordById" parameterType="Integer" resultMap="WsTowercraneEntranceexitRecordResult">
+        <include refid="selectWsTowercraneEntranceexitRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWsTowercraneEntranceexitRecord" parameterType="WsTowercraneEntranceexitRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_towercrane_entranceexit_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="towercraneEquipmentId != null ">towerCrane_equipment_id,</if>
+            <if test="projectId != null ">project_id,</if>
+            <if test="enterData != null ">enter_data,</if>
+            <if test="exitData != null ">exit_data,</if>
+            <if test="presence != null ">presence,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="towercraneEquipmentId != null ">#{towercraneEquipmentId},</if>
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="enterData != null ">#{enterData},</if>
+            <if test="exitData != null ">#{exitData},</if>
+            <if test="presence != null ">#{presence},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsTowercraneEntranceexitRecord" parameterType="WsTowercraneEntranceexitRecord">
+        update t_ws_towercrane_entranceexit_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="towercraneEquipmentId != null ">towerCrane_equipment_id = #{towercraneEquipmentId},</if>
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="enterData != null ">enter_data = #{enterData},</if>
+            <if test="exitData != null ">exit_data = #{exitData},</if>
+            <if test="presence != null ">presence = #{presence},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsTowercraneEntranceexitRecordById" parameterType="Integer">
+        delete from t_ws_towercrane_entranceexit_record where id = #{id}
+    </delete>
+
+    <delete id="deleteWsTowercraneEntranceexitRecordByIds" parameterType="String">
+        delete from t_ws_towercrane_entranceexit_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

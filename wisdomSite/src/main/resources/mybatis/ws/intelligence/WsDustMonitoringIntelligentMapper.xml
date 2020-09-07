@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsDustMonitoringIntelligentMapper">
+    
+    <resultMap type="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" id="WsDustMonitoringDetailsDTOResult">
+        <result property="projectId"    column="projectId"    />
+        <result property="todayDustControlRate"    column="todayDustControlRate"    />
+        <result property="todayNoiseControlRate"    column="todayNoiseControlRate"    />
+        <result property="updateDate"    column="updateDate"    />
+        <result property="noMonitoringProjectNum"    column="noMonitoringProjectNum"    />
+        <result property="dustType"    column="dustType"    />
+        <result property="alarmSorting"    column="alarmSorting"    />
+        <result property="projectName"    column="projectName"    />
+        <result property="todayAlarmNum"    column="todayAlarmNum"    />
+        <result property="pm25"    column="pm25"    />
+        <result property="pm10"    column="pm10"    />
+        <result property="noise"    column="noise"    />
+        <result property="temperatureHumidity"    column="temperatureHumidity"    />
+        <result property="windSpeed"    column="windSpeed"    />
+        <result property="monitoringEquipmentNo"    column="monitoringEquipmentNo"    />
+        <result property="alarmStatusCode"    column="alarmStatusCode"    />
+        <result property="totalNum"    column="totalNum"    />
+        <result property="projectLeader"    column="projectLeader"    />
+        <result property="monitoringPointName"    column="monitoringPointName"    />
+        <result property="pmTwentyFive"    column="pmTwentyFive"    />
+        <result property="pmTen"    column="pmTen"    />
+        <result property="strepitus"    column="strepitus"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="humidity"    column="humidity"    />
+        <result property="windVelocity"    column="windVelocity"    />
+        <result property="windDirection"    column="windDirection"    />
+        <result property="dustDate"    column="dustDate"    />
+        <result property="dustPm25"    column="dustPm25"    />
+        <result property="dustPm10"    column="dustPm10"    />
+        <result property="dustStrepitus"    column="dustStrepitus"    />
+        <result property="dustTemperature"    column="dustTemperature"    />
+        <result property="dustWindSpeed"    column="dustWindSpeed"    />
+        <result property="onlineOfflineName"    column="onlineOfflineName"    />
+        <result property="videoEquipmentId"    column="videoEquipmentId"    />
+        <result property="videoEquipmentAddress"    column="videoEquipmentAddress"    />
+        <result property="equipmentSerialnumber"    column="equipmentSerialnumber"    />
+        <result property="channelNumber"    column="channelNumber"    />
+    </resultMap>
+
+
+    <select id="selectProjectEquipmentList" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT t.project_id as projectId,t2.project_name as projectName from t_ws_project_equipment t
+        LEFT JOIN t_ws_project t2 ON t.project_id = t2.id
+        where 1=1
+        and t2.is_delete = 'N'
+        and t.equipment_type = '3'
+        and t.serialNumber != ''
+        and t.enable_status = '1'
+        <if test="projectId != null">
+            and t2.id = #{projectId}
+        </if>
+        <if test="projectIds != null">
+        and t.project_id in
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+            #{projectId}
+        </foreach> </if>
+        GROUP BY t.project_id
+    </select>
+
+    <select id="selectEquipmentList" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT t.serialNumber as monitoringEquipmentNo from t_ws_project_equipment t
+        left join t_ws_dust_monitoringpoint t2 on t.id = t2.equipmentNo_id
+        where 1=1
+        and t.equipment_type = '3'
+        and t.serialNumber != ''
+        and t.enable_status = '1'
+        and t2.is_delete = '1'
+        and t.project_id = #{projectId}
+    </select>
+
+    <select id="selectAlarmStatusCodelist" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT LPAD(bin(WARNREASON), 16, 0) as alarmStatusCode FROM t_ws_dust_monitor_data
+        where SERIAL_NUMBER in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+    </select>
+
+    <select id="selectTodayAlarmNumMonitoringEquipmentNo" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT COUNT(*) as totalNum,SUM(WARNREASON != '0') as todayAlarmNum from t_ws_dust_monitor_data_${monitoringEquipmentNo}
+        where
+        to_days(INSERTTIME) = to_days(now());
+    </select>
+
+
+    <select id="selectNothingMonitoringList" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT t.project_id as projectId from t_ws_project_equipment t
+        LEFT JOIN t_ws_dust_monitoringpoint t2 on t2.equipmentNo_id = t.id
+        where 1=1
+        and t.equipment_type = '3'
+        and t.enable_status = '1'
+        and t2.is_delete = '1'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY t.project_id
+    </select>
+
+    <select id="selectProjectNothingMonitoringList" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT * from (SELECT t2.id ,t2.project_name as projectName,t4.nick_name as projectLeader from t_ws_project t2
+        left join sys_user t4 on t2.project_person_id = t4.user_id
+        where 1=1
+        and t2.is_delete = 'N'
+        and t2.id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        ) a
+        WHERE  a.id not in (
+            SELECT distinct t3.project_id from t_ws_project t2 LEFT JOIN t_ws_project_equipment t3 on t2.id = t3.project_id
+            left join sys_user t4 on t2.project_person_id = t4.user_id
+            LEFT JOIN t_ws_dust_monitoringpoint t5 on t5.equipmentNo_id = t3.id
+            where 1=1
+            and t2.is_delete = 'N'
+            and t5.is_delete = '1'
+            and t3.equipment_type = '3'
+            and t2.id in
+            <foreach item="projectId" collection="array" open="(" separator="," close=")">
+                #{projectId}
+            </foreach>
+            GROUP BY t3.project_id
+        )
+    </select>
+
+
+
+    <select id="selectProjectIdMonitoringEquipmentNo" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT t.monitoringPoint_name as monitoringPointName,t2.serialNumber as monitoringEquipmentNo,t.video_equipment_id as videoEquipmentId FROM t_ws_dust_monitoringpoint t
+        LEFT JOIN t_ws_project_equipment t2 ON t.equipmentNo_id = t2.id
+        where t.equipmentNo_id != ''
+        and t.is_delete = '1'
+        and t.project_id = #{projectId}
+    </select>
+
+    <select id="selectOnlineOfflineName" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT CASE
+        when ONLINE_STATUS = '1' then '在线'
+        when ONLINE_STATUS = '2' then '离线'
+        END
+        as onlineOfflineName from t_ws_black_box
+        where
+        EQUIPMENT_TYPE = '3'
+        and SERIAL_NUMBER = #{monitoringEquipmentNo}
+    </select>
+
+    <select id="selectMonitoringEquipmentNoDust" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT PM25 as pmTwentyFive,PM10 as pmTen,round(FS * 0.1,1) as windVelocity,ZY as strepitus,round(WD * 0.1,1)as temperature,round(SD * 0.1,1) as humidity,
+        CASE
+        when FX = '1' then '东北偏北'
+        when FX = '2' then '东北'
+        when FX = '3' then '东北偏东'
+        when FX = '4' then '东'
+        when FX = '5' then '东南偏东'
+        when FX = '6' then '东南'
+        when FX = '7' then '东南偏南'
+        when FX = '8' then '南'
+        when FX = '9' then '西南偏南'
+        when FX = '10' then '西南'
+        when FX = '11' then '西南偏西'
+        when FX = '12' then '西'
+        when FX = '13' then '西北偏西'
+        when FX = '14' then '西北'
+        when FX = '15' then '西北偏北'
+        when FX = '16' then '北'
+        END
+        as windDirection from t_ws_dust_monitor_data
+        where
+        SERIAL_NUMBER = #{monitoringEquipmentNo}
+        and to_days(INSERTTIME) = to_days(now());
+    </select>
+
+    <select id="selectDustSevenDaySituation" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        select date_format(a.statisticsTime,'%m-%d') as dustDate,IFNULL(b.PM25,0.0) as dustPm25,IFNULL(b.PM10,0.0) as dustPm10
+        from (
+        SELECT curdate() as statisticsTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        ) a left join (
+        select date(t.INSERTTIME) as datetime,round(AVG(t.PM25),1) as PM25,round(AVG(t.PM10),1) as PM10
+        from t_ws_dust_monitor_data_${monitoringEquipmentNo} t
+        where 1=1
+        group by date(t.INSERTTIME)
+        ) b on a.statisticsTime = b.datetime
+        ORDER BY dustDate
+    </select>
+
+    <select id="selectNoiseSevenDaySituation" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        select date_format(a.statisticsTime,'%m-%d') as dustDate,IFNULL(b.ZY,0.0) as dustStrepitus
+        from (
+        SELECT curdate() as statisticsTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        ) a left join (
+        select date(t.INSERTTIME) as datetime,round(AVG(t.ZY),1) as ZY
+        from t_ws_dust_monitor_data_${monitoringEquipmentNo} t
+        where 1=1
+        group by date(t.INSERTTIME)
+        ) b on a.statisticsTime = b.datetime
+        ORDER BY dustDate
+    </select>
+
+    <select id="selectSameDayDustPm25OrDustPm10" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT
+	    ifnull(FORMAT(AVG(t.PM25), 1),0.0) AS dustPm25,
+        ifnull(FORMAT(AVG(t.PM10), 1),0.0) AS dustPm10,
+            DATE_FORMAT(
+                concat(
+                    date(t.INSERTTIME),
+                    ' ',
+                    HOUR (t.INSERTTIME),
+                    ':',
+                    floor(MINUTE(t.INSERTTIME) / 10) * 10
+                ),
+               '%Y-%m-%d %H:%i:%s'
+            ) AS dustDate
+        FROM
+            t_ws_dust_monitor_data_${monitoringEquipmentNo} t
+        WHERE
+            date_format(t.INSERTTIME, '%Y-%m-%d') = #{dustDate}
+        GROUP BY
+            dustDate
+    </select>
+
+
+    <select id="selectMonthlyDayDustPm25OrDustPm10" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT date_format(a.d,'%m-%d') as dustDate,IFNULL(tbr.PM25,0.0) as dustPm25,IFNULL(tbr.PM10,0.0) as dustPm10
+        from
+        (SELECT ADDDATE(y.first, x.d - 1) as d
+        FROM
+        (SELECT 1 AS d UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL
+        SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL
+        SELECT 15 UNION ALL SELECT 16 UNION ALL SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20 UNION ALL SELECT 21 UNION ALL
+        SELECT 22 UNION ALL SELECT 23 UNION ALL SELECT 24 UNION ALL SELECT 25 UNION ALL SELECT 26 UNION ALL SELECT 27 UNION ALL SELECT 28 UNION ALL
+        SELECT 29 UNION ALL SELECT 30 UNION ALL SELECT 31) x,
+        (SELECT CONCAT(#{dustDate},'-01') as FIRST, DAY(LAST_DAY(str_to_date(#{dustDate},'%Y-%m'))) AS last) y
+        WHERE x.d <![CDATA[<=]]> y.last )a
+        LEFT JOIN (
+        SELECT
+        FORMAT(AVG(PM25), 1) AS PM25,
+        FORMAT(AVG(PM10), 1) AS PM10,
+        DATE(INSERTTIME) createdate
+        FROM t_ws_dust_monitor_data_${monitoringEquipmentNo}
+        GROUP BY  createdate) AS tbr ON a.d = tbr.createdate
+        GROUP BY  dustDate
+    </select>
+
+
+    <select id="selectSameDayDustStrepitus" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT
+	    ifnull(FORMAT(AVG(t.zy), 1),0.0) AS dustStrepitus,
+            DATE_FORMAT(
+                concat(
+                    date(t.INSERTTIME),
+                    ' ',
+                    HOUR (t.INSERTTIME),
+                    ':',
+                    floor(MINUTE(t.INSERTTIME) / 10) * 10
+                ),
+               '%Y-%m-%d %H:%i:%s'
+            ) AS dustDate
+        FROM
+            t_ws_dust_monitor_data_${monitoringEquipmentNo} t
+        WHERE
+            date_format(t.INSERTTIME, '%Y-%m-%d') = #{dustDate}
+        GROUP BY
+            dustDate
+    </select>
+
+    <select id="selectMonthlyDayDustStrepitus" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT date_format(a.d,'%m-%d') as dustDate,IFNULL(tbr.zy,0.0) as dustStrepitus
+        from
+        (SELECT ADDDATE(y.first, x.d - 1) as d
+        FROM
+        (SELECT 1 AS d UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL
+        SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL
+        SELECT 15 UNION ALL SELECT 16 UNION ALL SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20 UNION ALL SELECT 21 UNION ALL
+        SELECT 22 UNION ALL SELECT 23 UNION ALL SELECT 24 UNION ALL SELECT 25 UNION ALL SELECT 26 UNION ALL SELECT 27 UNION ALL SELECT 28 UNION ALL
+        SELECT 29 UNION ALL SELECT 30 UNION ALL SELECT 31) x,
+        (SELECT CONCAT(#{dustDate},'-01') as FIRST, DAY(LAST_DAY(str_to_date(#{dustDate},'%Y-%m'))) AS last) y
+        WHERE x.d <![CDATA[<=]]> y.last )a
+        LEFT JOIN (
+        SELECT
+        FORMAT(AVG(ZY), 1) AS zy,
+        DATE(INSERTTIME) createdate
+        FROM t_ws_dust_monitor_data_${monitoringEquipmentNo}
+        GROUP BY  createdate) AS tbr ON a.d = tbr.createdate
+        GROUP BY  dustDate
+    </select>
+
+
+    <select id="selectSameDayDustTemperature" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT
+	    ifnull(FORMAT(AVG(t.WD) * 0.1, 1),0.0) AS dustTemperature,
+            DATE_FORMAT(
+                concat(
+                    date(t.INSERTTIME),
+                    ' ',
+                    HOUR (t.INSERTTIME),
+                    ':',
+                    floor(MINUTE(t.INSERTTIME) / 10) * 10
+                ),
+               '%Y-%m-%d %H:%i:%s'
+            ) AS dustDate
+        FROM
+            t_ws_dust_monitor_data_${monitoringEquipmentNo} t
+        WHERE
+            date_format(t.INSERTTIME, '%Y-%m-%d') = #{dustDate}
+        GROUP BY
+            dustDate
+
+    </select>
+
+    <select id="selectMonthlyDayDustTemperature" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT date_format(a.d,'%m-%d') as dustDate,IFNULL(tbr.wd,0.0) as dustTemperature
+        from
+        (SELECT ADDDATE(y.first, x.d - 1) as d
+        FROM
+        (SELECT 1 AS d UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL
+        SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL
+        SELECT 15 UNION ALL SELECT 16 UNION ALL SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20 UNION ALL SELECT 21 UNION ALL
+        SELECT 22 UNION ALL SELECT 23 UNION ALL SELECT 24 UNION ALL SELECT 25 UNION ALL SELECT 26 UNION ALL SELECT 27 UNION ALL SELECT 28 UNION ALL
+        SELECT 29 UNION ALL SELECT 30 UNION ALL SELECT 31) x,
+        (SELECT CONCAT(#{dustDate},'-01') as FIRST, DAY(LAST_DAY(str_to_date(#{dustDate},'%Y-%m'))) AS last) y
+        WHERE x.d <![CDATA[<=]]> y.last )a
+        LEFT JOIN (
+        SELECT
+        FORMAT(AVG(WD) * 0.1, 1) AS wd,
+        DATE(INSERTTIME) createdate
+        FROM t_ws_dust_monitor_data_${monitoringEquipmentNo}
+        GROUP BY  createdate) AS tbr ON a.d = tbr.createdate
+        GROUP BY  dustDate
+    </select>
+
+
+    <select id="selectSameDayDustWindSpeed" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT
+	    ifnull(FORMAT(AVG(t.fs) * 0.1, 1),0.0) AS dustWindSpeed,
+            DATE_FORMAT(
+                concat(
+                    date(t.INSERTTIME),
+                    ' ',
+                    HOUR (t.INSERTTIME),
+                    ':',
+                    floor(MINUTE(t.INSERTTIME) / 10) * 10
+                ),
+               '%Y-%m-%d %H:%i:%s'
+            ) AS dustDate
+        FROM
+            t_ws_dust_monitor_data_${monitoringEquipmentNo} t
+        WHERE
+            date_format(t.INSERTTIME, '%Y-%m-%d') = #{dustDate}
+        GROUP BY
+            dustDate
+    </select>
+
+
+    <select id="selectMonthlyDayDustWindSpeed" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        SELECT date_format(a.d,'%m-%d') as dustDate,IFNULL(tbr.fs,0.0) as dustWindSpeed
+        from
+        (SELECT ADDDATE(y.first, x.d - 1) as d
+        FROM
+        (SELECT 1 AS d UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL
+        SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL
+        SELECT 15 UNION ALL SELECT 16 UNION ALL SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20 UNION ALL SELECT 21 UNION ALL
+        SELECT 22 UNION ALL SELECT 23 UNION ALL SELECT 24 UNION ALL SELECT 25 UNION ALL SELECT 26 UNION ALL SELECT 27 UNION ALL SELECT 28 UNION ALL
+        SELECT 29 UNION ALL SELECT 30 UNION ALL SELECT 31) x,
+        (SELECT CONCAT(#{dustDate},'-01') as FIRST, DAY(LAST_DAY(str_to_date(#{dustDate},'%Y-%m'))) AS last) y
+        WHERE x.d <![CDATA[<=]]> y.last )a
+        LEFT JOIN (
+        SELECT
+        FORMAT(AVG(FS) * 0.1, 1) AS fs,
+        DATE(INSERTTIME) createdate
+        FROM t_ws_dust_monitor_data_${monitoringEquipmentNo}
+        GROUP BY  createdate) AS tbr ON a.d = tbr.createdate
+        GROUP BY  dustDate
+    </select>
+
+    <select id="selectAverageDustMonitoringDetailsDay" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        select  IFNULL(format(AVG(PM10),1),0.0) as dustPm10,IFNULL(format(AVG(ZY),1),0.0) as dustStrepitus,IFNULL(format(AVG(WD)*0.1,1),0.0) as dustTemperature,IFNULL(format(AVG(FS)*0.1,1),0.0) as dustWindSpeed
+        from t_ws_dust_monitor_data_${monitoringEquipmentNo}
+        where
+        DATE_FORMAT(INSERTTIME, '%Y-%m-%d' ) = #{dustDate}
+    </select>
+
+    <select id="selectAverageDustMonitoringDetailsMonth" parameterType="com.jlkj.project.ws.intelligence.dto.WsDustMonitoringDetailsDTO" resultMap="WsDustMonitoringDetailsDTOResult">
+        select IFNULL(format(AVG(PM10),1),0.0) as dustPm10,IFNULL(format(AVG(ZY),1),0.0) as dustStrepitus,IFNULL(format(AVG(WD)*0.1,1),0.0) as dustTemperature,IFNULL(format(AVG(FS)*0.1,1),0.0) as dustWindSpeed from t_ws_dust_monitor_data_${monitoringEquipmentNo}
+        where
+        DATE_FORMAT(INSERTTIME, '%Y-%m' ) = #{dustDate}
+    </select>
+</mapper>

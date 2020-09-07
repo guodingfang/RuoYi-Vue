@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsElevatorMinitorDeviceMapper">
+
+    <resultMap type="WsElevatorMinitorDevice" id="WsElevatorMinitorDeviceResult">
+        <result property="id"    column="id"    />
+        <result property="elevatorId"    column="elevator_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="serialNumber"    column="serial_number" />
+        <result property="equipmentType"    column="equipment_type" />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="deleted"    column="is_delete"    />
+        <result property="manufacturer"    column="manufacturer"    />
+        <result property="installDate"    column="install_date"    />
+        <result property="cageMark"    column="cage_mark"    />
+    </resultMap>
+
+    <sql id="selectWsElevatorMinitorDeviceVo">
+        select id, elevator_id, serial_number, cage_mark,install_date,manufacturer,equipment_type, updated_time, created_time, is_delete from t_ws_elevator_minitor_device
+    </sql>
+
+
+    <select id="selectWsElevatorMinitorDeviceList" parameterType="WsElevatorMinitorDevice" resultMap="WsElevatorMinitorDeviceResult">
+        <include refid="selectWsElevatorMinitorDeviceVo"/>
+        where is_delete='0'
+            <if test="elevatorId != null "> and elevator_id = #{elevatorId}</if>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="serialNumber != null  and serialNumber != ''"> and serial_number = #{serialNumber}</if>
+            <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
+            <if test="cageMark != null and cageMark!='' "> and cage_mark = #{cageMark}</if>
+            <if test="deleted != null  and deleted != ''"> and is_delete = #{deleted}</if>
+            <if test="manufacturer != null  and manufacturer != ''"> and manufacturer = #{manufacturer}</if>
+            <if test="installDate != null "> and install_date = #{installDate}</if>
+    </select>
+
+    <select id="selectWsElevatorMinitorDeviceById" parameterType="Integer" resultMap="WsElevatorMinitorDeviceResult">
+        <include refid="selectWsElevatorMinitorDeviceVo"/>
+        where id = #{id}
+    </select>
+    <select id="countWsElevatorMinitorDeviceByProjectAndSN" parameterType="WsElevatorMinitorDevice" resultType="Integer">
+        select count(1) from t_ws_elevator_minitor_device
+
+        where is_delete='0'
+        <if test="projectId !=null"> and project_id=#{projectId}</if>
+        <if test="serialNumber !=null"> and serial_number=#{serialNumber}</if>
+        <if test="id !=null"> and id = #{id}</if>
+    </select>
+
+    <select id="getWsElevatorMinitorDeviceByElevatorCage" resultType="WsElevatorMinitorDevice">
+        <include refid="selectWsElevatorMinitorDeviceVo"/>
+
+        where elevator_id=#{elevatorId} and cage_mark=#{cageMark} and is_delete='0'
+
+    </select>
+
+    <insert id="insertWsElevatorMinitorDevice" parameterType="WsElevatorMinitorDevice" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_elevator_minitor_device (
+            <if test="elevatorId != null ">elevator_id,</if>
+            <if test="projectId != null ">project_id,</if>
+            <if test="serialNumber != null  and serialNumber != ''">serial_number,</if>
+            <if test="equipmentType != null  and equipmentType != ''">equipment_type,</if>
+            <if test="deleted != null  and deleted != ''">is_delete,</if>
+            <if test="manufacturer != null  and manufacturer != ''">manufacturer,</if>
+            <if test="installDate != null">install_date,</if>
+            <if test="cageMark != null and cageMark!=''">cage_mark,</if>
+            updated_time,created_time
+        )values (
+            <if test="elevatorId != null ">#{elevatorId},</if>
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
+            <if test="equipmentType != null  and equipmentType != ''">#{equipmentType},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="manufacturer != null  and manufacturer != ''">#{manufacturer},</if>
+            <if test="installDate != null">#{installDate},</if>
+            <if test="cageMark != null and cageMark!=''">#{cageMark},</if>
+            sysdate(),sysdate()
+        )
+    </insert>
+
+    <update id="updateWsElevatorMinitorDevice" parameterType="WsElevatorMinitorDevice">
+        update t_ws_elevator_minitor_device
+        set
+            <if test="elevatorId != null ">elevator_id = #{elevatorId},</if>
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="serialNumber != null  and serialNumber != ''">serial_number = #{serialNumber},</if>
+            <if test="equipmentType != null  and equipmentType != ''">equipment_type = #{equipmentType},</if>
+            <if test="manufacturer != null  and manufacturer != ''">manufacturer = #{manufacturer},</if>
+            <if test="installDate != null">install_date=#{installDate},</if>
+            <if test="deleted != null  and deleted != ''">is_delete = #{deleted},</if>
+        <if test="cageMark != null and cageMark!=''">cage_mark=#{cageMark},</if>
+            updated_time =sysdate()
+        where id = #{id}
+    </update>
+
+    <update id="deleteWsElevatorMinitorDeviceById" parameterType="Integer">
+        update t_ws_elevator_minitor_device set is_delete = '1',updated_time =sysdate()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsElevatorMinitorDeviceByIds" parameterType="Integer">
+        update t_ws_elevator_minitor_device set is_delete = '1',updated_time =sysdate()
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="deleteWsElevatorMinitorDeviceByElevatorIds" parameterType="Integer">
+        update t_ws_elevator_minitor_device set is_delete = '1',updated_time =sysdate()
+        where elevator_id in
+        <foreach item="elevatorId" collection="array" open="(" separator="," close=")">
+            #{elevatorId}
+        </foreach>
+    </update>
+
+    <update id="removeWsElevatorMinitorDeviceByElevator" parameterType="Integer">
+        update t_ws_elevator_minitor_device
+        set  is_delete = '1',updated_time =sysdate()
+        where elevator_id = #{elevaotrId}
+
+    </update>
+
+</mapper>

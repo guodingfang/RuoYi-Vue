@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsSafetyOperationTypeMapper">
+    
+    <resultMap type="WsSafetyOperationType" id="WsSafetyOperationTypeResult">
+        <result property="id"    column="id"    />
+        <result property="enterpriseId"    column="enterprise_id"    />
+        <result property="operationName"    column="operation_name"    />
+        <result property="bindingStatus"    column="binding_status"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsSafetyOperationTypeVo">
+        select id, enterprise_id, operation_name, binding_status, created_by, created_time, updated_by, updated_time from t_ws_safety_operation_type
+    </sql>
+
+    <select id="selectWsSafetyOperationTypeList" parameterType="WsSafetyOperationType" resultMap="WsSafetyOperationTypeResult">
+        <include refid="selectWsSafetyOperationTypeVo"/>
+        <where>  
+            <if test="enterpriseId != null "> and enterprise_id = #{enterpriseId}</if>
+            <if test="operationName != null  and operationName != ''"> and operation_name like concat('%', #{operationName}, '%')</if>
+            <if test="bindingStatus != null "> and binding_status = #{bindingStatus}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsSafetyOperationTypeById" parameterType="Integer" resultMap="WsSafetyOperationTypeResult">
+        <include refid="selectWsSafetyOperationTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectWsSafetyOperationTypeByName" parameterType="WsSafetyOperationType" resultMap="WsSafetyOperationTypeResult">
+        <include refid="selectWsSafetyOperationTypeVo"/>
+        where  operation_name = #{operationName}  and  id != #{id}
+    </select>
+
+    <insert id="insertWsSafetyOperationType" parameterType="WsSafetyOperationType" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_safety_operation_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            enterprise_id,
+            <if test="operationName != null  and operationName != ''">operation_name,</if>
+            <if test="bindingStatus != null ">binding_status,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{enterpriseId},
+            <if test="operationName != null  and operationName != ''">#{operationName},</if>
+            <if test="bindingStatus != null ">#{bindingStatus},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsSafetyOperationType" parameterType="WsSafetyOperationType">
+        update t_ws_safety_operation_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="enterpriseId != null ">enterprise_id = #{enterpriseId},</if>
+            <if test="operationName != null  and operationName != ''">operation_name = #{operationName},</if>
+            <if test="bindingStatus != null ">binding_status = #{bindingStatus},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsSafetyOperationTypeById" parameterType="Integer">
+        delete from t_ws_safety_operation_type where id = #{id}  and binding_status = 0
+    </delete>
+
+</mapper>

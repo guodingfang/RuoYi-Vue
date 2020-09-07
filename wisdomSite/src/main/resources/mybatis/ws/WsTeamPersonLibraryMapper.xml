@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsTeamPersonLibraryMapper">
+
+    <resultMap type="WsTeamPersonLibrary" id="WsTeamPersonLibraryResult">
+        <result property="id"    column="id"    />
+        <result property="province"    column="province"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="personType"    column="person_type"    />
+        <result property="workType"    column="work_type"    />
+        <result property="specialWork"    column="is_special"    />
+        <result property="name"    column="name"    />
+        <result property="age"    column="age"    />
+        <result property="sex"    column="sex"    />
+        <result property="nationCode"    column="nation_code"    />
+        <result property="birthDate"    column="birth_date"    />
+        <result property="address"    column="address"    />
+        <result property="authority"    column="authority"    />
+        <result property="effectiveDate"    column="effective_date"    />
+        <result property="invalidDate"    column="invalid_date"    />
+        <result property="residenceNature"    column="residence_nature"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="mobilePhone"    column="mobile_phone"    />
+        <result property="payCard"    column="pay_card"    />
+        <result property="payCardBank"    column="pay_card_bank"    />
+        <result property="nameOfBank"    column="name_of_bank"    />
+        <result property="politicsStatusCode"    column="politics_status_code"    />
+        <result property="cultureStandardCode"    column="culture_standard_code"    />
+        <result property="bloodPressure"    column="blood_pressure"    />
+        <result property="heartRate"    column="heart_rate"    />
+        <result property="faceUrl"    column="face_url"    />
+        <result property="weight"    column="weight"    />
+        <result property="height"    column="height"    />
+        <result property="healthRelated"    column="health_related"    />
+        <result property="healthRemark"    column="health_remark"    />
+        <result property="contactNumber"    column="contact_number"    />
+        <result property="contactType"    column="contact_type"    />
+        <result property="contactEffectiveDate"    column="contact_effective_date"    />
+        <result property="contactInvalidDate"    column="contact_invalid_date"    />
+        <result property="attachmentOneUrl"    column="attachment_one_url"    />
+        <result property="comment"    column="comment"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="workTypeName"    column="work_type_name"    />
+        <result property="sexName"    column="sex_name"    />
+        <result property="cultureStandard"    column="culture_standard"    />
+    </resultMap>
+
+    <resultMap type="WsQualificationCertificateLibrary" id="WsQualificationCertificateResult">
+        <result property="id"    column="id"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="certificateName"    column="certificate_name"    />
+        <result property="certificateNumber"    column="certificate_number"    />
+        <result property="certificateType"    column="certificate_type"    />
+        <result property="certificateLevelCode"    column="certificate_level_code"    />
+        <result property="certificateLevel"    column="certificate_level"    />
+        <result property="effectiveDate"    column="effective_date"    />
+        <result property="invalidDate"    column="invalid_date"    />
+        <result property="frontImage"    column="front_image"    />
+        <result property="reverseImage"    column="reverse_image"    />
+        <result property="certificateTypeName"    column="certificate_type_name"    />
+    </resultMap>
+
+    <sql id="selectWsTeamPersonLibraryVo">
+        select id,province, id_number, person_type,work_type, is_special, name,age, sex, nation_code, birth_date, address, authority, effective_date, invalid_date, residence_nature, card_no, mobile_phone, pay_card, pay_card_bank, name_of_bank, politics_status_code, culture_standard_code, blood_pressure, heart_rate,
+        face_url, weight, height, health_related, health_remark, contact_number, contact_type, contact_effective_date, contact_invalid_date, attachment_one_url, comment, updated_time, created_time,
+        d1.dict_label sex_name,d2.dict_label certificate_type_name,d2.dict_label culture_standard
+        from t_ws_team_person_library p
+        left join sys_dict_data d1 on  (p.sex = d1.dict_value and d1.dict_type="sys_user_sex")
+        left join sys_dict_data d2 on  (p.culture_standard_code = d2.dict_value and d2.dict_type="ws_culture_standard")
+    </sql>
+
+    <sql id = "selectWsQualificationCertificateVo">
+        select qc.id,qc.id_number,qc.certificate_name,qc.certificate_number,qc.certificate_type,qc.certificate_level_code,
+               qc.effective_date,qc.invalid_date,qc.front_image,qc.reverse_image,
+               d1.dict_label certificate_level,d3.dict_label culture_standard
+               from t_ws_qualification_certificate_library qc
+               left join t_ws_team_person_library tp on tp.id_number = qc.id_number
+               left join sys_dict_data d1 on  (qc.certificate_level_code = d1.dict_value and d1.dict_type="ws_certificate_level")
+               left join sys_dict_data d2 on  (qc.certificate_type = d2.dict_value and d2.dict_type="ws_certificate_type")
+               left join sys_dict_data d3 on  (tp.culture_standard_code = d3.dict_value and d3.dict_type="ws_culture_standard")
+    </sql>
+
+    <select id="selectWsTeamPersonLibraryList" parameterType="WsTeamPersonLibrary" resultMap="WsTeamPersonLibraryResult">
+        <include refid="selectWsTeamPersonLibraryVo"/>
+        <where>
+            <if test="enterpriseId != null"> and enterprise_id = #{enterpriseId}</if>
+            <if test="idNumber != null  and idNumber != ''"> and id_number = #{idNumber}</if>
+            <if test="personType != null  and personType != ''"> and person_type = #{personType}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
+            <if test="mobilePhone != null  and mobilePhone != ''"> and mobile_phone = #{mobilePhone}</if>
+            <if test="keyWordName!=null and keyWordName!=''">
+                and name like concat('%', #{keyWordName}, '%') or id_number like concat('%', #{keyWordName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWsTeamPersonLibraryById" parameterType="Integer" resultMap="WsTeamPersonLibraryResult">
+        <include refid="selectWsTeamPersonLibraryVo"/>
+        where p.id = #{id}
+    </select>
+
+    <select id="selectWsTeamPersonLibraryByIdNumber" parameterType="String" resultMap="WsTeamPersonLibraryResult">
+        <include refid="selectWsTeamPersonLibraryVo"/>
+        where p.id_number = #{idNumber}
+    </select>
+
+
+
+    <insert id="insertWsTeamPersonLibrary" parameterType="WsTeamPersonLibrary" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_team_person_library(
+            <if test="enterpriseId != null"> enterprise_id,</if>
+            <if test="idNumber != null  and idNumber != ''">id_number,</if>
+            <if test="province != null and province!=''">province,</if>
+            <if test="personType != null  and personType != ''">person_type,</if>
+            <if test="workType != null  and workType != ''">work_type,</if>
+            <if test="specialWork != null  and specialWork != ''">is_special,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="age != null ">age,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="nationCode != null  and nationCode != ''">nation_code,</if>
+            <if test="birthDate != null ">birth_date,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="authority != null  and authority != ''">authority,</if>
+            <if test="effectiveDate != null ">effective_date,</if>
+            <if test="invalidDate != null ">invalid_date,</if>
+            <if test="residenceNature != null  and residenceNature != ''">residence_nature,</if>
+            <if test="cardNo != null  and cardNo != ''">card_no,</if>
+            <if test="mobilePhone != null  and mobilePhone != ''">mobile_phone,</if>
+            <if test="payCard != null  and payCard != ''">pay_card,</if>
+            <if test="payCardBank != null  and payCardBank != ''">pay_card_bank,</if>
+            <if test="nameOfBank != null  and nameOfBank != ''">name_of_bank,</if>
+            <if test="politicsStatusCode != null  and politicsStatusCode != ''">politics_status_code,</if>
+            <if test="cultureStandardCode != null  and cultureStandardCode != ''">culture_standard_code,</if>
+            <if test="bloodPressure != null ">blood_pressure,</if>
+            <if test="heartRate != null ">heart_rate,</if>
+            <if test="faceUrl != null  and faceUrl != ''">face_url,</if>
+            <if test="weight != null ">weight,</if>
+            <if test="height != null ">height,</if>
+            <if test="healthRelated != null  and healthRelated != ''">health_related,</if>
+            <if test="healthRemark != null  and healthRemark != ''">health_remark,</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number,</if>
+            <if test="contactType != null  and contactType != ''">contact_type,</if>
+            <if test="contactEffectiveDate != null ">contact_effective_date,</if>
+            <if test="contactInvalidDate != null ">contact_invalid_date,</if>
+            <if test="attachmentOneUrl != null  and attachmentOneUrl != ''">attachment_one_url,</if>
+            <if test="comment != null  and comment != ''">comment,</if>
+            updated_time,created_time
+        )values (
+            <if test="enterpriseId != null"> #{enterpriseId},</if>
+            <if test="idNumber != null  and idNumber != ''">#{idNumber},</if>
+            <if test="province != null  and province!=''">#{province},</if>
+            <if test="personType != null  and personType != ''">#{personType},</if>
+            <if test="workType != null  and workType != ''">#{workType},</if>
+            <if test="specialWork != null  and specialWork != ''">#{specialWork},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="age != null ">#{age},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="nationCode != null  and nationCode != ''">#{nationCode},</if>
+            <if test="birthDate != null ">#{birthDate},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="authority != null  and authority != ''">#{authority},</if>
+            <if test="effectiveDate != null ">#{effectiveDate},</if>
+            <if test="invalidDate != null ">#{invalidDate},</if>
+            <if test="residenceNature != null  and residenceNature != ''">#{residenceNature},</if>
+            <if test="cardNo != null  and cardNo != ''">#{cardNo},</if>
+            <if test="mobilePhone != null  and mobilePhone != ''">#{mobilePhone},</if>
+            <if test="payCard != null  and payCard != ''">#{payCard},</if>
+            <if test="payCardBank != null  and payCardBank != ''">#{payCardBank},</if>
+            <if test="nameOfBank != null  and nameOfBank != ''">#{nameOfBank},</if>
+            <if test="politicsStatusCode != null  and politicsStatusCode != ''">#{politicsStatusCode},</if>
+            <if test="cultureStandardCode != null  and cultureStandardCode != ''">#{cultureStandardCode},</if>
+            <if test="bloodPressure != null ">#{bloodPressure},</if>
+            <if test="heartRate != null ">#{heartRate},</if>
+            <if test="faceUrl != null  and faceUrl != ''">#{faceUrl},</if>
+            <if test="weight != null ">#{weight},</if>
+            <if test="height != null ">#{height},</if>
+            <if test="healthRelated != null  and healthRelated != ''">#{healthRelated},</if>
+            <if test="healthRemark != null  and healthRemark != ''">#{healthRemark},</if>
+            <if test="contactNumber != null  and contactNumber != ''">#{contactNumber},</if>
+            <if test="contactType != null  and contactType != ''">#{contactType},</if>
+            <if test="contactEffectiveDate != null ">#{contactEffectiveDate},</if>
+            <if test="contactInvalidDate != null ">#{contactInvalidDate},</if>
+            <if test="attachmentOneUrl != null  and attachmentOneUrl != ''">#{attachmentOneUrl},</if>
+            <if test="comment != null  and comment != ''">#{comment},</if>
+            sysdate(),sysdate()
+        )
+    </insert>
+
+
+    <insert id="insertWsTeamPersonLibraryByWsTeamPerson" parameterType="WsTeamPerson" >
+        insert into t_ws_team_person_library(
+        <if test="enterpriseId != null"> enterprise_id,</if>
+        <if test="idNumber != null  and idNumber != ''">id_number,</if>
+        <if test="province != null and province!=''">province,</if>
+        <if test="personType != null  and personType != ''">person_type,</if>
+        <if test="workType != null  and workType != ''">work_type,</if>
+        <if test="specialWork != null  and specialWork != ''">is_special,</if>
+        <if test="name != null  and name != ''">name,</if>
+        <if test="age != null ">age,</if>
+        <if test="sex != null  and sex != ''">sex,</if>
+        <if test="nationCode != null  and nationCode != ''">nation_code,</if>
+        <if test="birthDate != null ">birth_date,</if>
+        <if test="address != null  and address != ''">address,</if>
+        <if test="authority != null  and authority != ''">authority,</if>
+        <if test="effectiveDate != null ">effective_date,</if>
+        <if test="invalidDate != null ">invalid_date,</if>
+        <if test="residenceNature != null  and residenceNature != ''">residence_nature,</if>
+        <if test="cardNo != null  and cardNo != ''">card_no,</if>
+        <if test="mobilePhone != null  and mobilePhone != ''">mobile_phone,</if>
+        <if test="payCard != null  and payCard != ''">pay_card,</if>
+        <if test="payCardBank != null  and payCardBank != ''">pay_card_bank,</if>
+        <if test="nameOfBank != null  and nameOfBank != ''">name_of_bank,</if>
+        <if test="politicsStatusCode != null  and politicsStatusCode != ''">politics_status_code,</if>
+        <if test="cultureStandardCode != null  and cultureStandardCode != ''">culture_standard_code,</if>
+        <if test="bloodPressure != null ">blood_pressure,</if>
+        <if test="heartRate != null ">heart_rate,</if>
+        <if test="faceUrl != null  and faceUrl != ''">face_url,</if>
+        <if test="weight != null ">weight,</if>
+        <if test="height != null ">height,</if>
+        <if test="healthRelated != null  and healthRelated != ''">health_related,</if>
+        <if test="healthRemark != null  and healthRemark != ''">health_remark,</if>
+        <if test="contactNumber != null  and contactNumber != ''">contact_number,</if>
+        <if test="contactType != null  and contactType != ''">contact_type,</if>
+        <if test="contactEffectiveDate != null ">contact_effective_date,</if>
+        <if test="contactInvalidDate != null ">contact_invalid_date,</if>
+        <if test="attachmentOneUrl != null  and attachmentOneUrl != ''">attachment_one_url,</if>
+        <if test="comment != null  and comment != ''">comment,</if>
+        updated_time,created_time
+        )values (
+        <if test="enterpriseId != null"> #{enterpriseId},</if>
+        <if test="idNumber != null  and idNumber != ''">#{idNumber},</if>
+        <if test="province != null  and province!=''">#{province},</if>
+        <if test="personType != null  and personType != ''">#{personType},</if>
+        <if test="workType != null  and workType != ''">#{workType},</if>
+        <if test="specialWork != null  and specialWork != ''">#{specialWork},</if>
+        <if test="name != null  and name != ''">#{name},</if>
+        <if test="age != null ">#{age},</if>
+        <if test="sex != null  and sex != ''">#{sex},</if>
+        <if test="nationCode != null  and nationCode != ''">#{nationCode},</if>
+        <if test="birthDate != null ">#{birthDate},</if>
+        <if test="address != null  and address != ''">#{address},</if>
+        <if test="authority != null  and authority != ''">#{authority},</if>
+        <if test="effectiveDate != null ">#{effectiveDate},</if>
+        <if test="invalidDate != null ">#{invalidDate},</if>
+        <if test="residenceNature != null  and residenceNature != ''">#{residenceNature},</if>
+        <if test="cardNo != null  and cardNo != ''">#{cardNo},</if>
+        <if test="mobilePhone != null  and mobilePhone != ''">#{mobilePhone},</if>
+        <if test="payCard != null  and payCard != ''">#{payCard},</if>
+        <if test="payCardBank != null  and payCardBank != ''">#{payCardBank},</if>
+        <if test="nameOfBank != null  and nameOfBank != ''">#{nameOfBank},</if>
+        <if test="politicsStatusCode != null  and politicsStatusCode != ''">#{politicsStatusCode},</if>
+        <if test="cultureStandardCode != null  and cultureStandardCode != ''">#{cultureStandardCode},</if>
+        <if test="bloodPressure != null ">#{bloodPressure},</if>
+        <if test="heartRate != null ">#{heartRate},</if>
+        <if test="faceUrl != null  and faceUrl != ''">#{faceUrl},</if>
+        <if test="weight != null ">#{weight},</if>
+        <if test="height != null ">#{height},</if>
+        <if test="healthRelated != null  and healthRelated != ''">#{healthRelated},</if>
+        <if test="healthRemark != null  and healthRemark != ''">#{healthRemark},</if>
+        <if test="contactNumber != null  and contactNumber != ''">#{contactNumber},</if>
+        <if test="contactType != null  and contactType != ''">#{contactType},</if>
+        <if test="contactEffectiveDate != null ">#{contactEffectiveDate},</if>
+        <if test="contactInvalidDate != null ">#{contactInvalidDate},</if>
+        <if test="attachmentOneUrl != null  and attachmentOneUrl != ''">#{attachmentOneUrl},</if>
+        <if test="comment != null  and comment != ''">#{comment},</if>
+        sysdate(),sysdate()
+        )
+    </insert>
+
+    <update id="updateWsTeamPersonLibraryByWsTeamPerson" parameterType="WsTeamPerson">
+        update t_ws_team_person_library
+        set
+            <if test="enterpriseId != null"> enterprise_id=#{enterpriseId},</if>
+            <if test="province != null  and province!=''">province=#{province},</if>
+            <if test="personType != null  and personType != ''">person_type = #{personType},</if>
+            <if test="workType != null  and workType != ''">work_type=#{workType},</if>
+            <if test="specialWork != null  and specialWork != ''">is_special = #{specialWork},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="age != null ">age=#{age},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="nationCode != null  and nationCode != ''">nation_code = #{nationCode},</if>
+            <if test="birthDate != null ">birth_date = #{birthDate},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="authority != null  and authority != ''">authority = #{authority},</if>
+            <if test="effectiveDate != null ">effective_date = #{effectiveDate},</if>
+            <if test="invalidDate != null ">invalid_date = #{invalidDate},</if>
+            <if test="residenceNature != null  and residenceNature != ''">residence_nature = #{residenceNature},</if>
+            <if test="cardNo != null  and cardNo != ''">card_no = #{cardNo},</if>
+            <if test="mobilePhone != null  and mobilePhone != ''">mobile_phone = #{mobilePhone},</if>
+            <if test="payCard != null  and payCard != ''">pay_card = #{payCard},</if>
+            <if test="payCardBank != null  and payCardBank != ''">pay_card_bank = #{payCardBank},</if>
+            <if test="nameOfBank != null  and nameOfBank != ''">name_of_bank = #{nameOfBank},</if>
+            <if test="politicsStatusCode != null  and politicsStatusCode != ''">politics_status_code = #{politicsStatusCode},</if>
+            <if test="cultureStandardCode != null  and cultureStandardCode != ''">culture_standard_code = #{cultureStandardCode},</if>
+            <if test="bloodPressure != null ">blood_pressure = #{bloodPressure},</if>
+            <if test="heartRate != null ">heart_rate = #{heartRate},</if>
+            <if test="faceUrl != null  and faceUrl != ''">face_url = #{faceUrl},</if>
+            <if test="weight != null ">weight = #{weight},</if>
+            <if test="height != null ">height = #{height},</if>
+            <if test="healthRelated != null  and healthRelated != ''">health_related = #{healthRelated},</if>
+            <if test="healthRemark != null  and healthRemark != ''">health_remark = #{healthRemark},</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number = #{contactNumber},</if>
+            <if test="contactType != null  and contactType != ''">contact_type = #{contactType},</if>
+            <if test="contactEffectiveDate != null ">contact_effective_date = #{contactEffectiveDate},</if>
+            <if test="contactInvalidDate != null ">contact_invalid_date = #{contactInvalidDate},</if>
+            <if test="attachmentOneUrl != null  and attachmentOneUrl != ''">attachment_one_url = #{attachmentOneUrl},</if>
+            <if test="comment != null  and comment != ''">comment = #{comment},</if>
+            updated_time = sysdate()
+        where id_number= #{idNumber}
+    </update>
+
+    <update id="updateWsTeamPersonLibrary" parameterType="WsTeamPersonLibrary">
+        update t_ws_team_person_library
+        set
+        <if test="enterpriseId != null"> enterprise_id=#{enterpriseId},</if>
+        <if test="idNumber != null  and idNumber != ''">id_number = #{idNumber},</if>
+        <if test="province != null and province!=''">province=#{province},</if>
+        <if test="personType != null  and personType != ''">person_type = #{personType},</if>
+        <if test="workType != null  and workType != ''">work_type=#{workType},</if>
+        <if test="specialWork != null  and specialWork != ''">is_special = #{isSpecial},</if>
+        <if test="name != null  and name != ''">name = #{name},</if>
+        <if test="age != null ">age=#{age},</if>
+        <if test="sex != null  and sex != ''">sex = #{sex},</if>
+        <if test="nationCode != null  and nationCode != ''">nation_code = #{nationCode},</if>
+        <if test="birthDate != null ">birth_date = #{birthDate},</if>
+        <if test="address != null  and address != ''">address = #{address},</if>
+        <if test="authority != null  and authority != ''">authority = #{authority},</if>
+        <if test="effectiveDate != null ">effective_date = #{effectiveDate},</if>
+        <if test="invalidDate != null ">invalid_date = #{invalidDate},</if>
+        <if test="residenceNature != null  and residenceNature != ''">residence_nature = #{residenceNature},</if>
+        <if test="cardNo != null  and cardNo != ''">card_no = #{cardNo},</if>
+        <if test="mobilePhone != null  and mobilePhone != ''">mobile_phone = #{mobilePhone},</if>
+        <if test="payCard != null  and payCard != ''">pay_card = #{payCard},</if>
+        <if test="payCardBank != null  and payCardBank != ''">pay_card_bank = #{payCardBank},</if>
+        <if test="nameOfBank != null  and nameOfBank != ''">name_of_bank = #{nameOfBank},</if>
+        <if test="politicsStatusCode != null  and politicsStatusCode != ''">politics_status_code = #{politicsStatusCode},</if>
+        <if test="cultureStandardCode != null  and cultureStandardCode != ''">culture_standard_code = #{cultureStandardCode},</if>
+        <if test="bloodPressure != null ">blood_pressure = #{bloodPressure},</if>
+        <if test="heartRate != null ">heart_rate = #{heartRate},</if>
+        <if test="faceUrl != null  and faceUrl != ''">face_url = #{faceUrl},</if>
+        <if test="weight != null ">weight = #{weight},</if>
+        <if test="height != null ">height = #{height},</if>
+        <if test="healthRelated != null  and healthRelated != ''">health_related = #{healthRelated},</if>
+        <if test="healthRemark != null  and healthRemark != ''">health_remark = #{healthRemark},</if>
+        <if test="contactNumber != null  and contactNumber != ''">contact_number = #{contactNumber},</if>
+        <if test="contactType != null  and contactType != ''">contact_type = #{contactType},</if>
+        <if test="contactEffectiveDate != null ">contact_effective_date = #{contactEffectiveDate},</if>
+        <if test="contactInvalidDate != null ">contact_invalid_date = #{contactInvalidDate},</if>
+        <if test="attachmentOneUrl != null  and attachmentOneUrl != ''">attachment_one_url = #{attachmentOneUrl},</if>
+        <if test="comment != null  and comment != ''">comment = #{comment},</if>
+        updated_time = sysdate()
+        where id= #{id}
+    </update>
+
+    <delete id="deleteWsTeamPersonLibraryById" parameterType="Integer">
+        delete from t_ws_team_person_library where id = #{id}
+    </delete>
+
+    <delete id="deleteWsTeamPersonLibraryByIds" parameterType="String">
+        delete from t_ws_team_person_library where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countWsTeamPersonByIdNumber" parameterType="String" resultType="int">
+        select count(1) from t_ws_team_person_library where id_number = #{idNumber};
+
+    </select>
+
+    <select id="countWsQualificationCertificateByCertificateNumber" parameterType="String" resultType="int">
+        select count(1) from t_ws_qualification_certificate_library
+        where certificate_number = #{certificateNumber};
+
+    </select>
+
+    <select id="selectCertificateListByIdNumber" parameterType="String" resultMap="WsQualificationCertificateResult">
+        <include refid="selectWsQualificationCertificateVo"/>
+        where tp.id_number = #{idNumber}
+    </select>
+
+    <insert id="insertWsQualificationCertificate" parameterType="WsQualificationCertificateLibrary">
+        insert into t_ws_qualification_certificate_library (
+            <if test="teamPersonId != null">team_person_id,</if>
+            <if test="certificateName != null  and certificateName != ''">certificate_name,</if>
+            <if test="certificateNumber != null  and certificateNumber != ''">certificate_number,</if>
+            <if test="certificateType != null  and certificateType != ''">certificate_type,</if>
+            <if test="certificateLevelCode != null  and certificateLevelCode != ''">certificate_level_code,</if>
+            <if test="frontImage != null  and frontImage != ''">front_image,</if>
+            <if test="reverseImage != null  and reverseImage != ''">reverse_image,</if>
+            <if test="effectiveDate != null">effective_date,</if>
+            <if test="invalidDate != null">invalid_date,</if>
+            created_time,updated_time
+        )values (
+            <if test="teamPersonId != null">#{teamPersonId},</if>
+            <if test="certificateName != null  and certificateName != ''">#{certificateName},</if>
+            <if test="certificateNumber != null  and certificateNumber != ''">#{certificateNumber},</if>
+            <if test="certificateType != null  and certificateType != ''">#{certificateType},</if>
+            <if test="certificateLevelCode != null  and certificateLevelCode != ''">#{certificateLevelCode},</if>
+            <if test="frontImage != null  and frontImage != ''">#{frontImage},</if>
+            <if test="reverseImage != null  and reverseImage != ''">#{reverseImage},</if>
+            <if test="effectiveDate != null">#{effectiveDate},</if>
+            <if test="invalidDate != null">#{invalidDate},</if>
+            sysdate(),sysdate()
+        )
+    </insert>
+
+    <update id="updateWsQualificationCertificate" parameterType="WsQualificationCertificateLibrary">
+        update t_ws_qualification_certificate_library set
+        <if test="certificateName != null  and certificateName != ''">certificate_name=#{certificateName},</if>
+        <if test="certificateType != null  and certificateType != ''">certificate_type=#{certificateType},</if>
+        <if test="certificateLevelCode != null  and certificateLevelCode != ''">certificate_level_code=#{certificateLevelCode},</if>
+        <if test="frontImage != null  and frontImage != ''">front_image=#{frontImage},</if>
+        <if test="reverseImage != null  and reverseImage != ''">reverse_image=#{reverseImage},</if>
+        <if test="effectiveDate != null">effective_date=#{effectiveDate},</if>
+        <if test="invalidDate != null">invalid_date=#{invalidDate},</if>
+        updated_time = sysdate()
+        where certificate_number =#{certificateNumber}
+    </update>
+
+</mapper>

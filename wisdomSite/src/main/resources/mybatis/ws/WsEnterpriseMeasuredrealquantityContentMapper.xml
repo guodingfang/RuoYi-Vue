@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsEnterpriseMeasuredrealquantityContentMapper">
+    
+    <resultMap type="WsEnterpriseMeasuredrealquantityContent" id="WsEnterpriseMeasuredrealquantityContentResult">
+        <result property="id"    column="id"    />
+        <result property="measuredrealquantityMeasuredLocationId"    column="measuredRealQuantity_measured_location_id"    />
+        <result property="measuredrealquantityId"    column="measuredRealQuantity_id"    />
+        <result property="contentField"    column="content_field"    />
+        <result property="contentFieldValue"    column="content_field_value"    />
+        <result property="contentFieldCompany"    column="content_field_company"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsEnterpriseMeasuredrealquantityContentVo">
+        select id, measuredRealQuantity_measured_location_id, measuredRealQuantity_id, content_field, content_field_value, content_field_company, created_by, created_time, updated_by, updated_time from t_ws_enterprise_measuredrealquantity_content
+    </sql>
+
+    <select id="selectWsEnterpriseMeasuredrealquantityContentList" parameterType="WsEnterpriseMeasuredrealquantityContent" resultMap="WsEnterpriseMeasuredrealquantityContentResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityContentVo"/>
+        <where>  
+            <if test="measuredrealquantityMeasuredLocationId != null "> and measuredRealQuantity_measured_location_id = #{measuredrealquantityMeasuredLocationId}</if>
+            <if test="measuredrealquantityId != null "> and measuredRealQuantity_id = #{measuredrealquantityId}</if>
+            <if test="contentField != null  and contentField != ''"> and content_field = #{contentField}</if>
+            <if test="contentFieldValue != null  and contentFieldValue != ''"> and content_field_value = #{contentFieldValue}</if>
+            <if test="contentFieldCompany != null  and contentFieldCompany != ''"> and content_field_company = #{contentFieldCompany}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+            and is_delete = 'N'
+        </where>
+    </select>
+    
+    <select id="selectWsEnterpriseMeasuredrealquantityContentById" parameterType="Integer" resultMap="WsEnterpriseMeasuredrealquantityContentResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityContentVo"/>
+        where measuredRealQuantity_id = #{measuredrealquantityId} and is_delete = 'N'
+    </select>
+
+    <insert id="insertWsEnterpriseMeasuredrealquantityContent" parameterType="WsEnterpriseMeasuredrealquantityContent" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_enterprise_measuredrealquantity_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="measuredrealquantityMeasuredLocationId != null ">measuredRealQuantity_measured_location_id,</if>
+            <if test="measuredrealquantityId != null ">measuredRealQuantity_id,</if>
+            <if test="contentField != null  and contentField != ''">content_field,</if>
+            <if test="contentFieldValue != null  and contentFieldValue != ''">content_field_value,</if>
+            <if test="contentFieldCompany != null  and contentFieldCompany != ''">content_field_company,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="measuredrealquantityMeasuredLocationId != null ">#{measuredrealquantityMeasuredLocationId},</if>
+            <if test="measuredrealquantityId != null ">#{measuredrealquantityId},</if>
+            <if test="contentField != null  and contentField != ''">#{contentField},</if>
+            <if test="contentFieldValue != null  and contentFieldValue != ''">#{contentFieldValue},</if>
+            <if test="contentFieldCompany != null  and contentFieldCompany != ''">#{contentFieldCompany},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsEnterpriseMeasuredrealquantityContent" parameterType="WsEnterpriseMeasuredrealquantityContent">
+        update t_ws_enterprise_measuredrealquantity_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="measuredrealquantityMeasuredLocationId != null ">measuredRealQuantity_measured_location_id = #{measuredrealquantityMeasuredLocationId},</if>
+            <if test="measuredrealquantityId != null ">measuredRealQuantity_id = #{measuredrealquantityId},</if>
+            <if test="contentField != null  and contentField != ''">content_field = #{contentField},</if>
+            <if test="contentFieldValue != null  and contentFieldValue != ''">content_field_value = #{contentFieldValue},</if>
+            <if test="contentFieldCompany != null  and contentFieldCompany != ''">content_field_company = #{contentFieldCompany},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id} and is_delete = 'N'
+    </update>
+
+    <delete id="deleteWsEnterpriseMeasuredrealquantityContentById" parameterType="Integer">
+        delete from t_ws_enterprise_measuredrealquantity_content   where measuredRealQuantity_id = #{id}
+    </delete>
+
+    <update id="deleteWsEnterpriseMeasuredrealquantityContentByIds" parameterType="String">
+        update  t_ws_enterprise_measuredrealquantity_content  set is_delete = 'Y' where measuredRealQuantity_measured_location_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

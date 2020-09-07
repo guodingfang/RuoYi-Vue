@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsParticipatingTeamMapper">
+
+    <resultMap type="WsParticipatingTeam" id="WsParticipatingTeamResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="unitId"    column="unit_id"    />
+        <result property="teamName"    column="name"    />
+        <result property="deleted"    column="is_delete"    />
+    </resultMap>
+
+    <sql id="selectWsParticipatingTeamVo">
+        select id, project_id, unit_id, name from t_ws_participating_team
+    </sql>
+    <sql id="insertWsParticipatingTeamVo">
+        insert into t_ws_participating_team (
+            <if test="projectId != null ">project_id,</if>
+            <if test="unitId != null ">unit_id,</if>
+            <if test="teamName != null  and teamName != ''">name,</if>
+            updated_time,created_time
+        )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="unitId != null ">#{unitId},</if>
+            <if test="teamName != null  and teamName != ''">#{teamName},</if>
+            sysdate(),sysdate()
+        )
+    </sql>
+
+    <select id="selectWsParticipatingTeamList" parameterType="WsParticipatingTeam" resultMap="WsParticipatingTeamResult">
+        <include refid="selectWsParticipatingTeamVo"/>
+        where is_delete = '0'
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="unitId != null "> and unit_id = #{unitId}</if>
+            <if test="teamName != null  and teamName != ''"> and name like concat('%', #{teamName}, '%')</if>
+    </select>
+
+    <select id="selectWsParticipatingTeamById" parameterType="Integer" resultMap="WsParticipatingTeamResult">
+        <include refid="selectWsParticipatingTeamVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWsParticipatingTeam" parameterType="WsParticipatingTeam" useGeneratedKeys="true" keyProperty="id">
+        <include refid="insertWsParticipatingTeamVo"/>
+
+    </insert>
+
+    <insert id="batchParticipatingTeam" parameterType="WsParticipatingTeam" >
+        insert into t_ws_participating_team(project_id ,unit_id , name,updated_time,created_time)values
+
+        <foreach collection="list" item="team" index="index" separator=",">
+                    (#{team.projectId},#{team.unitId},#{team.teamName },sysdate(),sysdate())
+        </foreach>
+
+
+    </insert>
+
+    <update id="updateWsParticipatingTeam" parameterType="WsParticipatingTeam">
+        update t_ws_participating_team set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="unitId != null ">unit_id = #{unitId},</if>
+            <if test="teamName != null  and teamName != ''">name = #{teamName},</if>
+            updated_time=sysdate()
+        where id = #{id}
+    </update>
+
+
+    <update id="deleteWsParticipatingTeamById" parameterType="Integer">
+        update t_ws_participating_team
+        set
+        is_delete ='1'
+        where id = #{id}
+    </update>
+
+    <update id="deleteWsParticipatingTeamByIds" parameterType="Integer">
+        update t_ws_participating_team
+        set
+        is_delete ='1'
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="deleteWsProjectParticipatingTeamByProjectUnitIds" parameterType="Integer">
+        update t_ws_participating_team
+        set
+        is_delete ='1'
+        where unit_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="countWsParticipatingTeamInProject" parameterType="WsParticipatingTeam" resultType="int">
+       select count(1) from t_ws_participating_team
+
+        where is_delete = '0' and  project_id = #{projectId} and name =#{teamName}
+        <if test="id!=null">and id != #{id} </if>
+
+    </select>
+
+    <select id="countWsParticipatingTeamByTeam" parameterType="WsParticipatingTeam" resultType="int">
+        select count(1) from t_ws_participating_team
+        where is_delete = '0'
+            <if test="projectId!=null">and project_id = #{projectId} </if>
+            <if test="unitId!=null">and unit_id=#{unitId}</if>
+            <if test="teamName != null  and teamName != ''">and name = #{teamName}</if>
+
+
+    </select>
+    <!-- 单位，班组名称二者联合唯一-->
+    <select id="findWsParticipatingTeamByProjectTeam"  resultType="WsParticipatingTeam">
+        <include refid="selectWsParticipatingTeamVo"/>
+        where  is_delete = '0' and unit_id=#{unitId} and name = #{teamName};
+    </select>
+
+</mapper>

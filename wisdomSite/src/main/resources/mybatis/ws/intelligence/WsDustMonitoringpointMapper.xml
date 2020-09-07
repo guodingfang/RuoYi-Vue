@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsDustMonitoringpointMapper">
+    
+    <resultMap type="WsDustMonitoringpoint" id="WsDustMonitoringpointResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="monitoringpointName"    column="monitoringPoint_name"    />
+        <result property="equipmentnoId"    column="equipmentNo_id"    />
+        <result property="videoEquipmentId"    column="video_equipment_id"    />
+        <result property="installData"    column="install_data"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="serialNumber"    column="serialNumber"    />
+        <result property="videoSerialNumber"    column="videoSerialNumber"    />
+    </resultMap>
+
+    <sql id="selectWsDustMonitoringpointVo">
+        select t.id, t.project_id, t.monitoringPoint_name, t.equipmentNo_id, t.video_equipment_id, t.install_data, t2.serialNumber as serialNumber,t3.equipment_serialNumber as videoSerialNumber,t.is_delete from t_ws_dust_monitoringpoint t
+        left join t_ws_project_equipment t2 on t.equipmentNo_id = t2.id
+        left join t_ws_video_channel_management t3 on t.video_equipment_id = t3.id
+    </sql>
+
+    <select id="selectWsDustMonitoringpointList" parameterType="WsDustMonitoringpoint" resultMap="WsDustMonitoringpointResult">
+        <include refid="selectWsDustMonitoringpointVo"/>
+        <where>  
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+            <if test="monitoringpointName != null  and monitoringpointName != ''"> and t.monitoringPoint_name like concat('%', #{monitoringpointName}, '%')</if>
+            <if test="equipmentnoId != null "> and t.equipmentNo_id = #{equipmentnoId}</if>
+            <if test="videoEquipmentId != null "> and t.video_equipment_id = #{videoEquipmentId}</if>
+            <if test="installData != null "> and t.install_data = #{installData}</if>
+            <if test="isDelete != null  and isDelete != ''"> and t.is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsDustMonitoringpointById" parameterType="Integer" resultMap="WsDustMonitoringpointResult">
+        <include refid="selectWsDustMonitoringpointVo"/>
+        where t.id = #{id}
+    </select>
+        
+    <insert id="insertWsDustMonitoringpoint" parameterType="WsDustMonitoringpoint" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_dust_monitoringpoint
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="monitoringpointName != null  and monitoringpointName != ''">monitoringPoint_name,</if>
+            <if test="equipmentnoId != null ">equipmentNo_id,</if>
+            <if test="videoEquipmentId != null ">video_equipment_id,</if>
+            <if test="installData != null ">install_data,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="monitoringpointName != null  and monitoringpointName != ''">#{monitoringpointName},</if>
+            <if test="equipmentnoId != null ">#{equipmentnoId},</if>
+            <if test="videoEquipmentId != null ">#{videoEquipmentId},</if>
+            <if test="installData != null ">#{installData},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsDustMonitoringpoint" parameterType="WsDustMonitoringpoint">
+        update t_ws_dust_monitoringpoint
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="monitoringpointName != null  and monitoringpointName != ''">monitoringPoint_name = #{monitoringpointName},</if>
+            equipmentNo_id = #{equipmentnoId},
+            video_equipment_id = #{videoEquipmentId},
+            <if test="installData != null ">install_data = #{installData},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsDustMonitoringpointById" parameterType="Integer">
+        delete from t_ws_dust_monitoringpoint where id = #{id}
+    </delete>
+
+    <delete id="deleteWsMonitoringpointVideoByIds" parameterType="String">
+        delete from t_ws_dust_monitoringpoint where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="listHookVideoRepeat" parameterType="WsDustMonitoringpoint" resultMap="WsDustMonitoringpointResult">
+        <include refid="selectWsDustMonitoringpointVo"/>
+        where video_equipment_id = #{videoEquipmentId}
+    </select>
+
+    <update id="updateWsDustMonitoringpointIsDelete" parameterType="WsDustMonitoringpoint">
+        update t_ws_dust_monitoringpoint
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="monitoringpointName != null  and monitoringpointName != ''">monitoringPoint_name = #{monitoringpointName},</if>
+            <if test="equipmentnoId != null "> equipmentNo_id = #{equipmentnoId},</if>
+            <if test="videoEquipmentId != null "> video_equipment_id = #{videoEquipmentId},</if>
+            <if test="installData != null ">install_data = #{installData},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+</mapper>

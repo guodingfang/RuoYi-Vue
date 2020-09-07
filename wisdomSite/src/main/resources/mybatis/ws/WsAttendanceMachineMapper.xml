@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsAttendanceMachineMapper">
+
+    <resultMap type="WsAttendanceMachine" id="WsAttendanceMachineResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="zoneId"    column="zone_id"    />
+        <result property="name"    column="name"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="vendorCode"    column="vendor_code"    />
+        <result property="direction"    column="direction"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="machineType"    column="machine_type"    />
+        <result property="machineTypeName"    column="machine_type_name"    />
+        <result property="directionName"    column="direction_name"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="personId"    column="person_id"    />
+    </resultMap>
+
+    <sql id="selectWsAttendanceMachineVo">
+        select am.id, am.project_id, am.zone_id, am.name, am.serial_number, am.vendor_code, am.direction, am.latitude, am.longitude, am.machine_type, am.updated_time, am.created_time,
+         if(am.direction=1,"进","出") direction_name,
+         d.dict_label machine_type_name
+         from t_ws_attendance_machine  am
+
+        left join sys_dict_data d on  (am.machine_type = d.dict_value and d.dict_type="ws_attendance_machine_type")
+    </sql>
+
+    <select id="selectWsAttendanceMachineList" parameterType="WsAttendanceMachine" resultMap="WsAttendanceMachineResult">
+        <include refid="selectWsAttendanceMachineVo"/>
+        <where>
+            <if test="wsAttendanceMachine.projectId != null "> and am.project_id = #{wsAttendanceMachine.projectId}</if>
+            <if test="wsAttendanceMachine.zoneId != null "> and am.zone_id = #{wsAttendanceMachine.zoneId}</if>
+            <if test="wsAttendanceMachine.name != null  and name != ''"> and am.name like concat('%', #{wsAttendanceMachine.name}, '%')</if>
+            <if test="wsAttendanceMachine.serialNumber != null  and wsAttendanceMachine.serialNumber != ''"> and am.serial_number = #{wsAttendanceMachine.serialNumber}</if>
+            <if test="wsAttendanceMachine.vendorCode != null  and wsAttendanceMachine.vendorCode != ''"> and am.vendor_code = #{wsAttendanceMachine.vendorCode}</if>
+            <if test="wsAttendanceMachine.direction != null  and wsAttendanceMachine.direction != ''"> and am.direction = #{wsAttendanceMachine.direction}</if>
+            <if test="wsAttendanceMachine.latitude != null "> and latitude = #{wsAttendanceMachine.latitude}</if>
+            <if test="wsAttendanceMachine.longitude != null "> and longitude = #{wsAttendanceMachine.longitude}</if>
+            <if test="wsAttendanceMachine.machineType != null  and wsAttendanceMachine.machineType != ''"> and am.machine_type = #{wsAttendanceMachine.machineType}</if>
+            <if test="dataScope !=null and dataScope.size>0">
+                and am.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWsAttendanceMachineListByZone" parameterType="Integer" resultMap="WsAttendanceMachineResult">
+        <include refid="selectWsAttendanceMachineVo"/>
+        where am.zone_id = #{zoneId}
+    </select>
+
+    <select id="selectWsAttendanceMachineById" parameterType="Integer" resultMap="WsAttendanceMachineResult">
+        <include refid="selectWsAttendanceMachineVo"/>
+        where am.id = #{id}
+    </select>
+
+    <insert id="insertWsAttendanceMachine" parameterType="WsAttendanceMachine" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_attendance_machine(
+            <if test="projectId != null ">project_id,</if>
+            <if test="zoneId != null ">zone_id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="serialNumber != null  and serialNumber != ''">serial_number,</if>
+            <if test="vendorCode != null  and vendorCode != ''">vendor_code,</if>
+            <if test="direction != null  and direction != ''">direction,</if>
+            <if test="latitude != null ">latitude,</if>
+            <if test="longitude != null ">longitude,</if>
+            <if test="machineType != null  and machineType != ''">machine_type,</if>
+            updated_time,created_time
+         )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="zoneId != null ">#{zoneId},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
+            <if test="vendorCode != null  and vendorCode != ''">#{vendorCode},</if>
+            <if test="direction != null  and direction != ''">#{direction},</if>
+            <if test="latitude != null ">#{latitude},</if>
+            <if test="longitude != null ">#{longitude},</if>
+            <if test="machineType != null  and machineType != ''">#{machineType},</if>
+            sysdate(),sysdate()
+        )
+    </insert>
+
+    <update id="updateWsAttendanceMachine" parameterType="WsAttendanceMachine">
+        update t_ws_attendance_machine set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="zoneId != null ">zone_id = #{zoneId},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="serialNumber != null  and serialNumber != ''">serial_number = #{serialNumber},</if>
+            <if test="vendorCode != null  and vendorCode != ''">vendor_code = #{vendorCode},</if>
+            <if test="direction != null  and direction != ''">direction = #{direction},</if>
+            <if test="latitude != null ">latitude = #{latitude},</if>
+            <if test="longitude != null ">longitude = #{longitude},</if>
+            <if test="machineType != null  and machineType != ''">machine_type = #{machineType},</if>
+            updated_time = sysdate()
+        where id = #{id}
+    </update>
+
+
+    <update id="batchUpdateZone" >
+        update t_ws_attendance_machine set
+        zone_id = #{zoneId},
+        updated_time = sysdate()
+        where serial_number in (
+            <foreach collection="serialNumbers" index="index" item="serialNumber" separator=",">
+                #{serialNumber}
+            </foreach>
+        )
+    </update>
+
+    <delete id="deleteWsAttendanceMachineById" parameterType="Integer">
+        delete from t_ws_attendance_machine where id = #{id}
+    </delete>
+
+    <delete id="deleteWsAttendanceMachineByIds" parameterType="String">
+        delete from t_ws_attendance_machine where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countWsAttendanceBySerialNumber" parameterType="String" resultType="int">
+        select  count(1) from t_ws_attendance_machine where  serial_number = #{serialNumber}
+
+    </select>
+
+    <select id="findWsAttendanceMachineBySerialNumber" parameterType="String" resultMap="WsAttendanceMachineResult">
+
+        select
+         am.id,am.project_id,am.zone_id,am.name,am.serial_number,am.vendor_code,am.direction,am.latitude,am.longitude,am.machine_type
+        from t_ws_attendance_machine am
+
+        where  am.serial_number = #{serialNumber}
+
+    </select>
+
+</mapper>

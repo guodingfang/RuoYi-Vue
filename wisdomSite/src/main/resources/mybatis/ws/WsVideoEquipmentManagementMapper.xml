@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsVideoEquipmentManagementMapper">
+    
+    <resultMap type="WsVideoEquipmentManagement" id="WsVideoEquipmentManagementResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="equipmentType"    column="equipment_type"    />
+        <result property="equipmentSerialnumber"    column="equipment_serialNumber"    />
+        <result property="verificationCode"    column="verification_code"    />
+        <result property="installationPosition"    column="installation_position"    />
+        <result property="channels"    column="channels"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsVideoEquipmentManagementVo">
+        select t.id, t.project_id, t2.project_name AS projectName, t2.project_unit_id,  t3.`enterprise_name` AS enterpriseName,
+        t.equipment_type, t.equipment_serialNumber, t.verification_code, t.installation_position, t.channels, t.created_by,
+        t.created_time, t.updated_by, t.updated_time
+        from t_ws_video_equipment_management as t
+        LEFT JOIN `t_ws_project` AS t2 ON t.project_id = t2.id
+        LEFT JOIN `sys_enterprise` AS t3  ON t2.project_unit_id = t3.enterprise_id
+        LEFT JOIN `t_ws_video_channel_management` AS t4  ON t4.enable_status = t3.enterprise_id
+
+    </sql>
+
+    <select id="selectWsVideoEquipmentManagementList" parameterType="WsVideoEquipmentManagement" resultMap="WsVideoEquipmentManagementResult">
+        <include refid="selectWsVideoEquipmentManagementVo"/>
+        <where>  
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+            <if test="equipmentType != null "> and t.equipment_type = #{equipmentType}</if>
+            <if test="equipmentSerialnumber != null  and equipmentSerialnumber != ''"> and t.equipment_serialNumber = #{equipmentSerialnumber}</if>
+            <if test="verificationCode != null  and verificationCode != ''"> and t.verification_code = #{verificationCode}</if>
+            <if test="installationPosition != null  and installationPosition != ''"> and t.installation_position like concat('%', #{equipmentName}, '%')</if>
+            <if test="channels != null "> and t.channels = #{channels}</if>
+            <if test="createdBy != null "> and t.created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and t.created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and t.updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and t.updated_time = #{updatedTime}</if>
+            <if test="projectIds != null ">   and t.project_id in
+                <foreach collection="projectIds" item="projectId" open="(" close=")" separator=",">
+                    #{projectId}
+                </foreach>
+            </if>
+        </where>
+        order by t.created_time desc
+
+    </select>
+    
+    <select id="selectWsVideoEquipmentManagementBySerialNumber" parameterType="String" resultMap="WsVideoEquipmentManagementResult">
+        <include refid="selectWsVideoEquipmentManagementVo"/>
+        where t.equipment_serialNumber = #{equipmentSerialnumber}
+    </select>
+
+
+    <select id="selectWsVideoEquipmentManagementById" parameterType="Integer" resultMap="WsVideoEquipmentManagementResult">
+        <include refid="selectWsVideoEquipmentManagementVo"/>
+        where t.id = #{id}
+    </select>
+
+
+    <select id="selectWsVideoEquipmentManagementByProjectId" parameterType="Integer" resultMap="WsVideoEquipmentManagementResult">
+        <include refid="selectWsVideoEquipmentManagementVo"/>
+        where t.project_id = #{projectId}
+    </select>
+
+    <select id="selectEquipmentCount"  resultType="int">
+        select count(*) from t_ws_video_equipment_management
+    </select>
+
+    <select id="selectVideoCount"  resultType="int">
+        select count(*) from t_ws_video_equipment_management where equipment_type = 1
+    </select>
+
+    <select id="selectNVRCount"  resultType="int">
+        select count(*) from t_ws_video_equipment_management where equipment_type = 2
+    </select>
+
+    <insert id="insertWsVideoEquipmentManagement" parameterType="WsVideoEquipmentManagement" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_video_equipment_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="equipmentType != null ">equipment_type,</if>
+            <if test="equipmentSerialnumber != null  and equipmentSerialnumber != ''">equipment_serialNumber,</if>
+            <if test="verificationCode != null  and verificationCode != ''">verification_code,</if>
+            <if test="installationPosition != null  and installationPosition != ''">installation_position,</if>
+            <if test="channels != null ">channels,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="equipmentType != null ">#{equipmentType},</if>
+            <if test="equipmentSerialnumber != null  and equipmentSerialnumber != ''">#{equipmentSerialnumber},</if>
+            <if test="verificationCode != null  and verificationCode != ''">#{verificationCode},</if>
+            <if test="installationPosition != null  and installationPosition != ''">#{installationPosition},</if>
+            <if test="channels != null ">#{channels},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsVideoEquipmentManagement" parameterType="WsVideoEquipmentManagement">
+        update t_ws_video_equipment_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="equipmentType != null ">equipment_type = #{equipmentType},</if>
+            <if test="installationPosition != null  and installationPosition != ''">installation_position = #{installationPosition},</if>
+            <if test="channels != null ">channels = #{channels},</if>
+            updated_time = sysdate()
+        </trim>
+        where equipment_serialNumber = #{equipmentSerialnumber}
+    </update>
+
+    <delete id="deleteWsVideoEquipmentManagementById" parameterType="Integer">
+        delete from t_ws_video_equipment_management where id = #{id}
+    </delete>
+
+
+
+    
+</mapper>

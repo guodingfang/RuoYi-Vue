@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsVideoMonitoryPointManagementMapper">
+
+    <resultMap type="WsVideoMonitoryPointManagement" id="WsVideoMonitoryPointManagementResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="videoMonitoryPointName"    column="monitory_point"    />
+        <result property="zoneId"    column="zone_id"    />
+        <result property="videoSerialNumber"    column="video_serial_number"    />
+        <result property="videoChannel"    column="video_channel"    />
+        <result property="enabled"    column="is_enable"    />
+        <result property="zoneName"    column="zone_name"    />
+        <result property="videoNumber"    column="video_number"    />
+        <association property="video" javaType="WsVideoChannelManagement">
+            <result property="installationPosition"    column="installation_position"    />
+            <result property="equipmentSerialnumber"    column="equipment_serialNumber"    />
+            <result property="verificationCode"    column="verification_code"    />
+            <result property="channelNumber"    column="channel_number"    />
+            <result property="enableStatus"    column="enable_status"    />
+        </association>
+    </resultMap>
+
+    <sql id="selectWsVideoMonitoryPointManagementVo">
+        select
+        vmpm.id,vmpm.project_id,vmpm.monitory_point,vmpm.zone_id,vmpm.video_serial_number,vmpm.video_channel,vmpm.is_enable,
+        psp.partition_name zone_name,
+        vcm.installation_position,vcm.equipment_serialNumber,vcm.verification_code,vcm.channel_number,vcm.enable_status
+        from t_ws_video_monitory_point_management vmpm
+        left join t_ws_project_site_partition psp on vmpm.zone_id = psp.id
+        left join t_ws_video_channel_management vcm on (vmpm.video_serial_number=vcm.equipment_serialNumber and vmpm.video_channel = vcm.channel_number )
+    </sql>
+
+    <select id="selectWsVideoMonitoryPointManagementList" parameterType="WsVideoMonitoryPointManagement" resultMap="WsVideoMonitoryPointManagementResult">
+        <include refid="selectWsVideoMonitoryPointManagementVo"/>
+        <where>
+            <if test="projectId != null "> and vmpm.project_id = #{projectId}</if>
+            <if test="zoneId != null "> and vmpm.zone_id = #{zoneId}</if>
+            <if test="enabled != null  and enabled != ''"> and vmpm.is_enable = #{enabled}</if>
+        </where>
+    </select>
+
+
+
+    <select id="selectWsVideoMonitoryPointManagementById" parameterType="Integer" resultMap="WsVideoMonitoryPointManagementResult">
+        <include refid="selectWsVideoMonitoryPointManagementVo"/>
+        where vmpm.id = #{id}
+    </select>
+
+
+
+    <select id="countWsVideoMonitoryPointManagement" parameterType="WsVideoMonitoryPointManagement" resultType="int">
+        select count(1) from t_ws_video_monitory_point_management
+        <trim prefix="where" prefixOverrides="and">
+            <if test="videoSerialNumber!=null and videoSerialNumber!='' and videoChannel !=null and videoChannel!=''">
+                video_serial_number = #{videoSerialNumber}   and  video_channel=#{videoChannel}
+            </if>
+        </trim>
+
+
+    </select>
+
+
+
+    <insert id="insertWsVideoMonitoryPointManagement" parameterType="WsVideoMonitoryPointManagement" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_video_monitory_point_management (
+            <if test="projectId != null ">project_id,</if>
+            <if test="zoneId != null ">zone_id,</if>
+            <if test="videoMonitoryPointName != null  and videoMonitoryPointName != ''">monitory_point,</if>
+            <if test="videoSerialNumber != null  and videoSerialNumber != ''">video_serial_number,</if>
+            <if test="videoChannel != null ">video_channel,</if>
+            <if test="enabled != null ">is_enable,</if>
+            created_time,updated_time
+        )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="zoneId != null ">#{zoneId},</if>
+            <if test="videoMonitoryPointName != null  and videoMonitoryPointName != ''">#{videoMonitoryPointName},</if>
+            <if test="videoSerialNumber != null  and videoSerialNumber != ''">#{videoSerialNumber},</if>
+            <if test="videoChannel != null ">#{videoChannel},</if>
+            <if test="enabled != null ">#{enabled},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+    <update id="updateWsVideoMonitoryPointManagement" parameterType="WsVideoMonitoryPointManagement">
+        update t_ws_video_monitory_point_management set
+        <if test="zoneId != null ">zone_id=#{zoneId},</if>
+        <if test="videoMonitoryPointName != null  and videoMonitoryPointName != ''">monitory_point=#{videoMonitoryPointName},</if>
+        <if test="videoSerialNumber != null  and videoSerialNumber != ''">video_serial_number=#{videoSerialNumber},</if>
+        <if test="videoChannel != null ">video_channel=#{videoChannel},</if>
+        <if test="enabled != null ">is_enable=#{enabled},</if>
+        updated_time=sysdate()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsVideoMonitoryPointManagementById" parameterType="Integer">
+        delete from t_ws_video_monitory_point_management where id = #{id}
+    </delete>
+
+    <select id="statisticsVideoByWsProjectSitePartition" parameterType="WsVideoMonitoryPointManagement" resultMap="WsVideoMonitoryPointManagementResult">
+        select ifnull(vmpm.zone_id,0) zone_id ,count(vmpm.id) video_number,IFNULL(psp.partition_name,"默认分区") zone_name
+        from  t_ws_video_monitory_point_management vmpm
+        left join t_ws_project_site_partition psp on psp.id = vmpm.zone_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId != null ">and vmpm.project_id=#{projectId}</if>
+            <if test="enabled != null ">and vmpm.is_enable=#{enabled}</if>
+        </trim>
+        group by vmpm.zone_id
+        UNION
+        select null zone_id,count(vmpm.id) video_number,"全部区域" name
+        from  t_ws_video_monitory_point_management vmpm
+        left join t_ws_project_site_partition psp on psp.id = vmpm.zone_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId != null ">and vmpm.project_id=#{projectId}</if>
+            <if test="enabled != null ">and vmpm.is_enable=#{enabled}</if>
+        </trim>
+    </select>
+
+
+    <select id="statisticsProjectVideoPoints"  resultMap="WsVideoMonitoryPointManagementResult">
+        select  p.project_name project_name,p.id project_id,ifnull(count(1),0) video_number
+        from t_ws_video_monitory_point_management vmpm
+        left join t_ws_project p on p.id = vmpm.project_id
+        where vmpm.is_enable='1'
+        <if test="wsVideoMonitoryPointManagement.projectName != null  and wsVideoMonitoryPointManagement.projectName!= ''">and p.project_name like concat('%', #{wsVideoMonitoryPointManagement.projectName}, '%') ,</if>
+        <if test="dataScope !=null  and dataScope.size>0">
+            and vmpm.project_id in (
+            <foreach collection="dataScope" separator="," item="project"  index="index">
+                #{project.id}
+            </foreach>
+            )
+        </if>
+        group by vmpm.project_id
+    </select>
+
+
+</mapper>

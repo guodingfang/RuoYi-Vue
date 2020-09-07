@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsTeamPersonMapper">
+
+    <resultMap type="WsTeamPerson" id="WsTeamPersonResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="unitId"    column="unit_id"    />
+        <result property="teamId"    column="team_id"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="province"    column="province"    />
+        <result property="personType"    column="person_type"    />
+        <result property="workType"    column="work_type"    />
+        <result property="personStatus"    column="person_status"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="outDate"    column="out_date"    />
+        <result property="blacklist"    column="is_black"    />
+        <result property="monitor"    column="is_monitor"    />
+        <result property="specialWork"    column="is_special"    />
+        <result property="name"    column="name"    />
+        <result property="age"    column="age"    />
+        <result property="sex"    column="sex"    />
+        <result property="nationCode"    column="nation_code"    />
+        <result property="birthDate"    column="birth_date"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="address"    column="address"    />
+        <result property="authority"    column="authority"    />
+        <result property="effectiveDate"    column="effective_date"    />
+        <result property="invalidDate"    column="invalid_date"    />
+        <result property="residenceNature"    column="residence_nature"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="mobilePhone"    column="mobile_phone"    />
+        <result property="payCard"    column="pay_card"    />
+        <result property="payCardBank"    column="pay_card_bank"    />
+        <result property="nameOfBank"    column="name_of_bank"    />
+        <result property="politicsStatusCode"    column="politics_status_code"    />
+        <result property="cultureStandardCode"    column="culture_standard_code"    />
+        <result property="bloodPressure"    column="blood_pressure"    />
+        <result property="heartRate"    column="heart_rate"    />
+        <result property="faceUrl"    column="face_url"    />
+        <result property="weight"    column="weight"    />
+        <result property="height"    column="height"    />
+        <result property="healthRelated"    column="health_related"    />
+        <result property="healthRemark"    column="health_remark"    />
+        <result property="contactNumber"    column="contact_number"    />
+        <result property="contactType"    column="contact_type"    />
+        <result property="contactEffectiveDate"    column="contact_effective_date"    />
+        <result property="contactInvalidDate"    column="contact_invalid_date"    />
+        <result property="attachmentOneUrl"    column="attachment_one_url"    />
+        <result property="comment"    column="comment"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="deleted"    column="is_delete"    />
+        <result property="workTypeName"    column="work_type_name"    />
+        <result property="guid"    column="guid"    />
+        <result property="personStatusName"    column="personStatusName"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="unitName"    column="unit_name"    />
+        <collection property="certificates" column="id" ofType="WsQualificationCertificate"  select="selectCertificatesForWsTeamPerson"/>
+        <collection property="fileInfo" ofType="WsFileInfo" >
+            <result property="id"    column="file_id"    />
+            <result property="name"    column="file_name"    />
+            <result property="url"    column="file_url"    />
+        </collection>
+    </resultMap>
+
+    <resultMap type="WsTeamPersonVO" id="WsTeamPersonVOResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="unitId"    column="unit_id"    />
+        <result property="teamId"    column="team_id"    />
+        <result property="province"    column="province"    />
+        <result property="personType"    column="person_type"    />
+        <result property="workType"    column="work_type"    />
+        <result property="personStatus"    column="person_status"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="outDate"    column="out_date"    />
+        <result property="blacklist"    column="is_black"    />
+        <result property="monitor"    column="is_monitor"    />
+        <result property="specialWork"    column="is_special"    />
+        <result property="name"    column="name"    />
+        <result property="age"    column="age"    />
+        <result property="sex"    column="sex"    />
+        <result property="nationCode"    column="nation_code"    />
+        <result property="birthDate"    column="birth_date"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="address"    column="address"    />
+        <result property="authority"    column="authority"    />
+        <result property="effectiveDate"    column="effective_date"    />
+        <result property="invalidDate"    column="invalid_date"    />
+        <result property="residenceNature"    column="residence_nature"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="mobilePhone"    column="mobile_phone"    />
+        <result property="payCard"    column="pay_card"    />
+        <result property="payCardBank"    column="pay_card_bank"    />
+        <result property="nameOfBank"    column="name_of_bank"    />
+        <result property="politicsStatusCode"    column="politics_status_code"    />
+        <result property="cultureStandardCode"    column="culture_standard_code"    />
+        <result property="bloodPressure"    column="blood_pressure"    />
+        <result property="heartRate"    column="heart_rate"    />
+        <result property="faceUrl"    column="face_url"    />
+        <result property="weight"    column="weight"    />
+        <result property="height"    column="height"    />
+        <result property="healthRelated"    column="health_related"    />
+        <result property="healthRemark"    column="health_remark"    />
+        <result property="contactNumber"    column="contact_number"    />
+        <result property="contactType"    column="contact_type"    />
+        <result property="contactEffectiveDate"    column="contact_effective_date"    />
+        <result property="contactInvalidDate"    column="contact_invalid_date"    />
+        <result property="attachmentOneUrl"    column="attachment_one_url"    />
+        <result property="comment"    column="comment"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="deleted"    column="is_delete"    />
+        <result property="workTypeName"    column="work_type_name"    />
+        <result property="guid"    column="guid"    />
+        <result property="authNumber"    column="auth_number"    />
+        <result property="unauthNumber"    column="unauth_number"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="projectName"    column="project_name"    />
+        <collection property="certificates" ofType="WsQualificationCertificate" >
+            <id property="id" column="certificate_id"/>
+            <result property="certificateName"    column="certificate_name"    />
+            <result property="certificateNumber"    column="certificate_number"    />
+            <result property="certificateType"    column="certificate_type"    />
+            <result property="certificateLevelCode"    column="certificate_level_code"/>
+            <result property="effectiveDate"    column="certificate_effective_date"/>
+            <result property="invalidDate"    column="certificate_invalid_date"/>
+            <result property="frontImage"    column="front_image"    />
+            <result property="reverseImage"    column="reverse_image"    />
+        </collection>
+        <collection property="fileInfo" ofType="WsFileInfo" >
+            <result property="id"    column="file_id"    />
+            <result property="name"    column="file_name"    />
+            <result property="url"    column="file_url"    />
+        </collection>
+    </resultMap>
+    <resultMap id="wsCertificateResultMap" type="WsQualificationCertificate">
+        <id property="id" column="id"/>
+        <result property="certificateName"    column="certificate_name"    />
+        <result property="certificateNumber"    column="certificate_number"    />
+        <result property="certificateType"    column="certificate_type"    />
+        <result property="certificateLevelCode"    column="certificate_level_code"/>
+        <result property="effectiveDate"    column="effective_date"/>
+        <result property="invalidDate"    column="invalid_date"/>
+        <result property="frontImage"    column="front_image"    />
+        <result property="reverseImage"    column="reverse_image"    />
+    </resultMap>
+
+    <sql id="selectWsTeamPersonVo">
+        select p.id, p.project_id,p.guid, p.unit_id, p.team_id, p.person_type, p.person_status,p.work_type, p.in_date, p.out_date, p.is_black, p.is_monitor, p.is_special, p.name, p.age,p.sex,
+         p.nation_code, p.birth_date, p.id_number, p.address, p.authority, p.effective_date, p.invalid_date, p.residence_nature, p.card_no, p.mobile_phone,
+         p.pay_card, p.pay_card_bank, p.name_of_bank, p.politics_status_code, p.culture_standard_code, p.blood_pressure, p.heart_rate, p.face_url, p.weight,
+         p.height, p.health_related, p.health_remark, p.contact_number, p.contact_type, p.contact_effective_date, p.contact_invalid_date,p.attachment_one_url, p.comment, p.updated_time, p.created_time, p.is_delete,
+         d.dict_label work_type_name,
+         fi.name file_name,fi.url file_url ,fi.id file_id,
+        project.project_name project_name,
+        pt.name team_name,
+        ppu.unit_name unit_name
+        from t_ws_team_person p
+        left join t_ws_participating_team pt on p.team_id = pt.id
+        left join sys_dict_data d on  (p.work_type = d.dict_value and d.dict_type="ws_work_type")
+        left join t_ws_project_participating_unit ppu on ppu.id = p.unit_id
+        left join t_ws_project project  on project.id = p.project_id
+        left join t_ws_file_info fi on fi.id = p.attachment_one_url
+    </sql>
+    <select id="selectCertificatesForWsTeamPerson" resultMap="wsCertificateResultMap">
+            select * from t_ws_qualification_certificate where team_person_id =#{id}
+    </select>
+
+    <select id="selectWsTeamPersonList"  resultMap="WsTeamPersonResult">
+        <include refid="selectWsTeamPersonVo"/>
+        <where>
+            <if test="wsTeamPerson.id != null "> and p.id = #{wsTeamPerson.id}</if>
+            <if test="wsTeamPerson.workType != null  and wsTeamPerson.workType != ''">and p.work_type=#{wsTeamPerson.workType}</if>
+            <if test="wsTeamPerson.guid != null "> and p.guid = #{wsTeamPerson.guid}</if>
+            <if test="wsTeamPerson.projectId != null "> and p.project_id = #{wsTeamPerson.projectId}</if>
+            <if test="wsTeamPerson.unitTypeId != null "> and ppu.unit_type_id = #{wsTeamPerson.unitTypeId}</if>
+            <if test="wsTeamPerson.unitId != null "> and p.unit_id = #{wsTeamPerson.unitId}</if>
+            <if test="wsTeamPerson.teamId != null "> and p.team_id = #{wsTeamPerson.teamId}</if>
+            <if test="wsTeamPerson.personType != null  and wsTeamPerson.personType != ''"> and p.person_type = #{wsTeamPerson.personType}</if>
+            <if test="wsTeamPerson.personStatus != null  and wsTeamPerson.personStatus != ''"> and p.person_status = #{wsTeamPerson.personStatus}</if>
+            <if test="wsTeamPerson.blacklist != null  and wsTeamPerson.blacklist != ''"> and p.is_black = #{wsTeamPerson.blacklist}</if>
+            <if test="wsTeamPerson.monitor != null  and wsTeamPerson.monitor != ''"> and p.is_monitor = #{wsTeamPerson.monitor}</if>
+            <if test="wsTeamPerson.name != null  and wsTeamPerson.name != ''"> and p.name like concat('%', #{wsTeamPerson.name}, '%')</if>
+            <if test="wsTeamPerson.idNumber != null  and wsTeamPerson.idNumber != ''"> and p.id_number = #{wsTeamPerson.idNumber}</if>
+            <if test="wsTeamPerson.cardNo != null  and wsTeamPerson.cardNo != ''"> and p.card_no = #{wsTeamPerson.cardNo}</if>
+            <if test="wsTeamPerson.deleted != null  and wsTeamPerson.deleted != ''">and p.is_delete= #{wsTeamPerson.deleted}</if>
+            <if test="wsTeamPerson.keyWordName!=null and wsTeamPerson.keyWordName!=''">
+                and p.name like concat('%', #{wsTeamPerson.keyWordName}, '%') or id_number like concat('%', #{wsTeamPerson.keyWordName}, '%')
+            </if>
+            <if test="dataScope !=null and dataScope.size>0">
+                and p.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+
+        </where>
+    </select>
+
+    <select id="selectWsTeamPersonById" parameterType="Integer" resultMap="WsTeamPersonResult">
+        <include refid="selectWsTeamPersonVo"/>
+        where p.id = #{id}
+    </select>
+    <select id="selectWsTeamPersonByGuid" parameterType="String" resultMap="WsTeamPersonResult">
+        <include refid="selectWsTeamPersonVo"/>
+        where p.guid = #{guid}
+    </select>
+
+    <insert id="insertWsTeamPerson" parameterType="WsTeamPerson" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_team_person(
+            <if test="projectId != null ">project_id,</if>
+            <if test="unitId != null ">unit_id,</if>
+            <if test="teamId != null ">team_id,</if>
+            <if test="province != null ">province,</if>
+            <if test="personType != null  and personType != ''">person_type,</if>
+            <if test="personStatus != null  and personStatus != ''">person_status,</if>
+            <if test="workType != null  and workType != ''">work_type,</if>
+            <if test="inDate != null ">in_date,</if>
+            <if test="outDate != null ">out_date,</if>
+            <if test="blacklist != null  and blacklist != ''">is_black,</if>
+            <if test="monitor != null  and monitor != ''">is_monitor,</if>
+            <if test="specialWork != null  and specialWork != ''">is_special,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="age != null  ">age,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="nationCode != null  and nationCode != ''">nation_code,</if>
+            <if test="birthDate != null ">birth_date,</if>
+            <if test="idNumber != null  and idNumber != ''">id_number,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="authority != null  and authority != ''">authority,</if>
+            <if test="effectiveDate != null ">effective_date,</if>
+            <if test="invalidDate != null ">invalid_date,</if>
+            <if test="residenceNature != null  and residenceNature != ''">residence_nature,</if>
+            <if test="cardNo != null  and cardNo != ''">card_no,</if>
+            <if test="mobilePhone != null  and mobilePhone != ''">mobile_phone,</if>
+            <if test="payCard != null  and payCard != ''">pay_card,</if>
+            <if test="payCardBank != null  and payCardBank != ''">pay_card_bank,</if>
+            <if test="nameOfBank != null  and nameOfBank != ''">name_of_bank,</if>
+            <if test="politicsStatusCode != null  and politicsStatusCode != ''">politics_status_code,</if>
+            <if test="cultureStandardCode != null  and cultureStandardCode != ''">culture_standard_code,</if>
+            <if test="bloodPressure != null ">blood_pressure,</if>
+            <if test="heartRate != null ">heart_rate,</if>
+            <if test="faceUrl != null  and faceUrl != ''">face_url,</if>
+            <if test="weight != null ">weight,</if>
+            <if test="height != null ">height,</if>
+            <if test="healthRelated != null  and healthRelated != ''">health_related,</if>
+            <if test="healthRemark != null  and healthRemark != ''">health_remark,</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number,</if>
+            <if test="contactType != null  and contactType != ''">contact_type,</if>
+            <if test="contactEffectiveDate != null ">contact_effective_date,</if>
+            <if test="contactInvalidDate != null ">contact_invalid_date,</if>
+            <if test="attachmentOneUrl != null  and attachmentOneUrl != ''">attachment_one_url,</if>
+            <if test="comment != null  and comment != ''">comment,</if>
+            <if test="deleted != null  and deleted != ''">is_delete,</if>
+            <if test="guid != null  and guid != ''">guid,</if>
+            updated_time,created_time
+        )values(
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="unitId != null ">#{unitId},</if>
+            <if test="teamId != null ">#{teamId},</if>
+            <if test="province != null ">#{province},</if>
+            <if test="personType != null  and personType != ''">#{personType},</if>
+            <if test="personStatus != null  and personStatus != ''">#{personStatus},</if>
+            <if test="workType != null  and workType != ''">#{workType},</if>
+            <if test="inDate != null ">#{inDate},</if>
+            <if test="outDate != null ">#{outDate},</if>
+            <if test="blacklist != null  and blacklist != ''">#{blacklist},</if>
+            <if test="monitor != null  and monitor != ''">#{monitor},</if>
+            <if test="specialWork != null  and specialWork != ''">#{specialWork},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="age != null">#{age},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="nationCode != null  and nationCode != ''">#{nationCode},</if>
+            <if test="birthDate != null ">#{birthDate},</if>
+            <if test="idNumber != null  and idNumber != ''">#{idNumber},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="authority != null  and authority != ''">#{authority},</if>
+            <if test="effectiveDate != null ">#{effectiveDate},</if>
+            <if test="invalidDate != null ">#{invalidDate},</if>
+            <if test="residenceNature != null  and residenceNature != ''">#{residenceNature},</if>
+            <if test="cardNo != null  and cardNo != ''">#{cardNo},</if>
+            <if test="mobilePhone != null  and mobilePhone != ''">#{mobilePhone},</if>
+            <if test="payCard != null  and payCard != ''">#{payCard},</if>
+            <if test="payCardBank != null  and payCardBank != ''">#{payCardBank},</if>
+            <if test="nameOfBank != null  and nameOfBank != ''">#{nameOfBank},</if>
+            <if test="politicsStatusCode != null  and politicsStatusCode != ''">#{politicsStatusCode},</if>
+            <if test="cultureStandardCode != null  and cultureStandardCode != ''">#{cultureStandardCode},</if>
+            <if test="bloodPressure != null ">#{bloodPressure},</if>
+            <if test="heartRate != null ">#{heartRate},</if>
+            <if test="faceUrl != null  and faceUrl != ''">#{faceUrl},</if>
+            <if test="weight != null ">#{weight},</if>
+            <if test="height != null ">#{height},</if>
+            <if test="healthRelated != null  and healthRelated != ''">#{healthRelated},</if>
+            <if test="healthRemark != null  and healthRemark != ''">#{healthRemark},</if>
+            <if test="contactNumber != null  and contactNumber != ''">#{contactNumber},</if>
+            <if test="contactType != null  and contactType != ''">#{contactType},</if>
+            <if test="contactEffectiveDate != null ">#{contactEffectiveDate},</if>
+            <if test="contactInvalidDate != null ">#{contactInvalidDate},</if>
+            <if test="attachmentOneUrl != null  and attachmentOneUrl != ''">#{attachmentOneUrl},</if>
+            <if test="comment != null  and comment != ''">#{comment},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="guid != null  and guid != ''">#{guid},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+
+    <insert id="insertWsTeamPersonByLibrary" parameterType="WsTeamPerson">
+        insert into t_ws_team_person(
+        <if test="projectId != null ">project_id,</if>
+        <if test="unitId != null ">unit_id,</if>
+        <if test="teamId != null ">team_id,</if>
+        <if test="personLibrary.province != null ">province,</if>
+        <if test="personType != null  and personType != ''">person_type,</if>
+        <if test="personStatus != null  and personStatus != ''">person_status,</if>
+        <if test="workType != null  and workType != ''">work_type,</if>
+        <if test="inDate != null ">in_date,</if>
+        <if test="blacklist != null  and blacklist != ''">is_black,</if>
+        <if test="personLibrary.name != null  and personLibrary.name != ''">name,</if>
+        <if test="personLibrary.age != null  ">age,</if>
+        <if test="personLibrary.sex != null  and personLibrary.sex != ''">sex,</if>
+        <if test="personLibrary.nationCode != null  and personLibrary.nationCode != ''">nation_code,</if>
+        <if test="personLibrary.birthDate != null ">birth_date,</if>
+        <if test="personLibrary.idNumber != null  and personLibrary.idNumber != ''">id_number,</if>
+        <if test="personLibrary.address != null  and personLibrary.address != ''">address,</if>
+        <if test="personLibrary.authority != null  and personLibrary.authority != ''">authority,</if>
+        <if test="personLibrary.effectiveDate != null ">effective_date,</if>
+        <if test="personLibrary.invalidDate != null ">invalid_date,</if>
+        <if test="personLibrary.residenceNature != null  and personLibrary.residenceNature != ''">residence_nature,</if>
+        <if test="personLibrary.mobilePhone != null  and personLibrary.mobilePhone != ''">mobile_phone,</if>
+        <if test="personLibrary.politicsStatusCode != null  and personLibrary.politicsStatusCode != ''">politics_status_code,</if>
+        <if test="personLibrary.cultureStandardCode != null  and personLibrary.cultureStandardCode != ''">culture_standard_code,</if>
+        <if test="personLibrary.bloodPressure != null ">blood_pressure,</if>
+        <if test="personLibrary.heartRate != null ">heart_rate,</if>
+        <if test="personLibrary.faceUrl != null  and personLibrary.faceUrl != ''">face_url,</if>
+        <if test="personLibrary.weight != null ">weight,</if>
+        <if test="personLibrary.height != null ">height,</if>
+        <if test="personLibrary.healthRelated != null  and personLibrary.healthRelated != ''">health_related,</if>
+        <if test="personLibrary.healthRemark != null  and personLibrary.healthRemark != ''">health_remark,</if>
+        <if test="deleted != null  and deleted != ''">is_delete,</if>
+        updated_time,created_time
+        )values(
+        <if test="projectId != null ">#{projectId},</if>
+        <if test="unitId != null ">#{unitId},</if>
+        <if test="teamId != null ">#{teamId},</if>
+        <if test="personLibrary.province != null ">#{personLibrary.province},</if>
+        <if test="personType != null  and personType != ''">#{personType},</if>
+        <if test="personStatus != null  and personStatus != ''">#{personStatus},</if>
+        <if test="workType != null  and workType != ''">#{workType},</if>
+        <if test="inDate != null ">#{inDate},</if>
+        <if test="blacklist != null  and blacklist != ''">#{blacklist},</if>
+        <if test="personLibrary.name != null  and personLibrary. name != ''">#{personLibrary.name},</if>
+        <if test="personLibrary.age != null">#{personLibrary.age},</if>
+        <if test="personLibrary.sex != null  and personLibrary.sex != ''">#{personLibrary.sex},</if>
+        <if test="personLibrary.nationCode != null  and personLibrary.nationCode != ''">#{personLibrary.nationCode},</if>
+        <if test="personLibrary.birthDate != null ">#{personLibrary.birthDate},</if>
+        <if test="personLibrary.idNumber != null  and personLibrary.idNumber != ''">#{personLibrary.idNumber},</if>
+        <if test="personLibrary.address != null  and personLibrary.address != ''">#{personLibrary.address},</if>
+        <if test="personLibrary.authority != null  and personLibrary.authority != ''">#{personLibrary.authority},</if>
+        <if test="personLibrary.effectiveDate != null ">#{personLibrary.effectiveDate},</if>
+        <if test="personLibrary.invalidDate != null ">#{personLibrary.invalidDate},</if>
+        <if test="personLibrary.residenceNature != null  and personLibrary.residenceNature != ''">
+            #{personLibrary.residenceNature},</if>
+        <if test="personLibrary.mobilePhone != null  and personLibrary.mobilePhone != ''">#{personLibrary.mobilePhone},</if>
+        <if test="personLibrary.politicsStatusCode != null  and personLibrary.politicsStatusCode != ''">
+        #{personLibrary.politicsStatusCode},</if>
+        <if test="personLibrary.cultureStandardCode != null  and personLibrary.cultureStandardCode != ''">
+        #{personLibrary.cultureStandardCode},</if>
+        <if test="personLibrary.bloodPressure != null ">#{personLibrary.bloodPressure},</if>
+        <if test="personLibrary.heartRate != null ">#{personLibrary.heartRate},</if>
+        <if test="personLibrary.faceUrl != null  and personLibrary.faceUrl != ''">#{personLibrary.faceUrl},</if>
+        <if test="personLibrary.weight != null ">#{personLibrary.weight},</if>
+        <if test="personLibrary.height != null ">#{personLibrary.height},</if>
+        <if test="personLibrary.healthRelated != null  and personLibrary.healthRelated != ''">#{personLibrary.healthRelated},</if>
+        <if test="personLibrary.healthRemark != null  and personLibrary.healthRemark != ''">#{personLibrary.healthRemark},</if>
+        <if test="deleted != null  and deleted != ''">#{deleted},</if>
+        sysdate(),sysdate()
+        )
+    </insert>
+
+
+    <update id="updateWsTeamPerson" parameterType="WsTeamPerson">
+        update t_ws_team_person
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="unitId != null ">unit_id = #{unitId},</if>
+            <if test="teamId != null ">team_id = #{teamId},</if>
+            <if test="personType != null  and personType != ''">person_type = #{personType},</if>
+            <if test="personStatus != null  and personStatus != ''">person_status = #{personStatus},</if>
+            <if test="workType != null  and workType != ''">work_type = #{workType},</if>
+            <if test="inDate != null ">in_date = #{inDate},</if>
+            <if test="outDate != null ">out_date = #{outDate},</if>
+            <if test="blacklist != null  and blacklist != ''">is_black = #{blacklist},</if>
+            <if test="monitor != null  and monitor != ''">is_monitor = #{monitor},</if>
+            <if test="specialWork != null  and specialWork != ''">is_special = #{specialWork},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="age != null ">age = #{age},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="nationCode != null  and nationCode != ''">nation_code = #{nationCode},</if>
+            <if test="birthDate != null ">birth_date = #{birthDate},</if>
+            <if test="idNumber != null  and idNumber != ''">id_number = #{idNumber},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="authority != null  and authority != ''">authority = #{authority},</if>
+            <if test="effectiveDate != null ">effective_date = #{effectiveDate},</if>
+            <if test="invalidDate != null ">invalid_date = #{invalidDate},</if>
+            <if test="residenceNature != null  and residenceNature != ''">residence_nature = #{residenceNature},</if>
+            <if test="cardNo != null  and cardNo != ''">card_no = #{cardNo},</if>
+            <if test="mobilePhone != null  and mobilePhone != ''">mobile_phone = #{mobilePhone},</if>
+            <if test="payCard != null  and payCard != ''">pay_card = #{payCard},</if>
+            <if test="payCardBank != null  and payCardBank != ''">pay_card_bank = #{payCardBank},</if>
+            <if test="nameOfBank != null  and nameOfBank != ''">name_of_bank = #{nameOfBank},</if>
+            <if test="politicsStatusCode != null  and politicsStatusCode != ''">politics_status_code = #{politicsStatusCode},</if>
+            <if test="cultureStandardCode != null  and cultureStandardCode != ''">culture_standard_code = #{cultureStandardCode},</if>
+            <if test="bloodPressure != null ">blood_pressure = #{bloodPressure},</if>
+            <if test="heartRate != null ">heart_rate = #{heartRate},</if>
+            <if test="faceUrl != null  and faceUrl != ''">face_url = #{faceUrl},</if>
+            <if test="weight != null ">weight = #{weight},</if>
+            <if test="height != null ">height = #{height},</if>
+            <if test="healthRelated != null  and healthRelated != ''">health_related = #{healthRelated},</if>
+            <if test="healthRemark != null  and healthRemark != ''">health_remark = #{healthRemark},</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number = #{contactNumber},</if>
+            <if test="contactType != null  and contactType != ''">contact_type = #{contactType},</if>
+            <if test="contactEffectiveDate != null ">contact_effective_date = #{contactEffectiveDate},</if>
+            <if test="contactInvalidDate != null ">contact_invalid_date = #{contactInvalidDate},</if>
+            <if test="attachmentOneUrl != null  and attachmentOneUrl != ''">attachment_one_url = #{attachmentOneUrl},</if>
+            <if test="comment != null  and comment != ''">comment = #{comment},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="deleted != null  and deleted != ''">is_delete = #{deleted},</if>
+            <if test="guid != null  and guid != ''">guid = #{guid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="batchUpateWsTeamPerson" parameterType="WsTeamPerson">
+        update t_ws_team_person
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="unitId != null ">unit_id = #{unitId},</if>
+            <if test="teamId != null ">team_id = #{teamId},</if>
+            <if test="personStatus != null  and personStatus != ''">person_status = #{personStatus},</if>
+            <if test="blacklist != null  and blacklist != ''">is_black = #{blacklist},</if>
+            <if test="workType != null  and workType != ''">work_type = #{workType},</if>
+            <if test="personType != null  and personType != ''">person_type = #{personType},</if>
+        </trim>
+        where id in(
+            <foreach collection="params.ids" item="id" index="index" separator="," >
+                #{id}
+            </foreach>
+        )
+    </update>
+
+    <update id="deleteWsTeamPersonById" parameterType="Integer">
+        update t_ws_team_person set  is_delete = '1' where id = #{id}
+    </update>
+
+    <update id="deleteWsTeamPersonByIds" parameterType="String">
+        update t_ws_team_person set  is_delete = '1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="countWsTeamPersonInProject" parameterType="WsTeamPerson" resultType="int">
+        select count(1) from t_ws_team_person where  is_delete ='0'and project_id = #{projectId} and
+        (
+            <trim prefixOverrides="or|and">
+                <if test="idNumber!=null and idNumber!=''">id_number = #{idNumber}</if>
+                <if test="mobilePhone!=null and mobilePhone!=''">or mobile_phone =#{mobilePhone}</if>
+            </trim>
+        )
+    </select>
+
+    <select id="countWsTeamPersonInWsProjectParticipatingUnit" parameterType="int" resultType="int">
+        select count(1) from t_ws_team_person where  is_delete ='0' and unit_id=#{unitId}
+
+    </select>
+
+
+    <select id="countWsTeamPersonInProjectAndId"  resultType="int">
+        select count(1) from t_ws_team_person where  is_delete ='0'and project_id = #{projectId} and
+        (id_number = #{idNumber}or mobile_phone =#{mobilePhone})
+    </select>
+    <!--某项目下查找身份证号或者手机号相同的人员(人员修改时使用)  -->
+    <select id="findWsTeamPersonInProject" parameterType="WsTeamPerson" resultMap="WsTeamPersonResult">
+        <include refid="selectWsTeamPersonVo"/>
+        where  p.is_delete ='0'and p.project_id = #{projectId}
+         <if test="id != null "> and p.id &lt;&gt;  #{id}</if>
+         and
+        (id_number = #{idNumber} or mobile_phone =#{mobilePhone})
+    </select>
+
+    <select id="selectWsTeamPersonListWithAuth" resultMap="WsTeamPersonVOResult">
+        select tp.name name,tp.id_number,tp.mobile_phone  mobile_phone,tp.person_type,tp.id id,tp.guid guid,
+               d.dict_label work_type_name,
+               pt.name team_name,
+               pu.unit_name unit_name,
+               p.project_name,
+               count(if(ab.auth_status=0,1,null)) unauth_number,count(if(ab.auth_status=1,1,null )) auth_number
+        from t_ws_team_person tp
+        left join sys_dict_data d on (tp.work_type = d.dict_value and d.dict_type="ws_work_type")
+        left join t_ws_participating_team pt on tp.team_id = pt.id
+        left join t_ws_project_participating_unit pu on tp.unit_id = pu.id
+        left join t_ws_project p on tp.project_id = p.id
+        left join t_ws_attendance_binding ab on tp.guid = ab.guid
+        <trim prefix="where" prefixOverrides="and">
+            <if test="wsTeamPerson.personType!=null and wsTeamPerson.personType!=''">and tp.person_type=#{wsTeamPerson.personType} </if>
+            <if test="wsTeamPerson.projectId!=null ">and tp.project_id=#{wsTeamPerson.projectId} </if>
+            <if test="wsTeamPerson.unitId!=null ">and tp.unit_id=#{wsTeamPerson.unitId} </if>
+            <if test="wsTeamPerson.teamId!=null ">and tp.team_id=#{wsTeamPerson.teamId} </if>
+            <if test="wsTeamPerson.id!=null">and tp.id=#{wsTeamPerson.id} </if>
+            <if test="dataScope !=null and dataScope.size>0">
+                and tp.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+        </trim>
+         group by tp.id
+    </select>
+
+    <!-- 查询花名册-->
+    <select id="selectWsTeamPersonListRoster" parameterType="com.jlkj.project.ws.domain.WsTeamPerson" resultMap="WsTeamPersonResult">
+        select t.name,t.id_number,
+        CASE
+        when t.sex = '1' then '男'
+        when t.sex = '0' then '女'
+        else '未知'
+        END
+        as sex,t.address,t.mobile_phone,t2.unit_name as unit_name,t3.name as team_name,t4.dict_label as work_type_name,
+        CASE
+        when t.person_status = '1' then '在场'
+        when t.person_status = '0' then '退场'
+        else '未知'
+        END
+        as personStatusName from t_ws_team_person t
+        left join t_ws_project_participating_unit t2 on t.unit_id = t2.id
+        left join t_ws_participating_team t3 on t.team_id = t3.id
+        left join sys_dict_data t4 on t.work_type = t4.dict_value and t4.dict_type = 'ws_work_type'
+        <where>
+            <if test="wsTeamPerson.id != null and wsTeamPerson.id != ''"> and t.id = #{wsTeamPerson.id}</if>
+            <if test="wsTeamPerson.projectId != null"> and t.project_id = #{wsTeamPerson.projectId}</if>
+            <if test="wsTeamPerson.unitId != null "> and t.unit_id = #{wsTeamPerson.unitId}</if>
+            <if test="wsTeamPerson.teamId != null "> and t.team_id = #{wsTeamPerson.teamId}</if>
+            <if test="wsTeamPerson.personStatus != null  and wsTeamPerson.personStatus != ''"> and t.person_status = #{wsTeamPerson.personStatus}</if>
+            <if test="wsTeamPerson.personType != null  and wsTeamPerson.personType != ''"> and t.person_type = #{wsTeamPerson.personType}</if>
+            <if test="projectIds != null ">
+                and t.project_id in
+                <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+                    #{projectId}
+                </foreach>
+            </if>
+        </where>
+        and t.is_delete = '0'
+        order by t.created_time desc
+    </select>
+
+
+    <select id="selectWsTeamPersonByserialNumber" parameterType="String" resultMap="WsTeamPersonResult">
+            select
+                     tp.id_number,tp.face_url,tp.name,
+        qc.id certificate_id,qc.certificate_name certificate_name,qc.certificate_number certificate_number,qc.certificate_type certificate_type,qc.certificate_level_code,
+        qc.effective_date certificate_effective_date,qc.invalid_date certificate_invalid_date,qc.front_image front_image,qc.reverse_image reverse_image
+        from t_ws_elevator_minitor_device emd
+        left join t_ws_elevator_manager em on emd.elevator_id = em.id
+        left join t_ws_team_person tp on  tp.project_id = em.project_id
+        left join t_ws_qualification_certificate qc on tp.id=qc.team_person_id
+        where emd.serial_number =#{serialNumber}
+    </select>
+</mapper>

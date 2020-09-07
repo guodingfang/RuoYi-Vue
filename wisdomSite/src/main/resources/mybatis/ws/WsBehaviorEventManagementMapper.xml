@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsBehaviorEventManagementMapper">
+
+    <resultMap type="WsBehaviorEventManagement" id="WsBehaviorEventManagementResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="eventName"    column="event_name"    />
+        <result property="eventType"    column="event_type"    />
+        <result property="point"    column="point"    />
+        <result property="deleted"    column="is_delete"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsBehaviorEventManagementVo">
+        select id, project_id, event_name, event_type, point, created_time, updated_time from t_ws_behavior_event_management
+    </sql>
+
+    <select id="selectWsBehaviorEventManagementList" parameterType="WsBehaviorEventManagement" resultMap="WsBehaviorEventManagementResult">
+        <include refid="selectWsBehaviorEventManagementVo"/>
+        where  is_delete ='0'
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventType != null  and eventType != ''"> and event_type = #{eventType}</if>
+            <if test="point != null "> and point = #{point}</if>
+
+    </select>
+
+    <select id="selectWsBehaviorEventManagementById" parameterType="Integer" resultMap="WsBehaviorEventManagementResult">
+        <include refid="selectWsBehaviorEventManagementVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWsBehaviorEventManagement" parameterType="WsBehaviorEventManagement" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_behavior_event_management(
+
+            <if test="projectId != null ">project_id,</if>
+            <if test="eventName != null  and eventName != ''">event_name,</if>
+            <if test="eventType != null  and eventType != ''">event_type,</if>
+            <if test="point != null ">point,</if>
+            <if test="deleted != null ">is_delete,</if>
+            created_time,updated_time
+            )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="eventName != null  and eventName != ''">#{eventName},</if>
+            <if test="eventType != null  and eventType != ''">#{eventType},</if>
+            <if test="point != null ">#{point},</if>
+            <if test="deleted != null ">#{deleted},</if>
+             sysdate(),sysdate()
+         )
+    </insert>
+
+    <update id="updateWsBehaviorEventManagement" parameterType="WsBehaviorEventManagement">
+        update t_ws_behavior_event_management set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="eventName != null  and eventName != ''">event_name = #{eventName},</if>
+            <if test="eventType != null  and eventType != ''">event_type = #{eventType},</if>
+            <if test="point != null ">point = #{point},</if>
+            <if test="deleted != null ">is_delete=#{deleted},</if>
+            updated_time = sysdate()
+        where id = #{id}
+    </update>
+
+    <update id="deleteWsBehaviorEventManagementById" parameterType="Integer">
+        update t_ws_behavior_event_management set is_delete='1' where id = #{id}
+    </update>
+
+    <delete id="deleteWsBehaviorEventManagementByIds" parameterType="String">
+        delete from t_ws_behavior_event_management where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

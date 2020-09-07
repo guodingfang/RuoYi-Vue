@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsPersonSalaryDetailMapper">
+
+    <resultMap type="WsPersonSalaryDetail" id="WsPersonSalaryDetailResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="payrollNumber"    column="payroll_number"    />
+        <result property="planningAmount"    column="planning_amount"    />
+        <result property="payingAmount"    column="paying_amount"    />
+        <result property="salaryYear"    column="salary_year"    />
+        <result property="salaryMonth"    column="salary_month"    />
+        <result property="payingDate"    column="paying_date"    />
+        <result property="backPay"    column="is_back_pay"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="personNumber"    column="person_number"    />
+        <result property="personName"    column="person_name"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="attendanceDays"    column="attendance_days"    />
+        <result property="monthHours"    column="month_hours"    />
+    </resultMap>
+
+    <resultMap type="WsPersonSalaryDetailVO" id="WsPersonSalaryDetailResultVO">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="payrollNumber"    column="payroll_number"    />
+        <result property="planningAmount"    column="planning_amount"    />
+        <result property="payingAmount"    column="paying_amount"    />
+        <result property="salaryYear"    column="salary_year"    />
+        <result property="salaryMonth"    column="salary_month"    />
+        <result property="payingDate"    column="paying_date"    />
+        <result property="backPay"    column="is_back_pay"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="personNumber"    column="person_number"    />
+        <result property="personName"    column="person_name"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="attendanceDays"    column="attendance_days"    />
+        <result property="monthHours"    column="month_hours"    />
+    </resultMap>
+
+    <sql id="selectWsPersonSalaryDetailVo">
+        select id, project_id, id_number, payroll_number, planning_amount, paying_amount, salary_year, salary_month, paying_date, is_back_pay, updated_time, created_time from t_ws_person_salary_detail
+    </sql>
+
+    <sql id="selectWsPersonSalaryDetailVo2">
+        select psd.id, psd.project_id, psd.id_number, psd.payroll_number, psd.planning_amount, psd.paying_amount, psd.salary_year, psd.salary_month, psd.paying_date, is_back_pay,
+         tp.name person_name,
+         pt.name team_name,
+         ppu.unit_name unit_name
+         from t_ws_person_salary_detail psd
+         left join t_ws_team_person tp on (tp.id_number=psd.id_number and tp.project_id=psd.project_id)
+         left join t_ws_participating_team pt on pt.id = tp.team_id
+         left join t_ws_project_participating_unit ppu on ppu.id = tp.unit_id
+    </sql>
+
+    <select id="selectWsPersonSalaryDetailList"  resultMap="WsPersonSalaryDetailResultVO">
+        select psd.id, psd.project_id, psd.id_number, psd.payroll_number, psd.planning_amount, psd.paying_amount, psd.salary_year, psd.salary_month, psd.paying_date, is_back_pay,
+        tp.name person_name,
+        pt.name team_name,
+        ppu.unit_name unit_name,
+        count(distinct ar.day_of_month) attendance_days,
+        IFNULL(sum(ar.man_hour),0) month_hours
+        from (
+            select
+            id, project_id, id_number, payroll_number,sum(planning_amount) planning_amount,sum(paying_amount) paying_amount, salary_year, salary_month, paying_date, is_back_pay
+            from t_ws_person_salary_detail
+            <where>
+                <if test="wsPersonSalaryDetailDTO.salaryYear != null  and wsPersonSalaryDetailDTO.salaryYear != '' and wsPersonSalaryDetailDTO.salaryMonth != null  and wsPersonSalaryDetailDTO.salaryMonth != ''">
+                    and salary_year = #{wsPersonSalaryDetailDTO.salaryYear}  and salary_month = #{wsPersonSalaryDetailDTO.salaryMonth}
+                </if>
+                <if test="wsPersonSalaryDetailDTO.projectId != null "> and project_id = #{wsPersonSalaryDetailDTO.projectId}</if>
+            </where>
+            group by id_number
+        ) psd
+        left join t_ws_team_person tp on (tp.id_number=psd.id_number and tp.project_id=psd.project_id)
+        left join t_ws_participating_team pt on pt.id = tp.team_id
+        left join t_ws_project_participating_unit ppu on ppu.id = tp.unit_id
+        left join (
+            select
+                if(
+                ISNULL(min(if(twam.direction=1,twar.attendance_time,NULL))) or ISNULL(max(if(twam.direction=2,twar.attendance_time,NULL)))  or (max(if(twam.direction=2,twar.attendance_time,NULL)) &lt; min(if(twam.direction=1,twar.attendance_time,NULL))),
+                0,
+                format(TIMESTAMPDIFF(SECOND,min(if(twam.direction=1,twar.attendance_time,null)),max(if(twam.direction=2,twar.attendance_time,NULL)))/60/60,1)
+                ) man_hour,twar.team_person_id team_person_id,date_format(twar.attendance_time,'%e') day_of_month
+            from t_ws_attendance_record twar
+            left join t_ws_attendance_machine twam  on twar.machine_id = twam.id
+            where (attendance_time between  #{wsPersonSalaryDetailDTO.beginTime} and  #{wsPersonSalaryDetailDTO.endTime})
+            group by day_of_month,twar.team_person_id
+         ) ar on ar.team_person_id = tp.id
+        <where>
+            <if test="wsPersonSalaryDetailDTO.personId != null "> and tp.id = #{wsPersonSalaryDetailDTO.personId}</if>
+            <if test="wsPersonSalaryDetailDTO.unitId != null "> and ppu.id  = #{wsPersonSalaryDetailDTO.unitId}</if>
+            <if test="wsPersonSalaryDetailDTO.teamId != null "> and pt.id = #{wsPersonSalaryDetailDTO.teamId}</if>
+            <if test="dataScope !=null">
+                and psd.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+        </where>
+        group by tp.id
+    </select>
+
+    <select id="statisticsWsPersonSalaryDetail"  resultMap="WsPersonSalaryDetailResultVO">
+        select IFNULL(count(distinct tp.id),0) person_number,IFNULL(sum(psd.planning_amount),0)  planning_amount,IFNULL(sum(psd.paying_amount),0) paying_amount
+        from t_ws_person_salary_detail psd
+        left join t_ws_team_person tp on (tp.id_number=psd.id_number and tp.project_id=psd.project_id)
+        left join t_ws_participating_team pt on pt.id = tp.team_id
+        left join t_ws_project_participating_unit ppu on ppu.id = tp.unit_id
+        <where>
+            <if test="wsPersonSalaryDetailDTO.projectId != null "> and psd.project_id = #{wsPersonSalaryDetailDTO.projectId}</if>
+            <if test="wsPersonSalaryDetailDTO.personId != null "> and tp.id = #{wsPersonSalaryDetailDTO.personId}</if>
+            <if test="wsPersonSalaryDetailDTO.unitId != null "> and ppu.id  = #{wsPersonSalaryDetailDTO.unitId}</if>
+            <if test="wsPersonSalaryDetailDTO.teamId != null "> and pt.id = #{wsPersonSalaryDetailDTO.teamId}</if>
+            <if test="wsPersonSalaryDetailDTO.salaryYear != null  and wsPersonSalaryDetailDTO.salaryYear != ''">
+                and salary_year = #{wsPersonSalaryDetailDTO.salaryYear}
+            </if>
+            <if test="wsPersonSalaryDetailDTO.salaryMonth != null  and wsPersonSalaryDetailDTO.salaryMonth != ''">
+                and salary_month = #{wsPersonSalaryDetailDTO.salaryMonth}
+            </if>
+            <if test="dataScope !=null">
+                and psd.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWsPersonSalaryDetailById" parameterType="Integer" resultMap="WsPersonSalaryDetailResult">
+        <include refid="selectWsPersonSalaryDetailVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectWsPersonSalaryDetailByPayrollNumber" parameterType="String" resultMap="WsPersonSalaryDetailResult">
+        <include refid="selectWsPersonSalaryDetailVo"/>
+        where payroll_number = #{payrollNumber}
+    </select>
+
+    <insert id="insertWsPersonSalaryDetail" parameterType="WsPersonSalaryDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_person_salary_detail(
+            <if test="projectId != null ">project_id,</if>
+            <if test="idNumber != null ">id_number,</if>
+            <if test="payrollNumber != null  and payrollNumber != ''">payroll_number,</if>
+            <if test="planningAmount != null ">planning_amount,</if>
+            <if test="payingAmount != null ">paying_amount,</if>
+            <if test="salaryYear != null ">salary_year,</if>
+            <if test="salaryMonth != null ">salary_month,</if>
+            <if test="payingDate != null ">paying_date,</if>
+            <if test="backPay != null  and backPay != ''">is_back_pay,</if>
+            updated_time,created_time
+        )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="idNumber != null ">#{idNumber},</if>
+            <if test="payrollNumber != null  and payrollNumber != ''">#{payrollNumber},</if>
+            <if test="planningAmount != null ">#{planningAmount},</if>
+            <if test="payingAmount != null ">#{payingAmount},</if>
+            <if test="salaryYear != null ">#{salaryYear},</if>
+            <if test="salaryMonth != null ">#{salaryMonth},</if>
+            <if test="payingDate != null ">#{payingDate},</if>
+            <if test="backPay != null  and backPay != ''">#{backPay},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+    <update id="updateWsPersonSalaryDetail" parameterType="WsPersonSalaryDetail">
+        update t_ws_person_salary_detail set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="idNumber != null ">id_number = #{idNumber},</if>
+            <if test="payrollNumber != null  and payrollNumber != ''">payroll_number = #{payrollNumber},</if>
+            <if test="planningAmount != null ">planning_amount = #{planningAmount},</if>
+            <if test="payingAmount != null ">paying_amount = #{payingAmount},</if>
+            <if test="salaryYear != null ">salary_year = #{salaryYear},</if>
+            <if test="salaryMonth != null ">salary_month = #{salaryMonth},</if>
+            <if test="payingDate != null ">paying_date = #{payingDate},</if>
+            <if test="backPay != null  and backPay != ''">is_back_pay = #{backPay},</if>
+           updated_time = sysdate()
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsPersonSalaryDetailById" parameterType="Integer">
+        delete from t_ws_person_salary_detail where id = #{id}
+    </delete>
+
+    <delete id="deleteWsPersonSalaryDetailByIds" parameterType="String">
+        delete from t_ws_person_salary_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

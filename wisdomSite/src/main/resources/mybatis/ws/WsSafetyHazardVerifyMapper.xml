@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsSafetyHazardVerifyMapper">
+    
+    <resultMap type="WsSafetyHazardVerify" id="WsSafetyHazardVerifyResult">
+        <result property="id"    column="id"    />
+        <result property="inspectionId"    column="inspection_id"    />
+        <result property="verifyPersonId"    column="verify_person_id"    />
+        <result property="verifyDate"    column="verify_date"    />
+        <result property="verifyResult"    column="verify_result"    />
+        <result property="verifyResultDescription"    column="verify_result_description"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="uodatedBy"    column="uodated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsSafetyHazardVerifyVo">
+        SELECT t.id, t.inspection_id, t.verify_person_id, t2.nick_name AS verifyPersonName, t.verify_date, t.verify_result, t.verify_result_description
+        FROM `t_ws_safety_hazard_verify` AS t
+        LEFT JOIN `sys_user` t2 ON t.`verify_person_id` = t2.user_id
+    </sql>
+
+    <select id="selectWsSafetyHazardVerifyList" parameterType="WsSafetyHazardVerify" resultMap="WsSafetyHazardVerifyResult">
+        <include refid="selectWsSafetyHazardVerifyVo"/>
+        <where>  
+            <if test="inspectionId != null "> and t.inspection_id = #{inspectionId}</if>
+            <if test="verifyPersonId != null "> and t.verify_person_id = #{verifyPersonId}</if>
+            <if test="verifyDate != null "> and t.verify_date = #{verifyDate}</if>
+            <if test="verifyResult != null "> and t.verify_result = #{verifyResult}</if>
+            <if test="verifyResultDescription != null  and verifyResultDescription != ''"> and t.verify_result_description = #{verifyResultDescription}</if>
+            <if test="createdBy != null "> and t.created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and t.created_time = #{createdTime}</if>
+            <if test="uodatedBy != null "> and t.uodated_by = #{uodatedBy}</if>
+            <if test="updatedTime != null "> and t.updated_time = #{updatedTime}</if>
+        </where>
+        order by t.verify_date desc
+    </select>
+
+    <insert id="insertWsSafetyHazardVerify" parameterType="WsSafetyHazardVerify" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_safety_hazard_verify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inspectionId != null ">inspection_id,</if>
+            <if test="verifyPersonId != null ">verify_person_id,</if>
+            <if test="verifyDate != null ">verify_date,</if>
+            <if test="verifyResult != null ">verify_result,</if>
+            <if test="verifyResultDescription != null  and verifyResultDescription != ''">verify_result_description,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="uodatedBy != null ">uodated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inspectionId != null ">#{inspectionId},</if>
+            <if test="verifyPersonId != null ">#{verifyPersonId},</if>
+            <if test="verifyDate != null ">#{verifyDate},</if>
+            <if test="verifyResult != null ">#{verifyResult},</if>
+            <if test="verifyResultDescription != null  and verifyResultDescription != ''">#{verifyResultDescription},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="uodatedBy != null ">#{uodatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsSafetyHazardVerify" parameterType="WsSafetyHazardVerify">
+        update t_ws_safety_hazard_verify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inspectionId != null ">inspection_id = #{inspectionId},</if>
+            <if test="verifyPersonId != null ">verify_person_id = #{verifyPersonId},</if>
+            <if test="verifyDate != null ">verify_date = #{verifyDate},</if>
+            <if test="verifyResult != null ">verify_result = #{verifyResult},</if>
+            <if test="verifyResultDescription != null  and verifyResultDescription != ''">verify_result_description = #{verifyResultDescription},</if>
+            <if test="uodatedBy != null ">uodated_by = #{uodatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsSafetyHazardVerifyById" parameterType="Integer">
+        delete from t_ws_safety_hazard_verify where id = #{id}
+    </delete>
+
+    <delete id="deleteWsSafetyHazardVerifyByIds" parameterType="String">
+        delete from t_ws_safety_hazard_verify where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

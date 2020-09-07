@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsEnterpriseMeasuredrealquantitySetupMapper">
+
+    <resultMap type="WsEnterpriseMeasuredrealquantitySetup" id="WsEnterpriseMeasuredrealquantitySetupResult">
+        <result property="id"    column="id"    />
+        <result property="subitemProject"    column="subitem_project"    />
+        <result property="enterpriseId"    column="enterprise_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsEnterpriseMeasuredrealquantitySetupVo">
+        select id, subitem_project, enterprise_id, is_delete, created_by, created_time, updated_by, updated_time from t_ws_enterprise_measuredrealquantity_setup
+    </sql>
+
+    <select id="selectWsEnterpriseMeasuredrealquantitySetupList" parameterType="WsEnterpriseMeasuredrealquantitySetup" resultMap="WsEnterpriseMeasuredrealquantitySetupResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantitySetupVo"/>
+        <where>
+            <if test="subitemProject != null  and subitemProject != ''"> and subitem_project like concat('%', #{subitemProject}, '%')</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+            and is_delete = 'N' and enterprise_id = #{enterpriseId}
+        </where>
+    </select>
+
+    <select id="selectWsEnterpriseMeasuredrealquantitySetupById" parameterType="Integer" resultMap="WsEnterpriseMeasuredrealquantitySetupResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantitySetupVo"/>
+        where id = #{id}  and is_delete = 'N'
+    </select>
+
+    <select id="selectWsEnterpriseMeasuredrealquantitySetupByName" parameterType="WsEnterpriseMeasuredrealquantitySetup" resultMap="WsEnterpriseMeasuredrealquantitySetupResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantitySetupVo"/>
+        where subitem_project = #{subitemProject}  and is_delete = 'N'  and enterprise_id = #{enterpriseId}
+    </select>
+
+
+    <insert id="insertWsEnterpriseMeasuredrealquantitySetup" parameterType="WsEnterpriseMeasuredrealquantitySetup" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_enterprise_measuredrealquantity_setup
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            enterprise_id,
+            <if test="subitemProject != null  and subitemProject != ''">subitem_project,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{enterpriseId},
+            <if test="subitemProject != null  and subitemProject != ''">#{subitemProject},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsEnterpriseMeasuredrealquantitySetup" parameterType="WsEnterpriseMeasuredrealquantitySetup">
+        update t_ws_enterprise_measuredrealquantity_setup
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="subitemProject != null  and subitemProject != ''">subitem_project = #{subitemProject},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id}  and is_delete = 'N'
+    </update>
+
+    <update id="deleteWsEnterpriseMeasuredrealquantitySetupById" parameterType="Integer">
+        update  t_ws_enterprise_measuredrealquantity_setup  set is_delete = 'Y' where id = #{id}
+    </update>
+
+    <update id="deleteWsEnterpriseMeasuredrealquantitySetupByIds" parameterType="String">
+        update  t_ws_enterprise_measuredrealquantity_setup  set is_delete = 'Y' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

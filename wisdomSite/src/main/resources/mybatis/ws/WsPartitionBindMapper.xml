@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsPartitionBindMapper">
+
+    <resultMap type="WsPartitionBind" id="WsPartitionBindResult">
+        <result property="id" column="id"/>
+        <result property="partitionId" column="partition_id"/>
+        <result property="bindId" column="bind_id"/>
+        <result property="bindType" column="bind_type"/>
+    </resultMap>
+
+    <sql id="selectWsPartitionBindVo">
+        select id, partition_id, bind_id, bind_type from t_ws_partition_bind
+    </sql>
+
+    <select id="selectWsPartitionBindList" parameterType="WsPartitionBind" resultMap="WsPartitionBindResult">
+        <include refid="selectWsPartitionBindVo"/>
+        where partition_id = #{partitionId}
+    </select>
+
+    <select id="selectWsPartitionBindById" parameterType="Integer" resultMap="WsPartitionBindResult">
+        <include refid="selectWsPartitionBindVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWsPartitionBind" parameterType="WsPartitionBind" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_partition_bind
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="partitionId != null ">partition_id,</if>
+            <if test="bindId != null ">bind_id,</if>
+            <if test="bindType != null  and bindType != ''">bind_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="partitionId != null ">#{partitionId},</if>
+            <if test="bindId != null ">#{bindId},</if>
+            <if test="bindType != null  and bindType != ''">#{bindType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWsPartitionBind" parameterType="WsPartitionBind">
+        update t_ws_partition_bind
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="partitionId != null ">partition_id = #{partitionId},</if>
+            <if test="bindId != null ">bind_id = #{bindId},</if>
+            <if test="bindType != null  and bindType != ''">bind_type = #{bindType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsPartitionBindById" parameterType="Integer">
+        delete from t_ws_partition_bind where id = #{id}
+    </delete>
+
+    <delete id="deleteWsPartitionBindByIds" parameterType="String">
+        delete from t_ws_partition_bind where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

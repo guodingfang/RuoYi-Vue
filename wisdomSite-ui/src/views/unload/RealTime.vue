@@ -2,6 +2,7 @@
   <div class="realtime-wrap">
     <div class="query-box">
       <el-select
+        v-if="role.type === 0"
         placeholder="项目名称"
         v-model="queryParams.projectId"
         style="width: 180px; margin-right: 20px"
@@ -107,6 +108,12 @@
     components: {
       detailReal
     },
+    props: {
+      role: {
+        type: Object,
+        required: true,
+      },
+    },
     data() {
       return {
         queryParams: {
@@ -135,6 +142,7 @@
         immediate:true
       }
     },
+
     methods: {
       getChange() {
         this.getNum()

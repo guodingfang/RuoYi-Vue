@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.system.mapper.SysEnterpriseMapper">
+
+	<resultMap type="com.jlkj.project.system.domain.SysEnterprise" id="SysEnterpriseResult">
+		<id     property="enterpriseId"     column="enterprise_id"     />
+		<result property="parentId"   column="parent_id"   />
+		<result property="ancestors"  column="ancestors"   />
+		<result property="enterpriseName"   column="enterprise_name"   />
+		<result property="orderNum"   column="order_num"   />
+		<result property="leader"     column="leader"      />
+		<result property="phone"      column="phone"       />
+		<result property="email"      column="email"       />
+		<result property="status"     column="status"      />
+		<result property="delFlag"    column="del_flag"    />
+		<result property="parentName" column="parent_name" />
+		<result property="createBy"   column="create_by"   />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy"   column="update_by"   />
+		<result property="updateTime" column="update_time" />
+		<result property="abbreviation" column="abbreviation" />
+	</resultMap>
+
+	<sql id="selectEnterpriseVo">
+        select d.enterprise_id, d.parent_id, d.ancestors, d.enterprise_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time
+        from sys_enterprise d
+    </sql>
+
+	<select id="selectEnterpriseList" parameterType="SysEnterprise" resultMap="SysEnterpriseResult">
+		<include refid="selectEnterpriseVo"/>
+		where d.del_flag = '0'
+		<if test="parentId != null and parentId != 0">
+			AND parent_id = #{parentId}
+		</if>
+		<if test="enterpriseName != null and enterpriseName != ''">
+			AND enterprise_name like concat('%', #{enterpriseName}, '%')
+		</if>
+		<if test="status != null and status != ''">
+			AND status = #{status}
+		</if>
+		AND(
+			d.enterprise_id IN ( SELECT enterprise_id FROM sys_enterprise WHERE enterprise_id = #{enterpriseId} or find_in_set( #{enterpriseId} , ancestors ) )
+			)
+		ORDER BY d.parent_id, d.order_num
+	</select>
+
+	<select id="selectEnterpriseListByRoleId" parameterType="Long" resultType="Integer">
+		select d.enterprise_id, d.parent_id
+		from sys_enterprise d
+            left join sys_role_dept rd on d.enterprise_id = rd.dept_id
+        where rd.role_id = #{roleId}
+        	and d.enterprise_id not in (select d.parent_id from sys_enterprise d inner join sys_role_dept rd on d.enterprise_id = rd.dept_id and rd.role_id = #{roleId})
+		order by d.parent_id, d.order_num
+	</select>
+
+	<select id="selectEnterpriseById" parameterType="Long" resultMap="SysEnterpriseResult">
+		<include refid="selectEnterpriseVo"/>
+		where enterprise_id = #{enterpriseId}
+	</select>
+
+	<select id="checkEnterpriseExistUser" parameterType="Long" resultType="int">
+		select count(1) from sys_user where enterprise_id = #{enterpriseId} and del_flag = '0'
+	</select>
+
+	<select id="hasChildByEnterpriseId" parameterType="Long" resultType="int">
+		select count(1) from sys_enterprise
+		where del_flag = '0' and parent_id = #{enterpriseId}
+	</select>
+
+	<select id="selectChildrenEnterpriseById" parameterType="Long" resultMap="SysEnterpriseResult">
+		select * from sys_enterprise where enterprise_id = #{enterpriseId}
+	</select>
+
+	<select id="selectNormalChildrenEnterpriseById" parameterType="Long" resultType="int">
+		select count(*) from sys_enterprise where status = 0 and del_flag = '0' and find_in_set(#{enterpriseId}, ancestors)
+	</select>
+
+	<select id="checkEnterpriseNameUnique" resultMap="SysEnterpriseResult">
+		<include refid="selectEnterpriseVo"/>
+		where enterprise_name=#{enterpriseName} and parent_id = #{parentId} and del_flag = 0
+	</select>
+
+	<insert id="insertEnterprise" parameterType="SysEnterprise">
+		insert into sys_enterprise(
+		<if test="enterpriseId != null and enterpriseId != 0">enterprise_id,</if>
+		<if test="parentId != null and parentId != 0">parent_id,</if>
+		<if test="enterpriseName != null and enterpriseName != ''">enterprise_name,</if>
+		<if test="ancestors != null and ancestors != ''">ancestors,</if>
+		<if test="orderNum != null and orderNum != ''">order_num,</if>
+		<if test="leader != null and leader != ''">leader,</if>
+		<if test="phone != null and phone != ''">phone,</if>
+		<if test="email != null and email != ''">email,</if>
+		<if test="abbreviation != null and abbreviation != ''">abbreviation,</if>
+		<if test="status != null">status,</if>
+		<if test="createBy != null and createBy != ''">create_by,</if>
+		create_time
+		)values(
+		<if test="enterpriseId != null and enterpriseId != 0">#{enterpriseId},</if>
+		<if test="parentId != null and parentId != 0">#{parentId},</if>
+		<if test="enterpriseName != null and enterpriseName != ''">#{enterpriseName},</if>
+		<if test="ancestors != null and ancestors != ''">#{ancestors},</if>
+		<if test="orderNum != null and orderNum != ''">#{orderNum},</if>
+		<if test="leader != null and leader != ''">#{leader},</if>
+		<if test="phone != null and phone != ''">#{phone},</if>
+		<if test="email != null and email != ''">#{email},</if>
+		<if test="abbreviation != null and abbreviation != ''">#{abbreviation},</if>
+		<if test="status != null">#{status},</if>
+		<if test="createBy != null and createBy != ''">#{createBy},</if>
+		sysdate()
+		)
+	</insert>
+
+	<update id="updateEnterprise" parameterType="SysEnterprise">
+		update sys_enterprise
+		<set>
+			<if test="parentId != null and parentId != 0">parent_id = #{parentId},</if>
+			<if test="enterpriseName != null and enterpriseName != ''">enterprise_name = #{enterpriseName},</if>
+			<if test="ancestors != null and ancestors != ''">ancestors = #{ancestors},</if>
+			<if test="orderNum != null and orderNum != ''">order_num = #{orderNum},</if>
+			<if test="leader != null">leader = #{leader},</if>
+			<if test="phone != null">phone = #{phone},</if>
+			<if test="email != null">email = #{email},</if>
+			<if test="status != null and status != ''">status = #{status},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where enterprise_id = #{enterpriseId}
+	</update>
+
+	<update id="updateEnterpriseChildren" parameterType="java.util.List">
+		update sys_enterprise set ancestors =
+		<foreach collection="enterprises" item="item" index="index"
+				 separator=" " open="case enterprise_id" close="end">
+			when #{item.enterpriseId} then #{item.ancestors}
+		</foreach>
+		where enterprise_id in
+		<foreach collection="enterprises" item="item" index="index"
+				 separator="," open="(" close=")">
+			#{item.enterpriseId}
+		</foreach>
+	</update>
+
+	<update id="updateEnterpriseStatus" parameterType="SysEnterprise">
+		update sys_enterprise
+		<set>
+			<if test="status != null and status != ''">status = #{status},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where enterprise_id in (${ancestors})
+	</update>
+
+	<delete id="deleteEnterpriseById" parameterType="Long">
+		update sys_enterprise set del_flag = '2' where enterprise_id = #{enterpriseId}
+	</delete>
+
+<!--	<select id="selectOrgVOList" parameterType="SysEnterprise" resultMap="com.jlkj.project.system.domain.SysEnterprise">-->
+<!--		enterprise_id AS organization_id,-->
+<!--		parent_id,-->
+<!--		enterprise_name AS organization_name,-->
+<!--		ancestors-->
+<!--		where d.del_flag = '0'-->
+<!--		<if test="parentId != null and parentId != 0">-->
+<!--			AND parent_id = #{parentId}-->
+<!--		</if>-->
+<!--		<if test="enterpriseName != null and enterpriseName != ''">-->
+<!--			AND enterprise_name like concat('%', #{enterpriseName}, '%')-->
+<!--		</if>-->
+<!--		<if test="status != null and status != ''">-->
+<!--			AND status = #{status}-->
+<!--		</if>-->
+<!--		&lt;!&ndash; 数据范围过滤 &ndash;&gt;-->
+<!--		${params.dataScope}-->
+<!--		order by d.parent_id, d.order_num-->
+<!--	</select>-->
+
+	<sql id="selectProjectVo">
+		SELECT p.id AS enterprise_id,
+		d.enterprise_id AS parent_id,
+		project_name AS enterprise_name,
+		CONCAT( d.ancestors, ',', d.enterprise_id ) AS ancestors
+		FROM
+		t_ws_project p
+		LEFT JOIN sys_enterprise d ON p.project_unit_id = d.enterprise_id
+    </sql>
+
+	<select id="selectProjectList" parameterType="Long" resultMap="SysEnterpriseResult">
+		SELECT
+			p.id AS enterprise_id,
+			p.project_unit_id AS parent_id,
+			p.project_name AS enterprise_name,
+			CONCAT( e.ancestors, ',', p.project_unit_id ) AS ancestors
+		FROM
+			`sys_organization_account` org
+			LEFT JOIN t_ws_project p ON org.organizationId = p.id
+			LEFT JOIN sys_enterprise e ON p.project_unit_id = e.enterprise_id
+		WHERE
+			accountId = #{userId}
+			AND type = 1
+			AND is_delete = 'N';
+	</select>
+
+	<sql id="selectOrgVo">
+		SELECT p.id AS enterprise_id,
+		d.enterprise_id AS parent_id,
+		project_name AS enterprise_name,
+		CONCAT( d.ancestors, ',', d.enterprise_id ) AS ancestors
+		FROM
+		t_ws_project p
+		LEFT JOIN sys_enterprise d ON p.project_unit_id = d.enterprise_id
+    </sql>
+
+	<select id="selectEnterpriseIds" parameterType="Long" resultType="Long">
+		SELECT
+		organizationId
+		FROM
+		`sys_organization_account`
+		WHERE
+		accountId = #{userId}
+		AND type = 0;
+	</select>
+
+	<select id="selectEnterpriseAllList" resultMap="SysEnterpriseResult">
+		<include refid="selectEnterpriseVo"/>
+		where d.del_flag = '0'
+		ORDER BY d.parent_id, d.order_num desc
+	</select>
+
+	<select id="selectOrgProjectList" parameterType="java.util.List" resultMap="SysEnterpriseResult">
+		SELECT
+			p.id AS enterprise_id,
+			p.project_unit_id AS parent_id,
+			p.project_name AS enterprise_name,
+			CONCAT( e.ancestors, ',', p.project_unit_id ) AS ancestors
+		FROM
+			t_ws_project p
+			LEFT JOIN sys_enterprise e ON p.project_unit_id = e.enterprise_id
+		WHERE
+			p.is_delete = 'N'
+			AND p.project_unit_id IN
+			<foreach item="item" index="index" collection="orgIds"
+					 open="(" separator="," close=")">
+				#{item}
+			</foreach>
+	</select>
+
+	<select id="selectAncestorName" parameterType="java.util.List" resultType="String">
+		SELECT
+			GROUP_CONCAT( enterprise_name )
+		FROM
+			sys_enterprise
+		WHERE
+			del_flag = 0
+			AND enterprise_id IN
+		<foreach item="item" index="index" collection="ancestors"
+				 open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+
+	<select id="selectByProJectId" parameterType="Long" resultMap="SysEnterpriseResult">
+	SELECT
+		p.id AS enterprise_id,
+		p.project_unit_id AS parent_id,
+		p.project_name AS enterprise_name,
+		CONCAT( e.ancestors, ',', p.project_unit_id ) AS ancestors
+	FROM
+		t_ws_project p
+		LEFT JOIN sys_enterprise e ON p.project_unit_id = e.enterprise_id
+	WHERE p.id = #{projectId}
+	</select>
+
+</mapper>

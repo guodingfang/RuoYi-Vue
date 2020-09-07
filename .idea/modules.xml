@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/RuoYi-Vue.iml" filepath="$PROJECT_DIR$/.idea/RuoYi-Vue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ruoyi/ruoyi.iml" filepath="$PROJECT_DIR$/ruoyi/ruoyi.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsTowerCraneProjectRealTimeMonitoringMapper">
+
+    <resultMap type="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" id="WsTowerCraneProjectRealTimeMonitoringResult">
+        <result property="projectId"    column="projectId"    />
+        <result property="towerCraneOnSiteNum"    column="towerCraneOnSiteNum"    />
+        <result property="monitoringOnlineRate"    column="monitoringOnlineRate"    />
+        <result property="violationTodayNum"    column="violationTodayNum"    />
+        <result property="monitoringEquipmentNo"    column="monitoringEquipmentNo"    />
+        <result property="towerCraneName"    column="towerCraneName"    />
+        <result property="hoistingToday"    column="hoistingToday"    />
+        <result property="totalViolationToday"    column="totalViolationToday"    />
+        <result property="photoAddress"    column="photoAddress"    />
+        <result property="warningStatus"    column="warningStatus"    />
+        <result property="alarmStatus"    column="alarmStatus"    />
+        <result property="fieldLayout"    column="fieldLayout"    />
+        <result property="coordinateX"    column="coordinateX"    />
+        <result property="coordinateY"    column="coordinateY"    />
+        <result property="monitoringOnlineStatus"    column="monitoringOnlineStatus"    />
+        <result property="equipmentSiteStatus"    column="equipmentSiteStatus"    />
+        <result property="monitoringOnlineNum"    column="monitoringOnlineNum"    />
+        <result property="faceId"    column="faceId"    />
+        <result property="faceNo"    column="faceNo"    />
+        <result property="idCardNo"    column="idCardNo"    />
+        <result property="towerCraneId"    column="towerCraneId"    />
+        <result property="idCardNo"    column="idCardNo"    />
+        <result property="identificationTime"    column="identificationTime"    />
+        <result property="violationTime"    column="violationTime"    />
+        <result property="violationContent"    column="violationContent"    />
+        <result property="violationType"    column="violationType"    />
+        <result property="equipmentName"    column="equipmentName"    />
+        <result property="driverName"    column="driverName"    />
+        <result property="days"    column="days"    />
+        <result property="conditionsDate"    column="conditionsDate"    />
+        <result property="liftingWeight"    column="liftingWeight"    />
+    </resultMap>
+
+
+    <resultMap type="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" id="WsTowerCraneProjectMonitoringDetailsResult">
+        <result property="towerCraneId"    column="towerCraneId"    />
+        <result property="hookVideoId"    column="hookVideoId"    />
+        <result property="hookVideoAddress"    column="hookVideoAddress"    />
+        <result property="projectId"    column="projectId"    />
+        <result property="monitoringEquipmentNo"    column="monitoringEquipmentNo"    />
+        <result property="towerCraneName"    column="towerCraneName"    />
+        <result property="ranges"    column="ranges"    />
+        <result property="maxRange"    column="maxRange"    />
+        <result property="minRange"    column="minRange"    />
+        <result property="corner"    column="corner"    />
+        <result property="maxCorner"    column="maxCorner"    />
+        <result property="minCorner"    column="minCorner"    />
+        <result property="liftingheight"    column="liftingheight"    />
+        <result property="allowLiftingWeight"    column="allowLiftingWeight"    />
+        <result property="maxLiftingheight"    column="maxLiftingheight"    />
+        <result property="minLiftingheight"    column="minLiftingheight"    />
+        <result property="windSpeed"    column="windSpeed"    />
+        <result property="maxWindSpeed"    column="maxWindSpeed"    />
+        <result property="minWindSpeed"    column="minWindSpeed"    />
+        <result property="liftingWeight"    column="liftingWeight"    />
+        <result property="maxLiftingWeight"    column="maxLiftingWeight"    />
+        <result property="minLiftingWeight"    column="minLiftingWeight"    />
+        <result property="angle"    column="angle"    />
+        <result property="maxAngle"    column="maxAngle"    />
+        <result property="minAngle"    column="minAngle"    />
+        <result property="heightState"    column="heightState"    />
+        <result property="rangeState"    column="rangeState"    />
+        <result property="rotationState"    column="rotationState"    />
+        <result property="interferenceState"    column="interferenceState"    />
+        <result property="antiCollisionState"    column="antiCollisionState"    />
+        <result property="windSpeedState"    column="windSpeedState"    />
+        <result property="tiltState"    column="tiltState"    />
+        <result property="overweightState"    column="overweightState"    />
+        <result property="equipmentOnlineStatus"    column="equipmentOnlineStatus"    />
+        <result property="recordNo"    column="recordNo"    />
+        <result property="towerCraneModel"    column="towerCraneModel"    />
+        <result property="propertyUnit"    column="propertyUnit"    />
+        <result property="installUnit"    column="installUnit"    />
+        <result property="violationNotice"    column="violationNotice"    />
+        <result property="driversName"    column="driversName"    />
+        <result property="idNumber"    column="idNumber"    />
+        <result property="specialOperationNumber"    column="specialOperationNumber"    />
+        <result property="identificationTime"    column="identificationTime"    />
+        <result property="photoAddress"    column="photoAddress"    />
+        <result property="searchTime"    column="searchTime"    />
+        <result property="tjLiftingWeight"    column="tjLiftingWeight"    />
+        <result property="tjLiftingDistance"    column="tjLiftingDistance"    />
+        <result property="tjPercentageMoment"    column="tjPercentageMoment"    />
+        <result property="tjAngleRange"    column="tjAngleRange"    />
+        <result property="tjAmplitudeRange"    column="tjAmplitudeRange"    />
+        <result property="tjLiftingTime"    column="tjLiftingTime"    />
+        <result property="tjFallingTime"    column="tjFallingTime"    />
+        <result property="updateDate"    column="updateDate"    />
+        <result property="faceId"    column="faceId"    />
+        <result property="faceNo"    column="faceNo"    />
+        <result property="interferenceStateUpper"    column="interferenceStateUpper"    />
+        <result property="interferenceStateLower"    column="interferenceStateLower"    />
+        <result property="interferenceStateFront"    column="interferenceStateFront"    />
+        <result property="interferenceStateAfter"    column="interferenceStateAfter"    />
+        <result property="interferenceStateLeft"    column="interferenceStateLeft"    />
+        <result property="interferenceStateRight"    column="interferenceStateRight"    />
+        <result property="antiCollisionStateUpper"    column="antiCollisionStateUpper"    />
+        <result property="antiCollisionStateLower"    column="antiCollisionStateLower"    />
+        <result property="antiCollisionStateFront"    column="antiCollisionStateFront"    />
+        <result property="antiCollisionStateAfter"    column="antiCollisionStateAfter"    />
+        <result property="antiCollisionStateLeft"    column="antiCollisionStateLeft"    />
+        <result property="antiCollisionStateRight"    column="antiCollisionStateRight"    />
+        <result property="days"    column="days"    />
+        <result property="tjLiftingWeightChart"    column="tjLiftingWeightChart"    />
+        <result property="tjLiftingDistanceChart"    column="tjLiftingDistanceChart"    />
+        <result property="violationFrequencyChart"    column="violationFrequencyChart"    />
+        <result property="timeChart"    column="timeChart"    />
+        <result property="earlyWarningNum"    column="earlyWarningNum"    />
+        <result property="callPoliceNum"    column="callPoliceNum"    />
+        <result property="giveAlarmTime"    column="giveAlarmTime"    />
+        <result property="todayGiveAlarm"    column="todayGiveAlarm"    />
+        <result property="todayGiveWarning"    column="todayGiveWarning"    />
+        <result property="recentViolationRate"    column="recentViolationRate"    />
+        <result property="recentViolationNum"    column="recentViolationNum"    />
+        <result property="yesterdayHoistingNum"    column="yesterdayHoistingNum"    />
+        <result property="yesterdayHoistingState"    column="yesterdayHoistingState"    />
+        <result property="yesterdayViolationNum"    column="yesterdayViolationNum"    />
+        <result property="todayHoistingNum"    column="todayHoistingNum"    />
+        <result property="todayViolationNum"    column="todayViolationNum"    />
+        <result property="frequency"    column="frequency"    />
+        <result property="analysisLiftingWeight"    column="analysisLiftingWeight"    />
+        <result property="analysisLoadPercentage"    column="analysisLoadPercentage"    />
+        <result property="analysisTime"    column="analysisTime"    />
+        <result property="hoistingCycleTime"    column="hoistingCycleTime"    />
+        <result property="hoistingCycleNum"    column="hoistingCycleNum"    />
+        <result property="regulationsNum"    column="regulationsNum"    />
+        <result property="queryType"    column="queryType"    />
+    </resultMap>
+
+    <select id="selectTowerCraneOnSiteNumQuery" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT COUNT(*) as towerCraneOnSiteNum from t_ws_towercrane_equipment t
+        <where>
+            1=1
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+             and t.presence = '1'
+        </where>
+    </select>
+
+    <select id="selectTowerCraneOnSiteNumQueryList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT t.monitoring_equipment as monitoringEquipmentNo from t_ws_towercrane_equipment t
+        <where>
+            1=1
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+            and t.presence = '1'
+            and (t.monitoring_equipment != '' or t.monitoring_equipment != null)
+        </where>
+    </select>
+
+    <select id="selectMonitoringEquipmentNosOnlineRate" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        select SUM(ONLINE_STATUS = '1') as monitoringOnlineNum from t_ws_black_box
+        where SERIAL_NUMBER in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+    </select>
+
+    <select id="selectMonitoringEquipmentNosViolationTodayNum" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        select convert(SUM(whether_illegal != '0')/count(*) * 100,decimal(15,2)) as violationRate,SUM(whether_illegal != '0') as violationTodayNum from t_ws_towercrane_illegal
+        where serial_number in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        and to_days(insertion_time) = to_days(now());
+    </select>
+
+
+    <select id="selectProjectTowerCraneList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT t.id as towerCraneId, t.equipment_name as towerCraneName,t.monitoring_equipment as monitoringEquipmentNo,t.presence as equipmentSiteStatus,t.coordinate_x as coordinateX,t.coordinate_y as coordinateY,t.face_id as faceId from t_ws_towercrane_equipment t
+        <where>
+            1=1
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+        </where>
+    </select>
+
+    <select id="selectProjectfieldLayout" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT t.fieldLayout_address as fieldLayout from t_ws_project_field_layout t
+        <where>
+            1=1
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+            and t.is_delete = 'N'
+        </where>
+    </select>
+
+    <select id="selectTowerCraneEquipmentWorkDetailsQuery" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT count(*) as hoistingToday,SUM(t.whether_illegal != '0') as totalViolationToday
+        FROM t_ws_towercrane_illegal t
+        WHERE
+        t.serial_number = #{monitoringEquipmentNo}
+        and to_days(t.insertion_time) = to_days(now());
+    </select>
+
+    <select id="selectWarningStatusOrAlarmStatusQuery" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT t.WARNING_STATUS as warningStatus,t.ALARM_STATUS as alarmStatus,t.LOADWEIGHTR as liftingWeight
+        FROM t_ws_tj_monitor_data t
+        WHERE
+        t.SERIAL_NUMBER = #{monitoringEquipmentNo}
+        ORDER BY t.INSERTTIME DESC LIMIT 0,1
+    </select>
+
+    <select id="selectTowerCraneEquipmentFaceNoQuery" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT t.serialNumber as faceNo
+        FROM t_ws_project_equipment t
+        WHERE
+        t.id = #{faceId}
+    </select>
+
+    <select id="selectTowerCraneEquipmentIdCardNoQuery" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT t.ID_CARDNO as idCardNo,t.CREATE_DATE as identificationTime
+        FROM t_ws_monitor_workauth_info t
+        WHERE
+        t.SERIAL_NUMBER = #{faceNo}
+        ORDER BY t.CREATE_DATE DESC LIMIT 0,1
+    </select>
+
+    <select id="selectTowerCraneEquipmentPhotoAddressQuery" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT t.face_url as photoAddress
+        FROM t_ws_team_person t
+        WHERE
+        t.id_number = #{idCardNo}
+        and t.project_id = #{projectId}
+        and t.is_delete = '0'
+    </select>
+
+    <!--监控详情-->
+    <select id="selectProjectTowerCraneInformation" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT
+	    t.cliver_video_id as hookVideoId,t.equipment_name as towerCraneName,t.property_recordNo as recordNo,t.specifications_model as towerCraneModel,
+	    t.property_unit as propertyUnit,t.install_unit as installUnit,t.face_id as faceId,t.project_id as projectId,t2.violation_notice as violationNotice,t.monitoring_equipment as monitoringEquipmentNo
+        from t_ws_towercrane_equipment t left join t_ws_project t2 on t.project_id = t2.id where t.presence = '1'
+        and t.id = #{towerCraneId}
+        and (t.monitoring_equipment != '' or t.monitoring_equipment is not null)
+        and t2.is_delete = 'N'
+    </select>
+
+    <select id="selectProjectMonitorrRealTimeData" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT RADIUS as ranges,ANGLE as corner,HIGHT as liftingheight,WINDSPEED as windSpeed,LOADWEIGHTR as liftingWeight,FALL as angle,CURRENT_ALLOW_WEIGHT as allowLiftingWeight
+            from t_ws_tj_monitor_data_${monitoringEquipmentNo}
+            where 1=1
+        ORDER BY CREATE_DATE DESC LIMIT 0,1
+    </select>
+
+    <select id="selectRecentViolationRateData" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT round(SUM(IS_ILLEGAL != '0')/100,2) as recentViolationRate,SUM(IS_ILLEGAL != '0') as recentViolationNum
+            from t_ws_tj_monitor_work_cycle_${monitoringEquipmentNo}
+            where 1=1
+        ORDER BY CREATE_DATE DESC LIMIT 0,100
+    </select>
+
+    <select id="selectYesterdayHoistingData" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT count(*) as yesterdayHoistingNum,SUM(IS_ILLEGAL != '0') as yesterdayViolationNum
+            from t_ws_tj_monitor_work_cycle_${monitoringEquipmentNo}
+            where DATEDIFF(INSERTTIME,NOW())=-1
+    </select>
+
+    <select id="selectTodayHoistingData" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT count(*) as todayHoistingNum,SUM(IS_ILLEGAL != '0') as todayViolationNum
+            from t_ws_tj_monitor_work_cycle_${monitoringEquipmentNo}
+            where DATEDIFF(INSERTTIME,NOW())=0
+    </select>
+
+    <select id="selectProjectMonitorrRealTimeMaxMinData" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT QIANBICHANG as maxRange,'0' as minRange,'360' as maxCorner,'-360' as minCorner,TABIGAO as maxLiftingheight,'0' as minLiftingheight,
+            '10' as maxWindSpeed,'0' as minWindSpeed,MAXWEIGHT as maxLiftingWeight,'0' as minLiftingWeight,'5' as maxAngle,'-5' as minAngle
+            from t_ws_tj_base_info
+            where 1=1
+            and SERIAL_NUMBER = #{monitoringEquipmentNo}
+        ORDER BY CREATE_DATE DESC LIMIT 0,1
+    </select>
+
+    <select id="selectTowerCraneDriverInformationQuery" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT t.face_url as photoAddress,name as driversName,id_number as idNumber
+        FROM t_ws_team_person t
+        WHERE
+        t.id_number = #{idCardNo}
+        and t.project_id = #{projectId}
+        and t.is_delete = '0'
+    </select>
+
+    <select id="selectProjectMonitorrForewarningData" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT HEIGHT_LIMIT_STATUS as heightState,TURN_LIMIT_FN_STATUS as rangeState,TURN_LIMIT_LR_STATUS as rotationState,
+                INTERFERENCE_UP_STATUS as interferenceStateUpper,INTERFERENCE_DOWN_STATUS as interferenceStateLower,INTERFERENCE_BEFORE_STATUS as interferenceStateFront,INTERFERENCE_AFTER_STATUS as interferenceStateAfter,
+                INTERFERENCE_LEFT_STATUS as interferenceStateLeft,INTERFERENCE_RIGHT_STATUS as interferenceStateRight,
+                COLLISION_UP_STATUS as antiCollisionStateUpper,COLLISION_DOWN_STATUS as antiCollisionStateLower,COLLISION_BEFORE_STATUS as antiCollisionStateFront,
+                COLLISION_AFTER_STATUS as antiCollisionStateAfter,COLLISION_LEFT_STATUS as antiCollisionStateLeft,COLLISION_RIGHT_STATUS as antiCollisionStateRight,
+                WIND_SPEEN_LIMIT_STATUS as windSpeedState,TILT_LIMIT_STATUS as tiltState,WEIGHT_LIMIT_STATUS as overweightState,INSERTTIME as updateDate
+            from t_ws_tj_monitor_data_${monitoringEquipmentNo}
+            where 1=1
+        ORDER BY INSERTTIME DESC LIMIT 0,1
+    </select>
+
+    <select id="selectEquipmentOnlineStatusData" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        select ONLINE_STATUS as equipmentOnlineStatus from t_ws_black_box
+        where SERIAL_NUMBER = #{monitoringEquipmentNo}
+    </select>
+
+    <select id="selectEquipmentWorkCycleRecordOneList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT t.max_weight as tjLiftingWeightChart, abs(t.lifting_point_height - t.unloading_point_height) as tjLiftingDistanceChart,DATE_FORMAT(t.lifting_time,'%H:%i:%S')as timeChart
+        FROM t_ws_towercrane_illegal t
+        WHERE
+        t.serial_number = #{monitoringEquipmentNo}
+        and to_days(t.insertion_time) = to_days(now())
+		ORDER BY startTime DESC
+    </select>
+
+    <select id="selectEquipmentWorkCycleRecordfifteenList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT sum(t.max_weight) as tjLiftingWeightChart, sum(abs(t.lifting_point_height - t.unloading_point_height)) as tjLiftingDistanceChart,count(whether_illegal != '0') as violationFrequencyChart,
+        DATE_FORMAT(t.lifting_time,'%m-%d')as timeChart
+        FROM t_ws_towercrane_illegal t
+        WHERE
+        t.serial_number = #{monitoringEquipmentNo}
+        and date_sub(curdate(), interval 14 day) <![CDATA[<=]]> date(t.insertion_time)
+        GROUP BY timeChart
+        ORDER BY timeChart DESC
+    </select>
+
+    <select id="selectEquipmentWorkCycleDetails" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT convert(t.max_weight/1000,decimal(15,1)) as tjLiftingWeight,abs(t.lifting_point_height - t.unloading_point_height) as tjLiftingDistance,t.max_torque as tjPercentageMoment,
+               concat_ws("-",convert(t.lifting_point_angle/10,decimal(15,1)),convert(t.unloading_point_angle/10,decimal(15,1))) as tjAngleRange,
+               concat_ws("-",convert(t.lifting_point_amplitude/10,decimal(15,1)),convert(t.unloading_point_amplitude/10,decimal(15,1))) as tjAmplitudeRange,
+               t.lifting_time as tjLiftingTime,t.unloading_point_time as tjFallingTime
+        FROM t_ws_towercrane_illegal t
+        WHERE
+        t.serial_number = #{monitoringEquipmentNo}
+        and date_format(t.insertion_time, '%Y-%m-%d') = #{searchTime}
+        ORDER BY t.insertion_time DESC
+    </select>
+
+    <select id="selectEquipmentWorkDriverInformation" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT t.ID_CARDNO as idCardNo,t.CREATE_DATE as identificationTime,t.USERNAME as driversName,'' as specialOperationNumber
+        FROM t_ws_monitor_workauth_info t
+        WHERE
+        t.SERIAL_NUMBER = #{faceNo}
+        and t.USERNAME like CONCAT('%',#{driversName},'%')
+        and date_format(t.CREATE_DATE, '%Y-%m-%d') = #{searchTime}
+    </select>
+
+    <select id="selectProjectMonitorrRealTimeAlarmData" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT count(t.WARNING_STATUS = '1') as earlyWarningNum,count(t.ALARM_STATUS = '1') as callPoliceNum,DATE_FORMAT(t.INSERTTIME,'%m-%d')as giveAlarmTime
+        from t_ws_tj_monitor_data_${monitoringEquipmentNo} t
+        where 1=1
+        and date_sub(curdate(), interval 14 day) <![CDATA[<=]]> date(t.INSERTTIME)
+        GROUP BY giveAlarmTime
+        ORDER BY t.INSERTTIME DESC
+    </select>
+
+    <select id="selectProjectMonitorrWarningTodayData" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT SUM(t.WARNING_STATUS = '1') as todayGiveWarning,SUM(t.ALARM_STATUS = '1') as todayGiveAlarm
+        from t_ws_tj_monitor_data_${monitoringEquipmentNo} t
+        where 1=1
+        and to_days(t.INSERTTIME) = to_days(now())
+    </select>
+
+    <select id="selectTowerCraneEquipmentNameQuery" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT t.USERNAME as driverName
+        FROM t_ws_monitor_workauth_info t
+        WHERE
+        t.SERIAL_NUMBER = #{faceNo}
+        ORDER BY t.CREATE_DATE DESC LIMIT 0,1
+    </select>
+
+    <select id="selectDetailsProjectViolationQuerySeven" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        select
+        CASE
+        when whether_illegal = '1' then '超重违章'
+        when whether_illegal = '2' then '风速违章'
+        else '暂无数据'
+        END
+        as violationContent,insertion_time as violationTime from t_ws_towercrane_illegal
+        where 1=1
+        and serial_number = #{monitoringEquipmentNo}
+        and whether_illegal != '0'
+        and date_sub(curdate(), interval 6 day) <![CDATA[<=]]> date(insertion_time)
+        ORDER BY violationTime desc
+    </select>
+
+    <select id="selectDetailsProjectViolationQueryThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        select
+        CASE
+        when whether_illegal = '0' then '正常'
+        when whether_illegal = '1' then '超重违章'
+        when whether_illegal = '2' then '风速违章'
+        else '暂无数据'
+        END
+        as violationContent,insertion_time as violationTime from t_ws_towercrane_illegal
+        where 1=1
+        and serial_number = #{monitoringEquipmentNo}
+        and whether_illegal != '0'
+        and date_sub(curdate(), interval 29 day) <![CDATA[<=]]> date(insertion_time)
+        ORDER BY violationTime desc
+    </select>
+
+    <select id="selectDetailsProjectViolationQuerySame" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        select
+        CASE
+        when whether_illegal = '0' then '正常'
+        when whether_illegal = '1' then '超重违章'
+        when whether_illegal = '2' then '风速违章'
+        else '暂无数据'
+        END
+        as violationContent,insertion_time as violationTime from t_ws_towercrane_illegal
+        where 1=1
+        and serial_number = #{monitoringEquipmentNo}
+        and whether_illegal != '0'
+        and date_format(insertion_time, '%Y-%m-%d') = #{conditionsDate}
+        ORDER BY violationTime desc
+    </select>
+
+    <select id="selectProjectTowerCraneDetailsList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectRealTimeMonitoringDTO" resultMap="WsTowerCraneProjectRealTimeMonitoringResult">
+        SELECT t.id as towerCraneId, t.equipment_name as towerCraneName,t.monitoring_equipment as monitoringEquipmentNo,t.presence as equipmentSiteStatus,t.coordinate_x as coordinateX,t.coordinate_y as coordinateY,t.face_id as faceId from t_ws_towercrane_equipment t
+        <where>
+            1=1
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+            and t.equipment_name like CONCAT('%',#{equipmentName},'%')
+        </where>
+    </select>
+
+
+    <select id="selectEquipmentStatusAnalysis" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        SELECT INSERTTIME as analysisTime, ROUND(BCMAXLJ, 2) AS analysisLoadPercentage,BCMAXDZ as analysisLiftingWeight
+            from t_ws_tj_monitor_work_cycle_${monitoringEquipmentNo}
+            where 1=1
+        ORDER BY CREATE_DATE DESC LIMIT 0,${frequency}
+    </select>
+
+    <select id="selectHoistingCycleSeven" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        select a.hoistingCycleTime,IFNULL(b.regulationsNum,0) as regulationsNum,IFNULL(b.hoistingCycleNum,0) as hoistingCycleNum
+        from (
+        SELECT curdate() as hoistingCycleTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        ) a left join (
+        select date(t.INSERTTIME) as datetime,SUM(t.IS_ILLEGAL != '0') as regulationsNum,COUNT(*) as hoistingCycleNum
+        from t_ws_tj_monitor_work_cycle_${monitoringEquipmentNo} t
+        where 1=1
+        group by date(t.INSERTTIME)
+        ) b on a.hoistingCycleTime = b.datetime
+        ORDER BY a.hoistingCycleTime
+    </select>
+
+    <select id="selectHoistingCycleFifteen" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        select a.hoistingCycleTime,IFNULL(b.regulationsNum,0) as regulationsNum,IFNULL(b.hoistingCycleNum,0) as hoistingCycleNum
+        from (
+        SELECT curdate() as hoistingCycleTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 7 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 8 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 9 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 10 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 11 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 12 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 13 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 14 day) as click_date
+        ) a left join (
+        select date(t.INSERTTIME) as datetime,SUM(t.IS_ILLEGAL != '0') as regulationsNum,COUNT(*) as hoistingCycleNum
+        from t_ws_tj_monitor_work_cycle_${monitoringEquipmentNo} t
+        where 1=1
+        group by date(t.INSERTTIME)
+        ) b on a.hoistingCycleTime = b.datetime
+        ORDER BY a.hoistingCycleTime
+    </select>
+
+    <select id="selectHoistingCycleThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneProjectMonitoringDetailsDTO" resultMap="WsTowerCraneProjectMonitoringDetailsResult">
+        select a.hoistingCycleTime,IFNULL(b.regulationsNum,0) as regulationsNum,IFNULL(b.hoistingCycleNum,0) as hoistingCycleNum
+        from (
+        SELECT curdate() as hoistingCycleTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 7 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 8 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 9 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 10 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 11 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 12 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 13 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 14 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 15 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 16 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 17 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 18 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 19 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 20 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 21 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 22 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 23 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 24 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 25 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 26 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 27 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 28 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 29 day) as click_date
+        ) a left join (
+        select date(t.INSERTTIME) as datetime,SUM(t.IS_ILLEGAL != '0') as regulationsNum,COUNT(*) as hoistingCycleNum
+        from t_ws_tj_monitor_work_cycle_${monitoringEquipmentNo} t
+        where 1=1
+        group by date(t.INSERTTIME)
+        ) b on a.hoistingCycleTime = b.datetime
+        ORDER BY a.hoistingCycleTime
+    </select>
+</mapper>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsParticipatingUnitLibraryMapper">
+
+    <resultMap type="WsParticipatingUnitLibrary" id="WsParticipatingUnitLibraryResult">
+        <result property="id"    column="id"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="unitTypeId"    column="unit_type_id"    />
+        <result property="unitOrgcode"    column="unit_orgcode"    />
+        <result property="regDate"    column="reg_date"    />
+        <result property="regAreaId"    column="reg_area_id"    />
+        <result property="regCapital"    column="reg_capital"    />
+        <result property="unitNatureCode"    column="unit_nature_code"    />
+        <result property="unitNature"    column="unit_nature"    />
+        <result property="legalPerson"    column="legal_person"    />
+        <result property="address"    column="address"    />
+        <result property="contacts"    column="contacts"    />
+        <result property="contactNumber"    column="contact_number"    />
+        <result property="officeNumber"    column="office_number"    />
+        <result property="faxNumber"    column="fax_number"    />
+        <result property="comment"    column="comment"    />
+        <result property="teamNames"    column="team_names"    />
+        <result property="unitTypeName"    column="unit_type_name"    />
+        <result property="regAreaName"    column="reg_area_name"    />
+    </resultMap>
+
+    <resultMap type="WsParticipatingUnitLibraryVO" id="WsParticipatingUnitLibraryVOResult">
+
+        <result property="unitTypeName"    column="unit_type_name"    />
+        <result property="unitTypeParentName"    column="unit_type_parent_name"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="unitNatureName"    column="unit_nature_name"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="projectNo"    column="project_no"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="projectNo"    column="project_no"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="buildPurpose"    column="build_purpose"    />
+        <result property="registerNumber"    column="register_number"    />
+    </resultMap>
+
+    <sql id="selectWsParticipatingUnitLibraryVo">
+        select u.id, u.unit_name, u.unit_type_id, u.unit_orgcode, u.reg_date, u.reg_area_id, u.reg_capital,
+               u.unit_nature_code, u.legal_person, u.address, u.contacts, u.contact_number, u.office_number, u.fax_number, u.comment, u.team_names,
+               t.type_name unit_type_name, a.name reg_area_name,
+               d.dict_label unit_nature
+        from t_ws_participating_unit_library u
+        left join t_ws_participating_unit_type t on u.unit_type_id = t.id
+        left join (SELECT county.id id ,concat(province.name,city.name ,county.name) name from t_ws_area as  county INNER JOIN t_ws_area as city  on county.PARENT_ID = city.id INNER JOIN t_ws_area province on city.PARENT_ID=province.id) a on u.reg_area_id = a.id
+        left join sys_dict_data d on  (u.unit_nature_code = d.dict_value and d.dict_type="enterprise_nature")
+    </sql>
+
+
+    <select id="selectWsParticipatingUnitLibraryList" parameterType="WsParticipatingUnitLibrary" resultMap="WsParticipatingUnitLibraryResult">
+        <include refid="selectWsParticipatingUnitLibraryVo"/>
+        <where>
+            <if test="enterpriseId != null"> and enterprise_id = #{enterpriseId}</if>
+            <if test="unitName != null  and unitName != ''"> and unit_name like concat('%', #{unitName}, '%')</if>
+            <if test="unitTypeId != null "> and unit_type_id = #{unitTypeId}</if>
+            <if test="unitOrgcode != null  and unitOrgcode != ''"> and unit_orgcode = #{unitOrgcode}</if>
+            <if test="unitNatureCode != null  and unitNatureCode != ''"> and unit_nature_code = #{unitNatureCode}</if>
+            <if test="keyWordName != null  and keyWordName != ''">
+             and unit_orgcode like concat('%', #{keyWordName}, '%') or unit_name like concat('%', #{keyWordName}, '%')
+             </if>
+            <if test="params!=null and params.ids !=null"> and  u.id in (
+                <foreach collection="params.ids " index="index" separator="," item="id">
+                    #{id}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWsParticipatingUnitLibraryById" parameterType="Integer" resultMap="WsParticipatingUnitLibraryResult">
+        <include refid="selectWsParticipatingUnitLibraryVo"/>
+        where u.id = #{id}
+    </select>
+
+    <select id="statisticsProjectParticipatingUnitHistoryRecord" parameterType="WsParticipatingUnitLibrary" resultMap="WsParticipatingUnitLibraryVOResult">
+        select  p.project_name project_name,p.project_no project_no, p.build_purpose build_purpose,
+               pu.created_time in_date ,count(1) register_number
+         from t_ws_participating_unit_library u
+         left join t_ws_project_participating_unit pu on (u.unit_orgcode = pu.unit_orgcode and  u.unit_type_id= pu.unit_type_id)
+         left join t_ws_project p on pu.project_id  = p.id
+         left join t_ws_team_person tp on u.id = tp.unit_id
+         where  u.unit_orgcode = #{unitOrgcode} and  u.unit_type_id = #{unitTypeId}
+         group by pu.project_id
+
+    </select>
+
+    <select id="findWsParticipatingUnitByOrgcode" parameterType="String" resultType="int">
+        select count(1) from t_ws_participating_unit_library
+        where unit_orgcode = #{unitOrgcode}
+
+    </select>
+
+    <insert id="insertWsParticipatingUnitLibrary" parameterType="WsParticipatingUnitLibrary" >
+        insert into t_ws_participating_unit_library
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="enterpriseId != null"> enterprise_id,</if>
+            <if test="unitName != null  and unitName != ''">unit_name,</if>
+            <if test="unitTypeId != null ">unit_type_id,</if>
+            <if test="unitOrgcode != null  and unitOrgcode != ''">unit_orgcode,</if>
+            <if test="regDate != null ">reg_date,</if>
+            <if test="regAreaId != null ">reg_area_id,</if>
+            <if test="regCapital != null ">reg_capital,</if>
+            <if test="unitNatureCode != null  and unitNatureCode != ''">unit_nature_code,</if>
+            <if test="legalPerson != null  and legalPerson != ''">legal_person,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="contacts != null  and contacts != ''">contacts,</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number,</if>
+            <if test="officeNumber != null  and officeNumber != ''">office_number,</if>
+            <if test="faxNumber != null  and faxNumber != ''">fax_number,</if>
+            <if test="comment != null  and comment != ''">comment,</if>
+            <if test="teamNames != null  and teamNames != ''">team_names,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="enterpriseId != null"> #{enterpriseId},</if>
+            <if test="unitName != null  and unitName != ''">#{unitName},</if>
+            <if test="unitTypeId != null ">#{unitTypeId},</if>
+            <if test="unitOrgcode != null  and unitOrgcode != ''">#{unitOrgcode},</if>
+            <if test="regDate != null ">#{regDate},</if>
+            <if test="regAreaId != null ">#{regAreaId},</if>
+            <if test="regCapital != null ">#{regCapital},</if>
+            <if test="unitNatureCode != null  and unitNatureCode != ''">#{unitNatureCode},</if>
+            <if test="legalPerson != null  and legalPerson != ''">#{legalPerson},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="contacts != null  and contacts != ''">#{contacts},</if>
+            <if test="contactNumber != null  and contactNumber != ''">#{contactNumber},</if>
+            <if test="officeNumber != null  and officeNumber != ''">#{officeNumber},</if>
+            <if test="faxNumber != null  and faxNumber != ''">#{faxNumber},</if>
+            <if test="comment != null  and comment != ''">#{comment},</if>
+            <if test="teamNames != null  and teamNames != ''">#{teamNames},</if>
+         </trim>
+    </insert>
+
+
+    <insert id="insertWsParticipatingUnitLibraryByProject" parameterType="WsProjectParticipatingUnit" >
+        insert into t_ws_participating_unit_library
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="enterpriseId != null"> enterprise_id,</if>
+            <if test="unitName != null  and unitName != ''">unit_name,</if>
+            <if test="unitTypeId != null ">unit_type_id,</if>
+            <if test="unitOrgcode != null  and unitOrgcode != ''">unit_orgcode,</if>
+            <if test="regDate != null ">reg_date,</if>
+            <if test="regAreaId != null ">reg_area_id,</if>
+            <if test="regCapital != null ">reg_capital,</if>
+            <if test="unitNatureCode != null  and unitNatureCode != ''">unit_nature_code,</if>
+            <if test="legalPerson != null  and legalPerson != ''">legal_person,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="contacts != null  and contacts != ''">contacts,</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number,</if>
+            <if test="officeNumber != null  and officeNumber != ''">office_number,</if>
+            <if test="faxNumber != null  and faxNumber != ''">fax_number,</if>
+            <if test="comment != null  and comment != ''">comment,</if>
+            <if test="params != null">team_names,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="enterpriseId != null"> #{enterpriseId},</if>
+            <if test="unitName != null  and unitName != ''">#{unitName},</if>
+            <if test="unitTypeId != null ">#{unitTypeId},</if>
+            <if test="unitOrgcode != null  and unitOrgcode != ''">#{unitOrgcode},</if>
+            <if test="regDate != null ">#{regDate},</if>
+            <if test="regAreaId != null ">#{regAreaId},</if>
+            <if test="regCapital != null ">#{regCapital},</if>
+            <if test="unitNatureCode != null  and unitNatureCode != ''">#{unitNatureCode},</if>
+            <if test="legalPerson != null  and legalPerson != ''">#{legalPerson},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="contacts != null  and contacts != ''">#{contacts},</if>
+            <if test="contactNumber != null  and contactNumber != ''">#{contactNumber},</if>
+            <if test="officeNumber != null  and officeNumber != ''">#{officeNumber},</if>
+            <if test="faxNumber != null  and faxNumber != ''">#{faxNumber},</if>
+            <if test="comment != null  and comment != ''">#{comment},</if>
+            <if test="params != null  ">#{params.teamNames},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWsParticipatingUnitLibrary" parameterType="WsParticipatingUnitLibrary">
+        update t_ws_participating_unit_library
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="unitName != null  and unitName != ''">unit_name = #{unitName},</if>
+            <if test="unitTypeId != null ">unit_type_id = #{unitTypeId},</if>
+            <if test="unitOrgcode != null  and unitOrgcode != ''">unit_orgcode = #{unitOrgcode},</if>
+            <if test="regDate != null ">reg_date = #{regDate},</if>
+            <if test="regAreaId != null ">reg_area_id = #{regAreaId},</if>
+            <if test="regCapital != null ">reg_capital = #{regCapital},</if>
+            <if test="unitNatureCode != null  and unitNatureCode != ''">unit_nature_code = #{unitNatureCode},</if>
+            <if test="legalPerson != null  and legalPerson != ''">legal_person = #{legalPerson},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="contacts != null  and contacts != ''">contacts = #{contacts},</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number = #{contactNumber},</if>
+            <if test="officeNumber != null  and officeNumber != ''">office_number = #{officeNumber},</if>
+            <if test="faxNumber != null  and faxNumber != ''">fax_number = #{faxNumber},</if>
+            <if test="comment != null  and comment != ''">comment = #{comment},</if>
+            <if test="teamNames != null  and teamNames != ''">team_names = #{teamNames},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateWsParticipatingUnitLibraryByProject" parameterType="WsProjectParticipatingUnit">
+        update t_ws_participating_unit_library
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="unitName != null  and unitName != ''">unit_name = #{unitName},</if>
+            <if test="unitTypeId != null ">unit_type_id = #{unitTypeId},</if>
+            <if test="unitOrgcode != null  and unitOrgcode != ''">unit_orgcode = #{unitOrgcode},</if>
+            <if test="regDate != null ">reg_date = #{regDate},</if>
+            <if test="regAreaId != null ">reg_area_id = #{regAreaId},</if>
+            <if test="regCapital != null ">reg_capital = #{regCapital},</if>
+            <if test="unitNatureCode != null  and unitNatureCode != ''">unit_nature_code = #{unitNatureCode},</if>
+            <if test="legalPerson != null  and legalPerson != ''">legal_person = #{legalPerson},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="contacts != null  and contacts != ''">contacts = #{contacts},</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number = #{contactNumber},</if>
+            <if test="officeNumber != null  and officeNumber != ''">office_number = #{officeNumber},</if>
+            <if test="faxNumber != null  and faxNumber != ''">fax_number = #{faxNumber},</if>
+            <if test="comment != null  and comment != ''">comment = #{comment},</if>
+        </trim>
+        where unit_orgcode = #{unitOrgcode}
+    </update>
+
+    <delete id="deleteWsParticipatingUnitLibraryById" parameterType="Integer">
+        delete from t_ws_participating_unit_library where id = #{id}
+    </delete>
+
+    <delete id="deleteWsParticipatingUnitLibraryByIds" parameterType="String">
+        delete from t_ws_participating_unit_library where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

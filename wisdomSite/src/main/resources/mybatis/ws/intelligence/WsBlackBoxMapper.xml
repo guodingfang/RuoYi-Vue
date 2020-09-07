@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsBlackBoxMapper">
+
+    <resultMap type="WsBlackBox" id="WsBlackBoxResult">
+        <result property="oid"    column="oid"    />
+        <result property="name"    column="name"    />
+        <result property="equipmentType"    column="equipment_type"    />
+        <result property="code"    column="code"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="plantCode"    column="plant_code"    />
+        <result property="onlineStatus"    column="online_status"    />
+        <result property="alertStatus"    column="alert_status"    />
+        <result property="dtuNumber"    column="dtu_number"    />
+        <result property="memo"    column="memo"    />
+        <result property="tjWorkCycleNum"    column="tj_work_cycle_num"    />
+        <result property="tjIllegalNum"    column="tj_illegal_num"    />
+        <result property="elevatorWorkCycleNum"    column="elevator_work_cycle_num"    />
+        <result property="elevatorIllegalNum"    column="elevator_illegal_num"    />
+        <result property="personNum"    column="person_num"    />
+        <result property="messageBody"    column="message_body"    />
+        <result property="createdDate"    column="create_date"    />
+        <result property="rlbdSerialNumber"    column="rlbd_serial_number"    />
+    </resultMap>
+
+
+    <resultMap type="WsElevatorManagerStatisticsVO" id="WsElevatorManagerStatisticsVOResult">
+        <result property="onlineMonitorDeviceNumber"    column="online_number"    />
+        <result property="totalMonitorDeviceNumber"    column="total_number"    />
+    </resultMap>
+
+    <sql id="selectWsBlackBoxVo">
+        select  oid,name,equipment_type,code,serial_number,plant_code,online_status,alert_status,dtu_number,memo,tj_work_cycle_num,
+        tj_illegal_num,elevator_work_cycle_num,elevator_illegal_num,person_num,message_body,create_date,rlbd_serial_number
+        from t_ws_black_box
+    </sql>
+
+    <select id="selectWsBlackBoxList" parameterType="WsBlackBox" resultMap="WsBlackBoxResult">
+        <include refid="selectWsBlackBoxVo"/>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="equipmentType != null "> and equipment_type = #{equipmentType}</if>
+            <if test="serialNumbers != null">
+                and serial_number in
+                <foreach collection="serialNumbers" item="serialNumber" index="index" separator="," open="(" close=")">
+                    #{serialNumber}
+                </foreach>
+             </if>
+        </trim>
+    </select>
+
+
+    <select id="selectWsBlackBoxBySeriNumberAndType"  resultMap="WsBlackBoxResult">
+        <include refid="selectWsBlackBoxVo"/>
+        where serial_number = #{serialNumber} and equipment_type = #{equipmentType}
+    </select>
+
+
+    <select id="statisticsOnline"  resultMap="WsElevatorManagerStatisticsVOResult">
+        select count(1) total_number,count(if(online_status=1,1,null)) online_number     from t_ws_black_box
+        <where>
+            <if test="serialNumbers!=null ">
+               serial_number in (
+                    <foreach collection="serialNumbers" item="serialNumber" index="index" separator="," >
+                        #{serialNumber}
+                    </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

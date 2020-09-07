@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsAttendanceBindingMapper">
+
+    <resultMap type="WsAttendanceBinding" id="WsAttendanceBindingResult">
+        <result property="guid"    column="guid"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="authStatus"    column="auth_status"    />
+        <result property="reason"    column="reason"    />
+        <result property="deviceName"    column="device_name"    />
+    </resultMap>
+
+    <sql id="selectWsAttendanceBindingVo">
+        select  guid, serial_number, auth_status,reason from t_ws_attendance_binding
+    </sql>
+
+    <select id="selectWsAttendanceBindingList" resultMap="WsAttendanceBindingResult">
+        select am.name device_name,am.serial_number serial_number
+        from t_ws_attendance_binding ab
+        left join t_ws_attendance_machine am on ab.serial_number = am.serial_number
+        <trim prefix="where" prefixOverrides="and">
+            <if test="wsAttendanceBinding.guid != null and wsAttendanceBinding.guid!=''"> and ab.guid = #{wsAttendanceBinding.guid}</if>
+            <if test="wsAttendanceBinding.serialNumber != null and wsAttendanceBinding.serialNumber!=''"> and ab.serial_number = #{wsAttendanceBinding.serialNumber}</if>
+            <if test="wsAttendanceBinding.authStatus != null and wsAttendanceBinding.authStatus!=''"> and ab.auth_status = #{wsAttendanceBinding.authStatus}</if>
+            <if test="dataScope !=null and dataScope.size>0">
+                and am.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectWsAttendanceBindingById" parameterType="Integer" resultMap="WsAttendanceBindingResult">
+        <include refid="selectWsAttendanceBindingVo"/>
+        where guid = #{guid}
+    </select>
+
+    <insert id="insertWsAttendanceBinding" parameterType="WsAttendanceBinding" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_attendance_binding(
+            <if test="guid != null and guid!=''">guid,</if>
+            <if test="serialNumber != null and serialNumber!=''">serial_number,</if>
+            <if test="authStatus != null  and authStatus != ''">auth_status,</if>
+            <if test="reason != null  and reason != ''">reason,</if>
+            updated_time,created_time
+         )values(
+            <if test="guid != null and guid!=''">#{guid},</if>
+            <if test="serialNumber != null and serialNumber!=''">#{serialNumber},</if>
+            <if test="authStatus != null  and authStatus != ''">#{authStatus},</if>
+            <if test="reason != null  and reason != ''">#{reason},</if>
+            sysdate(),sysdate()
+        )
+    </insert>
+
+    <update id="updateWsAttendanceBinding" parameterType="WsAttendanceBinding">
+        update t_ws_attendance_binding set
+            <if test="guid != null and guid!=''">guid = #{guid},</if>
+            <if test="serialNumber != null and serialNumber!=''">serial_number = #{serialNumber},</if>
+            <if test="reason != null  and reason != ''">reason = #{reason},</if>
+            <if test="authStatus != null  and authStatus != ''">auth_status = #{authStatus},</if>
+            updated_time = sysdate()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsAttendanceBindingById" parameterType="Integer">
+        delete from t_ws_attendance_binding where id = #{id}
+    </delete>
+
+    <delete id="deleteWsAttendanceBindingByGuids" parameterType="String">
+        delete from t_ws_attendance_binding where guid in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countWsAttdanceBindingByGuidAndkey" parameterType="String" resultType="int">
+        select count(1) from t_ws_attendance_binding where serial_number = #{serialNumber} and guid = #{guid}
+    </select>
+
+    <insert id="batchAdd" parameterType="WsAttendanceBinding" >
+        insert into t_ws_attendance_binding (guid,serial_number,auth_status,reason) values
+            <foreach collection="list" item="item" index="index" separator="," >
+               ( #{item.guid},#{item.serialNumber},#{item.authStatus},#{item.reason})
+            </foreach>
+    </insert>
+
+    <update id="batchUpdate" parameterType="WsAttendanceBinding">
+        update t_ws_attendance_binding
+        SET auth_status =
+        <foreach collection="list" item="item" index="index"
+                 separator=" " open="case" close="end,">
+            when guid = #{item.guid} and serial_number=#{item.serialNumber} then #{item.authStatus}
+        </foreach>
+
+        reason =
+        <foreach collection="list" item="item" index="index"
+                 separator=" " open="case" close="end  ">
+            when guid = #{item.guid} and serial_number=#{item.serialNumber} then #{item.reason}
+        </foreach>
+        where guid in (
+        <foreach collection="list" item="item"
+                 separator=",">
+            #{item.guid}
+        </foreach>
+        )
+        and
+        serial_number in (
+        <foreach collection="list" item="item"
+                 separator=",">
+            #{item.serialNumber}
+        </foreach>
+        )
+
+
+    </update>
+
+    <select id="selectAuthDeviceByGuids" parameterType="String" resultType="java.util.Map">
+        select guid,group_concat(serial_number) from t_ws_attendance_binding  where guid in(
+           <foreach collection="array" item="guid" index="index" separator=",">
+               #{guid}
+           </foreach>
+        ) group by  guid
+    </select>
+
+</mapper>

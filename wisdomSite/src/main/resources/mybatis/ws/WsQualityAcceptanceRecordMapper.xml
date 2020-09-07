@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsQualityAcceptanceRecordMapper">
+    
+    <resultMap type="WsQualityAcceptanceRecord" id="WsQualityAcceptanceRecordResult">
+        <result property="id"    column="id"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="planverificationDate"    column="planVerification_date"    />
+        <result property="acceptancePersonId"    column="acceptance_person_id"    />
+        <result property="verificationDate"    column="verification_date"    />
+        <result property="verificationPersonId"    column="verification_person_id"    />
+        <result property="acceptanceState"    column="acceptance_state"    />
+        <result property="acceptanceFrequency"    column="acceptance_frequency"    />
+        <result property="acceptanceDescribe"    column="acceptance_describe"    />
+        <!--<result property="acceptanceImageAddres"    column="acceptance_image_addres"    />-->
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="acceptanceStateName"    column="acceptanceStateName"    />
+        <result property="verifyPersonName"    column="verifyPersonName"    />
+        <result property="acceptancePersonName"    column="acceptancePersonName"    />
+    </resultMap>
+
+    <sql id="selectWsQualityAcceptanceRecordVo">
+        select id, apply_id, planVerification_date, acceptance_person_id, verification_date, verification_person_id, acceptance_state, acceptance_frequency, acceptance_describe, created_by, created_time, updated_by, updated_time from t_ws_quality_acceptance_record
+    </sql>
+
+    <select id="selectWsQualityAcceptanceRecordList" parameterType="WsQualityAcceptanceRecord" resultMap="WsQualityAcceptanceRecordResult">
+        <include refid="selectWsQualityAcceptanceRecordVo"/>
+        <where>  
+            <if test="applyId != null "> and apply_id = #{applyId}</if>
+            <if test="planverificationDate != null "> and planVerification_date = #{planverificationDate}</if>
+            <if test="acceptancePersonId != null "> and acceptance_person_id = #{acceptancePersonId}</if>
+            <if test="verificationDate != null "> and verification_date = #{verificationDate}</if>
+            <if test="verificationPersonId != null "> and verification_person_id = #{verificationPersonId}</if>
+            <if test="acceptanceState != null "> and acceptance_state = #{acceptanceState}</if>
+            <if test="acceptanceFrequency != null "> and acceptance_frequency = #{acceptanceFrequency}</if>
+            <if test="acceptanceDescribe != null  and acceptanceDescribe != ''"> and acceptance_describe = #{acceptanceDescribe}</if>
+            <!--<if test="acceptanceImageAddres != null  and acceptanceImageAddres != ''"> and acceptance_image_addres = #{acceptanceImageAddres}</if>-->
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsQualityAcceptanceRecordById" parameterType="Long" resultMap="WsQualityAcceptanceRecordResult">
+        <include refid="selectWsQualityAcceptanceRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWsQualityAcceptanceRecord" parameterType="WsQualityAcceptanceRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_quality_acceptance_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null ">apply_id,</if>
+            <if test="planverificationDate != null ">planVerification_date,</if>
+            <if test="acceptancePersonId != null ">acceptance_person_id,</if>
+            <if test="verificationDate != null ">verification_date,</if>
+            <if test="verificationPersonId != null ">verification_person_id,</if>
+            <if test="acceptanceState != null ">acceptance_state,</if>
+            <if test="acceptanceFrequency != null ">acceptance_frequency,</if>
+            <if test="acceptanceDescribe != null  and acceptanceDescribe != ''">acceptance_describe,</if>
+            <!--<if test="acceptanceImageAddres != null  and acceptanceImageAddres != ''">acceptance_image_addres,</if>-->
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null ">#{applyId},</if>
+            <if test="planverificationDate != null ">#{planverificationDate},</if>
+            <if test="acceptancePersonId != null ">#{acceptancePersonId},</if>
+            <if test="verificationDate != null ">#{verificationDate},</if>
+            <if test="verificationPersonId != null ">#{verificationPersonId},</if>
+            <if test="acceptanceState != null ">#{acceptanceState},</if>
+            <if test="acceptanceFrequency != null ">#{acceptanceFrequency},</if>
+            <if test="acceptanceDescribe != null  and acceptanceDescribe != ''">#{acceptanceDescribe},</if>
+           <!-- <if test="acceptanceImageAddres != null  and acceptanceImageAddres != ''">#{acceptanceImageAddres},</if>-->
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsQualityAcceptanceRecord" parameterType="WsQualityAcceptanceRecord">
+        update t_ws_quality_acceptance_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyId != null ">apply_id = #{applyId},</if>
+            <if test="planverificationDate != null ">planVerification_date = #{planverificationDate},</if>
+            <if test="acceptancePersonId != null ">acceptance_person_id = #{acceptancePersonId},</if>
+            <if test="verificationDate != null ">verification_date = #{verificationDate},</if>
+            <if test="verificationPersonId != null ">verification_person_id = #{verificationPersonId},</if>
+            <if test="acceptanceState != null ">acceptance_state = #{acceptanceState},</if>
+            <if test="acceptanceFrequency != null ">acceptance_frequency = #{acceptanceFrequency},</if>
+            <if test="acceptanceDescribe != null  and acceptanceDescribe != ''">acceptance_describe = #{acceptanceDescribe},</if>
+           <!-- <if test="acceptanceImageAddres != null  and acceptanceImageAddres != ''">acceptance_image_addres = #{acceptanceImageAddres},</if>-->
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsQualityAcceptanceRecordById" parameterType="Long">
+        delete from t_ws_quality_acceptance_record where id = #{id}
+    </delete>
+
+    <delete id="deleteWsQualityAcceptanceRecordByIds" parameterType="String">
+        delete from t_ws_quality_acceptance_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countWsQualityAcceptanceRecordByApplyId" parameterType="WsQualityAcceptanceRecord" resultMap="WsQualityAcceptanceRecordResult">
+       select * from t_ws_quality_acceptance_record where apply_id = #{applyId}
+    </select>
+
+    <select id="listWsQualityAcceptanceRecordByApplyId" parameterType="WsQualityAcceptanceRecord" resultMap="WsQualityAcceptanceRecordResult">
+        select t.id,t.planVerification_date,t2.nick_name as acceptancePersonName,t.verification_date,t3.nick_name as verifyPersonName,t4.dict_label as acceptanceStateName,t.acceptance_frequency,t.acceptance_describe,t.acceptance_state from t_ws_quality_acceptance_record t
+        left join sys_user t2 on t.acceptance_person_id = t2.user_id
+        left join sys_user t3 on t.verification_person_id = t3.user_id
+        left join sys_dict_data t4 on t.acceptance_state = t4.dict_value and t4.dict_type = 'acceptance_state'
+        where 1=1 and t.apply_id = #{applyId}
+          order by t.acceptance_frequency asc
+    </select>
+</mapper>

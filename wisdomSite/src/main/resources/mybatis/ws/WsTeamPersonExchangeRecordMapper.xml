@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsTeamPersonExchangeRecordMapper">
+    <resultMap type="WsTeamPersonExchangeRecord" id="WsTeamPersonExchangeRecordResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="costPoint"    column="cost_point"    />
+        <result property="exchangeMount"    column="exchange_mount"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <resultMap type="WsTeamPersonExchangeRecordVO" id="WsTeamPersonExchangeRecordVOResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="costPoint"    column="cost_point"    />
+        <result property="exchangeMount"    column="exchange_mount"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="personName"    column="person_name"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="totalDeductPoints"    column="total_deduct_points"    />
+        <result property="faceUrl"    column="face_url"    />
+
+    </resultMap>
+
+    <sql id="selectWsTeamPersonExchangeRecordVo">
+        select id, project_id, person_id, cost_point, exchange_mount, item_name, created_time, updated_time from t_ws_team_person_exchange_record
+    </sql>
+
+    <select id="selectWsTeamPersonExchangeRecordList"  resultMap="WsTeamPersonExchangeRecordVOResult">
+        select tper.id id , tper.project_id, tper.person_id, tper.cost_point, tper.exchange_mount, tper.item_name, tper.created_time ,
+        tp.name person_name,tp.id_number id_number,
+        pt.name team_name,
+        ppu.unit_name unit_name
+        from t_ws_team_person_exchange_record tper
+        left join  t_ws_team_person tp on tp.id = tper.person_id
+        left join t_ws_participating_team pt on pt.id = tp.team_id
+        left join t_ws_project_participating_unit ppu on tp.unit_id = ppu.id
+        where tp.is_delete='0'
+        <if test="wsTeamPersonExchangeRecord.projectId != null "> and tper.project_id = #{wsTeamPersonExchangeRecord.projectId}</if>
+        <if test="wsTeamPersonExchangeRecord.personId != null "> and tper.person_id = #{wsTeamPersonExchangeRecord.personId}</if>
+        <if test="wsTeamPersonExchangeRecord.costPoint != null "> and tper.cost_point = #{wsTeamPersonExchangeRecord.costPoint}</if>
+        <if test="wsTeamPersonExchangeRecord.exchangeMount != null "> and tper.exchange_mount = #{wsTeamPersonExchangeRecord.exchangeMount}</if>
+        <if test="wsTeamPersonExchangeRecord.itemName != null  and wsTeamPersonExchangeRecord.itemName != ''"> and tper.item_name like concat('%', #{wsTeamPersonExchangeRecord.itemName}, '%')</if>
+        <if test="wsTeamPersonExchangeRecord.beginTime != null and wsTeamPersonExchangeRecord.endTime != null ">
+            and tper.created_time between #{wsTeamPersonExchangeRecord.beginTime} and #{wsTeamPersonExchangeRecord.endTime}</if>
+        <if test="wsTeamPersonExchangeRecord.keyWordName != null and wsTeamPersonExchangeRecord.keyWordName != '' ">
+            and (tp.name like concat('%', #{wsTeamPersonExchangeRecord.keyWordName}, '%') or tp.id_number like concat('%', #{wsTeamPersonExchangeRecord.keyWordName}, '%'))
+        </if>
+        <if test="dataScope !=null and dataScope.size>0">
+            and tper.project_id in (
+            <foreach collection="dataScope" separator="," item="project"  index="index">
+                #{project.id}
+            </foreach>
+            )
+        </if>
+        order by tper.created_time desc
+    </select>
+
+    <select id="statisticstPersonExchangedPoints" parameterType="int" resultMap="WsTeamPersonExchangeRecordVOResult">
+        select tper.id id , sum(tper.cost_point) cost_point ,
+        (
+            select sum(if(event.event_type=1,0,record.point))
+            from
+            t_ws_team_person_behavior_record record
+            left join t_ws_behavior_event_management event on record.event_id=event.id
+            where person_id = #{personId}
+        ) total_deduct_points,
+        tp.name person_name,tp.id_number id_number,tp.face_url face_url,
+        pt.name team_name,
+        ppu.unit_name unit_name
+        from t_ws_team_person tp
+        left join  t_ws_team_person_exchange_record tper on tp.id = tper.person_id
+        left join t_ws_participating_team pt on pt.id = tp.team_id
+        left join t_ws_project_participating_unit ppu on tp.unit_id = ppu.id
+        where tper.person_id = #{personId}
+    </select>
+
+    <select id="selectWsTeamPersonExchangeRecordById" parameterType="Integer" resultMap="WsTeamPersonExchangeRecordResult">
+        <include refid="selectWsTeamPersonExchangeRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWsTeamPersonExchangeRecord" parameterType="WsTeamPersonExchangeRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_team_person_exchange_record (
+            <if test="projectId != null ">project_id,</if>
+            <if test="personId != null ">person_id,</if>
+            <if test="costPoint != null ">cost_point,</if>
+            <if test="exchangeMount != null ">exchange_mount,</if>
+            <if test="itemName != null  and itemName != ''">item_name,</if>
+            created_time,updated_time
+            )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="personId != null ">#{personId},</if>
+            <if test="costPoint != null ">#{costPoint},</if>
+            <if test="exchangeMount != null ">#{exchangeMount},</if>
+            <if test="itemName != null  and itemName != ''">#{itemName},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+    <update id="updateWsTeamPersonExchangeRecord" parameterType="WsTeamPersonExchangeRecord">
+        update t_ws_team_person_exchange_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="personId != null ">person_id = #{personId},</if>
+            <if test="costPoint != null ">cost_point = #{costPoint},</if>
+            <if test="exchangeMount != null ">exchange_mount = #{exchangeMount},</if>
+            <if test="itemName != null  and itemName != ''">item_name = #{itemName},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsTeamPersonExchangeRecordById" parameterType="Integer">
+        delete from t_ws_team_person_exchange_record where id = #{id}
+    </delete>
+
+    <delete id="deleteWsTeamPersonExchangeRecordByIds" parameterType="String">
+        delete from t_ws_team_person_exchange_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

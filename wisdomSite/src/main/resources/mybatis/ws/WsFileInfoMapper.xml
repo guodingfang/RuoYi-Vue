@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsFileInfoMapper">
+
+    <resultMap type="WsFileInfo" id="WsFileInfoResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="url"    column="url"    />
+    </resultMap>
+
+    <sql id="selectWsFileInfoVo">
+        select id,name,url from t_ws_file_info
+    </sql>
+
+    <select id="selectWsFileInfoList" parameterType="WsFileInfo" resultMap="WsFileInfoResult">
+        <include refid="selectWsFileInfoVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="url != null  and url != ''"> and url like concat('%', #{url}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectWsFileInfoById" parameterType="Integer" resultMap="WsFileInfoResult">
+        <include refid="selectWsFileInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFileInfo" parameterType="WsFileInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_file_info(
+            <if test="id != null ">id,</if>
+            <if test="name != null ">name,</if>
+            <if test="url != null  and url != ''">url,</if>
+           updated_time,created_time
+         )values (
+            <if test="id != null ">#{id},</if>
+            <if test="name != null ">#{name},</if>
+            <if test="url != null  and url != ''">#{url},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+    <delete id="deleteWsFileInfoById" parameterType="Integer">
+        delete from t_ws_file_info where id = #{id}
+    </delete>
+
+    <delete id="deleteWsFileInfoByIds" parameterType="String">
+        delete from t_ws_file_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsElevatorManagerMapper">
+
+    <resultMap type="WsElevatorManager" id="WsElevatorManagerResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="selfNumber"    column="self_number"    />
+        <result property="recordNumber"    column="record_number"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="outDate"    column="out_date"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="propertyUnit"    column="property_unit"    />
+        <result property="installationUnit"    column="installation_unit"    />
+        <result property="produceUnit"    column="produce_unit"    />
+        <result property="models"    column="models"    />
+        <result property="factoryNumber"    column="factory_number"    />
+        <result property="productDate"    column="product_date"    />
+        <result property="xOffset"    column="x_offset"    />
+        <result property="yOffset"    column="y_offset"    />
+        <result property="sign"    column="is_sign"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="layoutUrl"    column="layout_url"    />
+        <result property="violationNotice"    column="violation_notice"    />
+        <collection property="monitorDevices" ofType="WsElevatorMinitorDevice" >
+            <id property="id" column="monitor_device_id" />
+            <result property="projectId"    column="project_id"    />
+            <result property="manufacturer"    column="manufacturer"    />
+            <result property="equipmentType"    column="equipment_type"    />
+            <result property="cageMark"    column="cage_mark"    />
+            <result property="serialNumber"    column="monitor_device_serial_number"    />
+        </collection>
+    </resultMap>
+
+    <resultMap type="WsElevatorManagerVO" id="WsElevatorManagerVOResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="selfNumber"    column="self_number"    />
+        <result property="recordNumber"    column="record_number"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="outDate"    column="out_date"    />
+        <result property="province"    column="province_name"    />
+        <result property="city"    column="city_name"    />
+        <result property="county"    column="county_name"    />
+        <result property="provinceCode"    column="province_code"    />
+        <result property="cityCode"    column="city_code"    />
+        <result property="countyCode"    column="county_code"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="xOffset"    column="x_offset"    />
+        <result property="yOffset"    column="y_offset"    />
+        <result property="sign"    column="is_sign"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="companyName"    column="company_name"    />
+        <collection property="monitorDevices" ofType="WsElevatorMinitorDevice" >
+            <id property="id" column="monitor_device_id" />
+            <result property="manufacturer"    column="manufacturer"    />
+            <result property="equipmentType"    column="equipment_type"    />
+            <result property="cageMark"    column="cage_mark"    />
+            <result property="serialNumber"    column="monitor_device_serial_number"    />
+        </collection>
+    </resultMap>
+
+    <resultMap type="WsElevatorManagerVO" id="WsElevatorMonitorDeviceResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="selfNumber"    column="self_number"    />
+        <result property="recordNumber"    column="record_number"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="outDate"    column="out_date"    />
+        <result property="province"    column="province_name"    />
+        <result property="city"    column="city_name"    />
+        <result property="county"    column="county_name"    />
+        <result property="provinceId"    column="province_id"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="countyId"    column="county_id"    />
+        <result property="cageMark"    column="cage_mark"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+
+    <resultMap type="WsElevatorManagerVO" id="WsElevatorManagerVO2Result">
+        <result property="id"    column="id"    />
+        <result property="monitorDeviceId"    column="monitor_device_id"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="inOutId"    column="in_out_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="outDate"    column="out_date"    />
+        <result property="serialNumber"    column="serial_number"    />
+    </resultMap>
+
+    <resultMap type="WsElevatorManagerStatisticsVO" id="WsElevatorManagerVO3Result">
+        <result property="deviceNumber"    column="device_number"    />
+        <result property="doubleDeviceNumber"    column="double_device_number"    />
+        <result property="projectNumber"    column="project_number"    />
+        <result property="totalMonitorDeviceNumber"    column="total_monitor_device_number"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="serialNumbers"    column="serial_numbers"    />
+    </resultMap>
+
+    <resultMap type="WsElevatorDriverInfo" id="WsElevatorDriverInfoResult">
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="name"    column="name"    />
+        <result property="recognitionTime"    column="recognition_time"    />
+    </resultMap>
+
+
+
+
+
+    <sql id="selectWsElevatorManagerVo">
+        select id, project_id, self_number, record_number, device_name, device_status, in_date, out_date, device_type, property_unit, installation_unit, produce_unit, models, factory_number, product_date, x_offset, y_offset, updated_time, created_time ,is_sign from t_ws_elevator_manager
+    </sql>
+
+    <sql id="selectWsElevatorManagerVo2">
+        select em.id id,em.project_id, em.self_number, em.record_number, em.device_name, em.in_date, em.out_date,em.device_type,em.created_time,em.is_sign,
+        emd.serial_number monitor_device_serial_number ,emd.cage_mark,emd.equipment_type,emd.manufacturer,emd.id monitor_device_id
+        from t_ws_elevator_manager em
+        left join t_ws_elevator_minitor_device emd on em.id = emd.elevator_id
+
+    </sql>
+
+
+
+    <select id="selectWsElevatorManagerList"  resultMap="WsElevatorManagerVOResult">
+        <include refid="selectWsElevatorManagerVo"/>
+        where is_delete='0'
+            <if test="wsElevatorManager.projectId != null "> and project_id = #{wsElevatorManager.projectId}</if>
+            <if test="wsElevatorManager.selfNumber != null  and wsElevatorManager.selfNumber != ''"> and self_number = #{wsElevatorManager.selfNumber}</if>
+            <if test="wsElevatorManager.recordNumber != null  and wsElevatorManager.recordNumber != ''"> and record_number = #{wsElevatorManager.recordNumber}</if>
+            <if test="wsElevatorManager.deviceName != null  and wsElevatorManager.deviceName != ''"> and device_name like concat('%', #{wsElevatorManager.deviceName}, '%')</if>
+            <if test="wsElevatorManager.deviceStatus != null  and wsElevatorManager.deviceStatus != ''"> and device_status = #{wsElevatorManager.deviceStatus}</if>
+            <if test="wsElevatorManager.inDate != null "> and in_date = #{wsElevatorManager.inDate}</if>
+            <if test="wsElevatorManager.outDate != null "> and out_date = #{wsElevatorManager.outDate}</if>
+            <if test="wsElevatorManager.deviceType != null  and wsElevatorManager.deviceType != ''"> and device_type = #{wsElevatorManager.deviceType}</if>
+            <if test="wsElevatorManager.propertyUnit != null  and wsElevatorManager.propertyUnit != ''"> and property_unit = #{wsElevatorManager.propertyUnit}</if>
+            <if test="wsElevatorManager.installationUnit != null  and wsElevatorManager.installationUnit != ''"> and installation_unit = #{wsElevatorManager.installationUnit}</if>
+            <if test="wsElevatorManager.produceUnit != null  and wsElevatorManager.produceUnit != ''"> and produce_unit = #{wsElevatorManager.produceUnit}</if>
+            <if test="wsElevatorManager.models != null  and wsElevatorManager.models != ''"> and models = #{wsElevatorManager.models}</if>
+            <if test="wsElevatorManager.factoryNumber != null  and wsElevatorManager.factoryNumber != ''"> and factory_number = #{wsElevatorManager.factoryNumber}</if>
+            <if test="wsElevatorManager.productDate != null "> and product_date = #{wsElevatorManager.productDate}</if>
+            <if test="wsElevatorManager.xOffset != null "> and x_offset = #{wsElevatorManager.xOffset}</if>
+            <if test="wsElevatorManager.yOffset != null "> and y_offset = #{wsElevatorManager.yOffset}</if>
+            <if test="wsElevatorManager.sign != null "> and is_sign = #{wsElevatorManager.sign}</if>
+            <if test="dataScope !=null and dataScope.size>0">
+                and project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+    </select>
+
+
+
+    <select id="selectWsElevatorManagerById" parameterType="Integer" resultMap="WsElevatorManagerResult">
+        select em.id id,em.project_id, em.self_number, em.record_number, em.device_name, em.in_date, em.out_date,em.device_type,
+        em.property_unit, em.installation_unit, em.produce_unit, em.models, em.factory_number, em.product_date, em.x_offset, em.y_offset,
+        emd.serial_number monitor_device_serial_number,emd.cage_mark,emd.equipment_type,emd.manufacturer,emd.id monitor_device_id,device_status,
+        pfl.id layout_id,pfl.fieldLayout_address layout_url,
+        p.violation_notice violation_notice
+        from t_ws_elevator_manager em
+        left join (select * from t_ws_elevator_minitor_device where is_delete='0') emd on em.id = emd.elevator_id
+        left join t_ws_project_field_layout pfl on (em.project_id=pfl.project_id and pfl.equipment_type="2" and pfl.is_delete="0")
+        left join t_ws_project p on p.id = em.project_id
+
+        where em.id = #{id} and em.is_delete='0';
+    </select>
+    <select id="countWsElevatorManager" parameterType="WsElevatorManager" resultType="int">
+        select count(*) from t_ws_elevator_manager
+       where is_delete='0'
+           <if test="projectId != null ">and project_id=#{projectId}</if>
+           <if test="selfNumber != null  and selfNumber != ''">and self_number=#{selfNumber}</if>
+           <if test="id != null ">and id !=#{id}</if>
+
+
+    </select>
+
+
+    <select id="selectWsElevatorManagerVOList" resultMap="WsElevatorManagerVOResult">
+        select em.id id,em.project_id, em.self_number, em.record_number, em.device_name, em.in_date, em.out_date,em.device_type,em.created_time,em.is_sign,
+        emd.serial_number monitor_device_serial_number ,emd.cage_mark,emd.equipment_type,emd.manufacturer,emd.id monitor_device_id
+        from t_ws_elevator_manager em
+        left join (select  elevator_id,serial_number,cage_mark,equipment_type,manufacturer,id from t_ws_elevator_minitor_device where is_delete='0') emd on em.id = emd.elevator_id
+        where  em.is_delete='0'
+        <if test="wsElevatorManager.projectId != null ">and em.project_id = #{wsElevatorManager.projectId}</if>
+        <if test="wsElevatorManager.deviceStatus != null  and wsElevatorManager.deviceStatus != ''"> and em.device_status = #{wsElevatorManager.deviceStatus}</if>
+        <if test="wsElevatorManager.sign != null "> and em.is_sign = #{wsElevatorManager.sign}</if>
+        <if test="dataScope !=null and dataScope.size>0">
+            and em.project_id in (
+            <foreach collection="dataScope" separator="," item="project"  index="index">
+                #{project.id}
+            </foreach>
+            )
+        </if>
+    </select>
+
+    <!--查询升降机设备列表，数据按照升降机设备接收-->
+    <select id="selectWsElevatorManagerVOListByDTO"  resultMap="WsElevatorManagerVOResult">
+    select
+    em.record_number, em.device_name,em.device_type,em.id id ,GROUP_CONCAT(emd.serial_number) serial_number,
+    em.x_offset,em.y_offset,em.is_sign,em.device_status,
+    emd.serial_number monitor_device_serial_number,emd.cage_mark,emd.equipment_type,emd.manufacturer,emd.id monitor_device_id,
+    p.project_name project_name,p.id project_id,
+    se.enterprise_name company_name,
+    county_code,city_code,province_code,county_name,city_name,province_name
+    from t_ws_elevator_manager em
+    left join  t_ws_project p  on em.project_id = p.id
+    left join  sys_enterprise se on p.project_unit_id = se.enterprise_id
+    left join (select * from t_ws_elevator_minitor_device where is_delete='0') emd on em.id = emd.elevator_id
+    left join (SELECT county.code county_code,county.name county_name, city.code city_code ,city.name city_name ,province.code province_code ,province.name province_name,county.code code  from t_ws_area as  county INNER JOIN t_ws_area as city  on county.PARENT_ID = city.id INNER JOIN t_ws_area province on city.PARENT_ID=province.id) a on p.areaCode = a.code
+    where  em.is_delete = '0'
+    <if test="wsElevatorManagerDTO.areaCode != null and wsElevatorManagerDTO.areaCode!='' ">
+        and (city_code=#{wsElevatorManagerDTO.areaCode} or province_code=#{wsElevatorManagerDTO.areaCode} or county_code=#{wsElevatorManagerDTO.areaCode})
+    </if>
+    <if test="wsElevatorManagerDTO.projectId != null ">and em.project_id = #{wsElevatorManagerDTO.projectId}</if>
+    <if test="wsElevatorManagerDTO.serialNumber != null and wsElevatorManagerDTO.serialNumber!='' ">and emd.serial_number = #{wsElevatorManagerDTO.serialNumber}</if>
+    <if test="wsElevatorManagerDTO.deviceType != null ">and em.device_type = #{wsElevatorManagerDTO.deviceType}</if>
+    <if test="wsElevatorManagerDTO.sign != null "> and em.is_sign = #{wsElevatorManagerDTO.sign}</if>
+    <if test="wsElevatorManagerDTO.deviceName != null and wsElevatorManagerDTO.deviceName!=''">and em.device_name like concat('%', #{wsElevatorManagerDTO.deviceName}, '%') </if>
+    <if test="wsElevatorManagerDTO.projectName != null and wsElevatorManagerDTO.projectName!=''">and p.project_name like concat('%', #{wsElevatorManagerDTO.projectName}, '%') </if>
+    <if test="wsElevatorManagerDTO.recordNumber != null and wsElevatorManagerDTO.recordNumber!=''">and em.record_number like concat('%', #{wsElevatorManagerDTO.recordNumber}, '%') </if>
+    <if test="wsElevatorManagerDTO.keyWordName!=null and wsElevatorManagerDTO.keyWordName!=''">
+            and em.record_number like concat('%', #{wsElevatorManagerDTO.keyWordName}, '%') or p.project_name like concat('%', #{wsElevatorManagerDTO.keyWordName}, '%')or em.device_name like concat('%', #{wsElevatorManagerDTO.keyWordName}, '%')
+    </if>
+
+    <if test="dataScope !=null and dataScope.size>0">
+            and em.project_id in (
+            <foreach collection="dataScope" separator="," item="project"  index="index">
+                #{project.id}
+            </foreach>
+            )
+        </if>
+    group by em.id
+</select>
+
+    <!--查询升降机监控设备列表,数据按照监控设备接收-->
+    <select id="selectWsElevatorMonitorDeviceListByDTO" resultMap="WsElevatorMonitorDeviceResult">
+        select
+        em.record_number, em.device_name,em.device_type,em.id id,em.device_status device_status,
+        emd.serial_number,emd.cage_mark,emd.equipment_type,emd.manufacturer,emd.id monitor_device_id,
+        p.project_name project_name,p.id project_id,
+        county_code,city_code,province_code,county_name,city_name,province_name
+        from t_ws_elevator_minitor_device emd
+        left join t_ws_elevator_manager em on em.id = emd.elevator_id
+        left join t_ws_project p on em.project_id = p.id
+        left join (SELECT county.code county_code,county.name county_name, city.code city_code ,city.name city_name ,province.code province_code ,province.name province_name,county.code code  from t_ws_area as  county INNER JOIN t_ws_area as city  on county.PARENT_ID = city.id INNER JOIN t_ws_area province on city.PARENT_ID=province.id) a on p.areaCode = a.code
+        where  emd.is_delete='0' and (em.is_delete = '0' )  and p.is_delete='N'
+        <if test="wsElevatorManagerDTO.projectId != null ">and em.project_id = #{wsElevatorManagerDTO.projectId}</if>
+        <if test="wsElevatorManagerDTO.deviceType != null ">and em.device_type = #{wsElevatorManagerDTO.deviceType}</if>
+        <if test="wsElevatorManagerDTO.deviceName != null and wsElevatorManagerDTO.deviceName!=''">and em.device_name like concat('%', #{wsElevatorManagerDTO.deviceName}, '%') </if>
+        <if test="wsElevatorManagerDTO.projectName != null and wsElevatorManagerDTO.projectName!=''">and em.project_name like concat('%', #{wsElevatorManagerDTO.projectName}, '%') </if>
+        <if test="wsElevatorManagerDTO.areaCode != null and wsElevatorManagerDTO.areaCode!=''">
+            and (city_code=#{wsElevatorManagerDTO.areaCode} or province_code=#{wsElevatorManagerDTO.areaCode} or county_code=#{wsElevatorManagerDTO.areaCode})
+        </if>
+        <if test="dataScope !=null and dataScope.size>0">
+            and emd.project_id in (
+            <foreach collection="dataScope" separator="," item="project"  index="index">
+                #{project.id}
+            </foreach>
+            )
+        </if>
+    </select>
+
+
+
+
+    <insert id="insertWsElevatorManager" parameterType="WsElevatorManager" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_elevator_manager(
+            <if test="projectId != null ">project_id,</if>
+            <if test="selfNumber != null  and selfNumber != ''">self_number,</if>
+            <if test="recordNumber != null  and recordNumber != ''">record_number,</if>
+            <if test="deviceName != null  and deviceName != ''">device_name,</if>
+            <if test="deviceStatus != null  and deviceStatus != ''">device_status,</if>
+            <if test="inDate != null ">in_date,</if>
+            <if test="outDate != null ">out_date,</if>
+            <if test="deviceType != null  and deviceType != ''">device_type,</if>
+            <if test="propertyUnit != null  and propertyUnit != ''">property_unit,</if>
+            <if test="installationUnit != null  and installationUnit != ''">installation_unit,</if>
+            <if test="produceUnit != null  and produceUnit != ''">produce_unit,</if>
+            <if test="models != null  and models != ''">models,</if>
+            <if test="factoryNumber != null  and factoryNumber != ''">factory_number,</if>
+            <if test="productDate != null ">product_date,</if>
+            <if test="xOffset != null ">x_offset,</if>
+            <if test="yOffset != null ">y_offset,</if>
+            <if test="deleted != null and deleted !=''">is_delete,</if>
+            updated_time,created_time
+        )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="selfNumber != null  and selfNumber != ''">#{selfNumber},</if>
+            <if test="recordNumber != null  and recordNumber != ''">#{recordNumber},</if>
+            <if test="deviceName != null  and deviceName != ''">#{deviceName},</if>
+            <if test="deviceStatus != null  and deviceStatus != ''">#{deviceStatus},</if>
+            <if test="inDate != null ">#{inDate},</if>
+            <if test="outDate != null ">#{outDate},</if>
+            <if test="deviceType != null  and deviceType != ''">#{deviceType},</if>
+            <if test="propertyUnit != null  and propertyUnit != ''">#{propertyUnit},</if>
+            <if test="installationUnit != null  and installationUnit != ''">#{installationUnit},</if>
+            <if test="produceUnit != null  and produceUnit != ''">#{produceUnit},</if>
+            <if test="models != null  and models != ''">#{models},</if>
+            <if test="factoryNumber != null  and factoryNumber != ''">#{factoryNumber},</if>
+            <if test="productDate != null ">#{productDate},</if>
+            <if test="xOffset != null ">#{xOffset},</if>
+            <if test="yOffset != null ">#{yOffset},</if>
+            <if test="deleted != null and deleted !=''">#{deleted},</if>
+            sysdate(),sysdate()
+        )
+    </insert>
+
+    <update id="updateWsElevatorManager" parameterType="WsElevatorManager">
+        update t_ws_elevator_manager
+        set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="selfNumber != null  and selfNumber != ''">self_number = #{selfNumber},</if>
+            <if test="recordNumber != null  and recordNumber != ''">record_number = #{recordNumber},</if>
+            <if test="deviceName != null  and deviceName != ''">device_name = #{deviceName},</if>
+            <if test="deviceStatus != null  and deviceStatus != ''">device_status = #{deviceStatus},</if>
+            <if test="inDate != null ">in_date = #{inDate},</if>
+            <if test="outDate != null ">out_date = #{outDate},</if>
+            <if test="deviceType != null  and deviceType != ''">device_type = #{deviceType},</if>
+            <if test="propertyUnit != null  and propertyUnit != ''">property_unit = #{propertyUnit},</if>
+            <if test="installationUnit != null  and installationUnit != ''">installation_unit = #{installationUnit},</if>
+            <if test="produceUnit != null  and produceUnit != ''">produce_unit = #{produceUnit},</if>
+            <if test="models != null  and models != ''">models = #{models},</if>
+            <if test="factoryNumber != null  and factoryNumber != ''">factory_number = #{factoryNumber},</if>
+            <if test="productDate != null ">product_date = #{productDate},</if>
+            <if test="xOffset != null ">x_offset = #{xOffset},</if>
+            <if test="yOffset != null ">y_offset = #{yOffset},</if>
+            updated_time = sysdate()
+        where id = #{id}
+    </update>
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        update t_ws_elevator_manager
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_sign =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when id=#{item.id} then #{item.sign}
+                </foreach>
+            </trim>
+            <trim prefix="y_offset =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when id=#{item.id} then #{item.yOffset}
+                </foreach>
+            </trim>
+            <trim prefix="x_offset =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when id=#{item.id} then #{item.xOffset}
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+
+
+    </update>
+
+    <update id="unSignPoint" parameterType="int">
+        update t_ws_elevator_manager set is_sign = '0',x_offset=null,y_offset=null
+        where  id = #{id}
+    </update>
+
+
+    <delete id="deleteWsElevatorManagerById" parameterType="Integer">
+        delete from t_ws_elevator_manager where id = #{id}
+    </delete>
+
+    <delete id="deleteWsElevatorManagerByIds" parameterType="Integer">
+        update  t_ws_elevator_manager
+        set
+            is_delete='1'
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectInAndOutList"  resultMap="WsElevatorManagerVO2Result">
+        select em.id id, eio.id in_out_id,eio.in_date in_date,eio.out_date out_date,em.device_type device_type,
+        emd.serial_number serial_number, emd.id monitor_device_id,
+        p.id project_id,p.project_name project_name
+        from t_ws_elevator_manager em
+        left join t_ws_elevator_in_out eio on em.id = eio.elevator_id
+        left join (select * from t_ws_elevator_minitor_device where is_delete='0') emd on em.id = emd.elevator_id
+        left join t_ws_project  p  on p.id = em.project_id
+        where em.is_delete = '0'
+        <if test="wsElevatorManagerDTO.endTime!=null and wsElevatorManagerDTO.beginTime!=null">
+            and eio.in_date &lt; #{wsElevatorManagerDTO.endTime} and (eio.out_date &gt;  #{wsElevatorManagerDTO.beginTime} or ISNULL(eio.out_date))
+        </if>
+        <if test="wsElevatorManagerDTO.projectId != null ">and em.project_id=#{wsElevatorManagerDTO.projectId}</if>
+        <if test="dataScope !=null and dataScope.size>0">
+            and em.project_id IN (
+            <foreach collection="dataScope" separator="," item="project" index="index">
+                #{project.id}
+            </foreach>
+            )
+        </if>
+    </select>
+
+    <!-- 获取最新司机认证 -->
+    <select id="findNewestRecognitionBySerialNumber"  resultMap="WsElevatorDriverInfoResult">
+        select
+          SERIAL_NUMBER,ID_CARDNO id_number,USERNAME name,create_date recognition_time
+        from t_ws_elevator_workauth_info ewi
+        where SERIAL_NUMBER =#{serialNumber}
+        order by CREATE_DATE desc
+        limit 1
+
+    </select>
+    <!-- 获取司机认证历史数据列表 -->
+    <select id="selectDriverRecognitionListByDriver" parameterType="WsElevatorDriverInfo" resultMap="WsElevatorDriverInfoResult" >
+        select
+          SERIAL_NUMBER,ID_CARDNO id_number,USERNAME name,create_date recognition_time
+        from t_ws_elevator_workauth_info ewi
+        where SERIAL_NUMBER =#{serialNumber}
+        <if test="name!=null and  name!=''">and USERNAME =#{name}</if>
+        <if test="recognitionTime!=null">and datediff ( create_date , #{recognitionTime} )=0 </if>
+        order by CREATE_DATE desc
+
+    </select>
+
+    <select id="statisticsProjectDeviceList"  resultMap="WsElevatorManagerVO3Result">
+        select
+        count(distinct em.id ) device_number,count(distinct emd.id ) total_monitor_device_number,
+        count(distinct if(em.device_type=2,em.id,null)) double_device_number,
+        GROUP_CONCAT(emd.serial_number) serial_numbers,
+        p.project_name project_name,p.id project_id
+        from t_ws_elevator_minitor_device emd
+        left join t_ws_elevator_manager em on em.id = emd.elevator_id
+        left join t_ws_project p on em.project_id = p.id
+        left join (SELECT county.code county_code,county.name county_name, city.code city_code ,city.name city_name ,province.code province_code ,province.name province_name,county.code code  from t_ws_area as  county INNER JOIN t_ws_area as city  on county.PARENT_ID = city.id INNER JOIN t_ws_area province on city.PARENT_ID=province.id) a on p.areaCode = a.code
+        where  emd.is_delete='0' and em.is_delete = '0'  and p.is_delete='N'
+        <if test="wsElevatorManagerDTO.projectId != null ">and em.project_id = #{wsElevatorManagerDTO.projectId}</if>
+        <if test="wsElevatorManagerDTO.deviceType != null ">and em.device_type = #{wsElevatorManagerDTO.deviceType}</if>
+        <if test="wsElevatorManagerDTO.deviceName != null and wsElevatorManagerDTO.deviceName!=''">and em.device_name like concat('%', #{wsElevatorManagerDTO.deviceName}, '%') </if>
+        <if test="wsElevatorManagerDTO.projectName != null and wsElevatorManagerDTO.projectName!=''">and em.project_name like concat('%', #{wsElevatorManagerDTO.projectName}, '%') </if>
+        <if test="wsElevatorManagerDTO.areaCode != null and wsElevatorManagerDTO.areaCode!=''">
+            and (city_code=#{wsElevatorManagerDTO.areaCode} or province_code=#{wsElevatorManagerDTO.areaCode} or county_code=#{wsElevatorManagerDTO.areaCode})
+        </if>
+        <if test="dataScope !=null and dataScope.size>0">
+            and emd.project_id in (
+            <foreach collection="dataScope" separator="," item="project"  index="index">
+                #{project.id}
+            </foreach>
+            )
+        </if>
+        group by emd.project_id
+
+    </select>
+
+    <!-- 按区域获取设备整体统计数据 -->
+    <select id="statisticsAllDeviceData"  resultMap="WsElevatorManagerVO3Result">
+        select count(distinct em.id ) device_number,count(DISTINCT if(em.device_type=2,em.id,null))double_device_number,count(distinct p.id ) project_number
+        FROM t_ws_project p
+        left join t_ws_elevator_manager em   on em.project_id = p.id
+        left join (SELECT county.code county_code,county.name county_name, city.code city_code ,city.name city_name ,province.code province_code ,province.name province_name,county.code code  from t_ws_area as  county INNER JOIN t_ws_area as city  on county.PARENT_ID = city.id INNER JOIN t_ws_area province on city.PARENT_ID=province.id) a on p.areaCode = a.code
+        where  (em.is_delete='0' or em.is_delete IS NULL ) and p.is_delete='N'
+        <if test="wsElevatorManagerDTO.projectId != null ">and em.project_id = #{wsElevatorManagerDTO.projectId}</if>
+        <if test="wsElevatorManagerDTO.deviceType != null ">and em.device_type = #{wsElevatorManagerDTO.deviceType}</if>
+        <if test="wsElevatorManagerDTO.deviceStatus != null  and wsElevatorManagerDTO.deviceStatus != ''"> and device_status = #{wsElevatorManagerDTO.deviceStatus}</if>
+        <if test="wsElevatorManagerDTO.deviceName != null and wsElevatorManagerDTO.deviceName!=''">and em.device_name like concat('%', #{wsElevatorManagerDTO.deviceName}, '%') </if>
+        <if test="wsElevatorManagerDTO.projectName != null and wsElevatorManagerDTO.projectName!=''">and em.project_name like concat('%', #{wsElevatorManagerDTO.projectName}, '%') </if>
+        <if test="wsElevatorManagerDTO.areaCode != null and wsElevatorManagerDTO.areaCode!=''">
+            and (city_code=#{wsElevatorManagerDTO.areaCode} or province_code=#{wsElevatorManagerDTO.areaCode} or county_code=#{wsElevatorManagerDTO.areaCode})
+        </if>
+        <if test="dataScope !=null and dataScope.size>0">
+            and p.id in (
+            <foreach collection="dataScope" separator="," item="project"  index="index">
+                #{project.id}
+            </foreach>
+            )
+        </if>
+
+    </select>
+
+            <!-- 按区域获取设备列表数据 -->
+    <select id="selectDeviceListByArea" resultMap="WsElevatorManagerVOResult">
+        select
+        em.id id ,
+        p.project_name project_name,p.id project_id,p.longitude,p.latitude,a.ancestors ancestors,
+        county_code,city_code,province_code,county_name,city_name,province_name
+        FROM t_ws_project p
+        left join t_ws_elevator_manager em   on em.project_id = p.id
+        left join (SELECT county.code county_code,county.name county_name, city.code city_code ,city.name city_name ,province.code province_code ,province.name province_name,county.code code ,county.ancestors from t_ws_area as  county INNER JOIN t_ws_area as city  on county.PARENT_ID = city.id INNER JOIN t_ws_area province on city.PARENT_ID=province.id) a on p.areaCode = a.code
+        where  (em.is_delete='0' or em.is_delete IS NULL ) and p.is_delete='N'
+        <if test="wsElevatorManagerDTO.projectId != null ">and em.project_id = #{wsElevatorManagerDTO.projectId}</if>
+        <if test="wsElevatorManagerDTO.deviceType != null ">and em.device_type = #{wsElevatorManagerDTO.deviceType}</if>
+        <if test="wsElevatorManagerDTO.deviceStatus != null  and wsElevatorManagerDTO.deviceStatus != ''"> and device_status = #{wsElevatorManagerDTO.deviceStatus}</if>
+        <if test="wsElevatorManagerDTO.deviceName != null and wsElevatorManagerDTO.deviceName!=''">and em.device_name like concat('%', #{wsElevatorManagerDTO.deviceName}, '%') </if>
+        <if test="wsElevatorManagerDTO.projectName != null and wsElevatorManagerDTO.projectName!=''">and em.project_name like concat('%', #{wsElevatorManagerDTO.projectName}, '%') </if>
+        <if test="wsElevatorManagerDTO.areaCode != null and wsElevatorManagerDTO.areaCode!=''">
+            and (city_code=#{wsElevatorManagerDTO.areaCode} or province_code=#{wsElevatorManagerDTO.areaCode} or county_code=#{wsElevatorManagerDTO.areaCode})
+        </if>
+        <if test="dataScope !=null and dataScope.size>0">
+            and p.id in (
+            <foreach collection="dataScope" separator="," item="project"  index="index">
+                #{project.id}
+            </foreach>
+            )
+        </if>
+
+    </select>
+
+    <select id="selectMonitorDeviceSerialNumberList" parameterType="WsElevatorManagerDTO" resultType="java.lang.String">
+        select
+            emd.serial_number
+        from t_ws_elevator_minitor_device emd
+        left join t_ws_elevator_manager em on em.id = emd.elevator_id
+        left join t_ws_project p on em.project_id = p.id
+        left join (SELECT county.code county_code,county.name county_name, city.code city_code ,city.name city_name ,province.code province_code ,province.name province_name,county.code code  from t_ws_area as  county INNER JOIN t_ws_area as city  on county.PARENT_ID = city.id INNER JOIN t_ws_area province on city.PARENT_ID=province.id) a on p.areaCode = a.code
+        where  emd.is_delete='0' and em.is_delete = '0'  and p.is_delete='N'
+        <if test="projectId != null ">and em.project_id = #{projectId}</if>
+        <if test="deviceType != null ">and em.device_type = #{deviceType}</if>
+        <if test="deviceName != null and deviceName!=''">and em.device_name like concat('%', #{deviceName}, '%') </if>
+        <if test="projectName != null and projectName!=''">and em.project_name like concat('%', #{projectName}, '%') </if>
+        <if test="areaCode != null and areaCode!=''">
+            and (city_code=#{areaCode} or province_code=#{areaCode} or county_code=#{areaCode})
+        </if>
+
+    </select>
+
+</mapper>

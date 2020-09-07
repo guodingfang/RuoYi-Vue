@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsElectricityMonitorManageMapper">
+    
+    <resultMap type="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" id="WsElectricityMonitorManageResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="equipmentName"    column="equipment_name"    />
+        <result property="monitoringEquipment"    column="monitoring_equipment"    />
+        <result property="installationArea"    column="installation_area"    />
+        <result property="whether"    column="whether"    />
+        <result property="enableDisable"    column="enable_disable"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="monitoringStatus"    column="monitoringStatus"    />
+        <result property="todayElectricity"    column="todayElectricity"    />
+        <result property="monthElectricity"    column="monthElectricity"    />
+        <result property="statisticalPeriod"    column="statisticalPeriod"    />
+        <result property="electricityQuantity"    column="electricityQuantity"    />
+        <result property="timeSlot"    column="timeSlot"    />
+        <result property="initialCharge"    column="initialCharge"    />
+        <result property="stopCodePower"    column="stopCodePower"    />
+        <result property="queryType"    column="queryType"    />
+        <result property="installationAreaName"    column="installationAreaName"    />
+    </resultMap>
+
+    <resultMap type="com.jlkj.project.ws.intelligence.domain.WsElecBoxMonitorData" id="WsElecBoxMonitorDataResult">
+        <result property="monitoringEquipment"    column="monitoringEquipment"    />
+        <result property="equipmentName"    column="equipmentName"    />
+        <result property="insertTime"    column="insertTime"    />
+        <result property="voltageU"    column="voltageU"    />
+        <result property="voltageV"    column="voltageV"    />
+        <result property="voltageW"    column="voltageW"    />
+        <result property="currentU"    column="currentU"    />
+        <result property="currentV"    column="currentV"    />
+        <result property="currentW"    column="currentW"    />
+        <result property="activePower"    column="activePower"    />
+        <result property="reactivePower"    column="reactivePower"    />
+        <result property="activeElectricity"    column="activeElectricity"    />
+        <result property="reactiveElectricity"    column="reactiveElectricity"    />
+        <result property="monitorType"    column="monitorType"    />
+        <result property="region"    column="region"    />
+        <result property="totalPower"    column="totalPower"    />
+        <result property="projectId"    column="projectId"    />
+        <result property="analysisType"    column="analysisType"    />
+    </resultMap>
+
+    <sql id="selectWsElectricityMonitorManageVo">
+        select id, equipment_name, monitoring_equipment, installation_area, whether, enable_disable, created_time, updated_time from t_ws_electricity_monitor_manage
+    </sql>
+
+    <select id="selectWsElectricityMonitorManageList" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" resultMap="WsElectricityMonitorManageResult">
+        SELECT t.id,t.project_id,t.equipment_name,t.monitoring_equipment,
+            t2.partition_name as installationAreaName,t.whether,t.enable_disable
+        from t_ws_electricity_monitor_manage t
+        left join t_ws_project_site_partition t2 on t.installation_area = t2.id
+        <where>
+            <if test="wsElectricityMonitorManage.projectId != null and wsElectricityMonitorManage.projectId != ''"> and t.project_id = #{wsElectricityMonitorManage.projectId}</if>
+            <if test="wsElectricityMonitorManage.equipmentName != null  and wsElectricityMonitorManage.equipmentName != ''"> and t.equipment_name like concat('%', #{wsElectricityMonitorManage.equipmentName}, '%')</if>
+            <if test="wsElectricityMonitorManage.monitoringEquipment != null  and wsElectricityMonitorManage.monitoringEquipment != ''"> and t.monitoring_equipment = #{wsElectricityMonitorManage.monitoringEquipment}</if>
+            <if test="wsElectricityMonitorManage.installationArea != null and wsElectricityMonitorManage.installationArea != ''"> and t.installation_area = #{wsElectricityMonitorManage.installationArea}</if>
+            <if test="wsElectricityMonitorManage.whether != null and wsElectricityMonitorManage.whether != ''"> and t.whether = #{wsElectricityMonitorManage.whether}</if>
+            <if test="wsElectricityMonitorManage.enableDisable != null and wsElectricityMonitorManage.enableDisable != ''"> and t.enable_disable = #{wsElectricityMonitorManage.enableDisable}</if>
+            <if test="projectIds != null">
+                and t.project_id in
+                <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+                    #{projectId}
+                </foreach> </if>
+        </where>
+        order by t.created_time desc
+    </select>
+    
+    <select id="selectWsElectricityMonitorManageById" parameterType="Integer" resultMap="WsElectricityMonitorManageResult">
+        <include refid="selectWsElectricityMonitorManageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWsElectricityMonitorManage" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_electricity_monitor_manage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="equipmentName != null  and equipmentName != ''">equipment_name,</if>
+            <if test="monitoringEquipment != null  and monitoringEquipment != ''">monitoring_equipment,</if>
+            <if test="installationArea != null ">installation_area,</if>
+            <if test="whether != null ">whether,</if>
+            <if test="enableDisable != null ">enable_disable,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="equipmentName != null  and equipmentName != ''">#{equipmentName},</if>
+            <if test="monitoringEquipment != null  and monitoringEquipment != ''">#{monitoringEquipment},</if>
+            <if test="installationArea != null ">#{installationArea},</if>
+            <if test="whether != null ">#{whether},</if>
+            <if test="enableDisable != null ">#{enableDisable},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsElectricityMonitorManage" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage">
+        update t_ws_electricity_monitor_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="equipmentName != null  and equipmentName != ''">equipment_name = #{equipmentName},</if>
+            <if test="monitoringEquipment != null  and monitoringEquipment != ''">monitoring_equipment = #{monitoringEquipment},</if>
+            <if test="installationArea != null ">installation_area = #{installationArea},</if>
+            <if test="whether != null ">whether = #{whether},</if>
+            <if test="enableDisable != null ">enable_disable = #{enableDisable},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsElectricityMonitorManageById" parameterType="Integer">
+        delete from t_ws_electricity_monitor_manage where id = #{id}
+    </delete>
+
+    <delete id="deleteWsElectricityMonitorManageByIds" parameterType="String">
+        delete from t_ws_electricity_monitor_manage where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectWsElectricityMonitorManageLists" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" resultMap="WsElectricityMonitorManageResult">
+        SELECT t.id,t.project_id,t.equipment_name,t.monitoring_equipment,
+        t2.partition_name as installationAreaName,t.whether,t.enable_disable
+        from t_ws_electricity_monitor_manage t
+        left join t_ws_project_site_partition t2 on t.installation_area = t2.id
+        where 1=1
+        and t.enable_disable = '1'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        order by t.created_time desc
+    </select>
+
+    <select id="selectElectricityMonitorMonitoringStatus" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" resultMap="WsElectricityMonitorManageResult">
+        select
+        CASE
+        when ONLINE_STATUS = '1' then '在线'
+        when ONLINE_STATUS = '2' then '离线'
+        END
+        as monitoringStatus from t_ws_black_box
+        where SERIAL_NUMBER = #{monitoringEquipment}
+    </select>
+
+
+    <select id="selectRealTimeMonitoringEquipmentName" parameterType="com.jlkj.project.ws.intelligence.domain.WsElecBoxMonitorData" resultMap="WsElecBoxMonitorDataResult">
+        select equipment_name as equipmentName from t_ws_electricity_monitor_manage
+        where monitoring_equipment = #{monitoringEquipment}
+    </select>
+
+    <select id="selectRealTimeMonitoringInformation" parameterType="com.jlkj.project.ws.intelligence.domain.WsElecBoxMonitorData" resultMap="WsElecBoxMonitorDataResult">
+        select VOLTAGE_U as voltageU,VOLTAGE_V as voltageV,VOLTAGE_W as voltageW,CURRENT_U as currentU,CURRENT_V as currentV,CURRENT_W as currentW,
+                ACTIVE_ELECTRICITY as activeElectricity,REACTIVE_ELECTRICITY as reactiveElectricity,INSERT_TIME as insertTime
+        from t_ws_elec_box_monitor_data
+        where SERIAL_NUMBER = #{monitoringEquipment}
+    </select>
+
+    <select id="selectMonitoringRecordsListTwentyFourTime" parameterType="com.jlkj.project.ws.intelligence.domain.WsElecBoxMonitorData" resultMap="WsElecBoxMonitorDataResult">
+        select INSERT_TIME as insertTime,CURRENT_U as currentU,CURRENT_V as currentV,CURRENT_W as currentW,VOLTAGE_U as voltageU,VOLTAGE_V as voltageV,VOLTAGE_W as voltageW
+        from t_ws_elec_box_monitor_data_${monitoringEquipment}
+        where INSERT_TIME >=(NOW() - interval 24 hour);
+    </select>
+
+    <select id="selectMonitoringRecordsListThreeDays" parameterType="com.jlkj.project.ws.intelligence.domain.WsElecBoxMonitorData" resultMap="WsElecBoxMonitorDataResult">
+        select INSERT_TIME as insertTime,CURRENT_U as currentU,CURRENT_V as currentV,CURRENT_W as currentW,VOLTAGE_U as voltageU,VOLTAGE_V as voltageV,VOLTAGE_W as voltageW
+        from t_ws_elec_box_monitor_data_${monitoringEquipment}
+        where INSERT_TIME >=(NOW() - interval 72 hour);
+    </select>
+
+    <select id="selectMonitoringRecordsListSevenDays" parameterType="com.jlkj.project.ws.intelligence.domain.WsElecBoxMonitorData" resultMap="WsElecBoxMonitorDataResult">
+        select INSERT_TIME as insertTime,CURRENT_U as currentU,CURRENT_V as currentV,CURRENT_W as currentW,VOLTAGE_U as voltageU,VOLTAGE_V as voltageV,VOLTAGE_W as voltageW
+        from t_ws_elec_box_monitor_data_${monitoringEquipment}
+        where INSERT_TIME >=(NOW() - interval 168 hour);
+    </select>
+
+    <select id="selectMonitoringEquipmentList" parameterType="com.jlkj.project.ws.intelligence.domain.WsElecBoxMonitorData" resultMap="WsElecBoxMonitorDataResult">
+        SELECT t.monitoring_equipment as monitoringEquipment from t_ws_electricity_monitor_manage t
+        where 1=1
+        and t.project_id = #{projectId}
+        and t.whether = '1'
+        and t.enable_disable = '1'
+    </select>
+
+    <select id="selectElectricityConsumptionORpower" parameterType="com.jlkj.project.ws.intelligence.domain.WsElecBoxMonitorData" resultMap="WsElecBoxMonitorDataResult">
+        select SUM(ACTIVE_ELECTRICITY) as totalPower,SUM(ACTIVE_POWER) as activePower,SUM(REACTIVE_POWER) as reactivePower,INSERT_TIME as insertTime
+        from t_ws_elec_box_monitor_data
+        where SERIAL_NUMBER in
+        <foreach item="monitoringEquipment" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipment}
+        </foreach>
+    </select>
+
+    <select id="selectWsElectricityMonitorManage" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" resultMap="WsElectricityMonitorManageResult">
+        SELECT t.monitoring_equipment from t_ws_electricity_monitor_manage t
+        where t.installation_area = #{installationArea}
+        /*and t.whether = '1'*/
+        and t.enable_disable = '1'
+    </select>
+
+    <select id="selectWsElectricityTodayElectricity" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" resultMap="WsElectricityMonitorManageResult">
+        SELECT ACTIVE_ELECTRICITY as todayElectricity FROM t_ws_elec_box_monitor_data_${monitoringEquipment} WHERE DATEDIFF(INSERT_TIME,NOW())=0 ORDER BY INSERT_TIME DESC LIMIT 0,1
+    </select>
+
+    <select id="selectWsElectricityYesterdayElectricity" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" resultMap="WsElectricityMonitorManageResult">
+        SELECT ACTIVE_ELECTRICITY as todayElectricity FROM t_ws_elec_box_monitor_data_${monitoringEquipment} WHERE DATEDIFF(INSERT_TIME,NOW())=-1
+        ORDER BY INSERT_TIME DESC LIMIT 0,1
+    </select>
+
+    <select id="selectWsElectricitySameMonthElectricity" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" resultMap="WsElectricityMonitorManageResult">
+        SELECT ACTIVE_ELECTRICITY as monthElectricity FROM t_ws_elec_box_monitor_data_${monitoringEquipment} WHERE DATE_FORMAT(INSERT_TIME, '%Y%m') = DATE_FORMAT(CURDATE() , '%Y%m')
+        ORDER BY INSERT_TIME DESC LIMIT 0,1
+    </select>
+
+    <select id="selectWsElectricityLastMonthElectricity" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" resultMap="WsElectricityMonitorManageResult">
+        SELECT ACTIVE_ELECTRICITY as monthElectricity FROM t_ws_elec_box_monitor_data_${monitoringEquipment} WHERE PERIOD_DIFF(date_format( now() , '%Y%m') , date_format(INSERT_TIME, '%Y%m')) =1
+        ORDER BY INSERT_TIME DESC LIMIT 0,1
+    </select>
+
+
+    <select id="selectPowerConsumptionDetailsDayList" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" resultMap="WsElectricityMonitorManageResult">
+        SELECT
+            a. HOUR AS timeSlot,
+            ifnull(b.electricityQuantity, 0) AS electricityQuantity,
+            ifnull(b.stopCodePower, 0) AS stopCodePower,
+            ifnull(b.initialCharge, 0) AS initialCharge
+            FROM
+                (
+                    SELECT
+                        '00:00-01:00' HOUR
+                    UNION ALL
+                        SELECT
+                            '01:00-02:00' HOUR
+                        UNION ALL
+                            SELECT
+                                '02:00-03:00' HOUR
+                            UNION ALL
+                                SELECT
+                                    '03:00-04:00' HOUR
+                                UNION ALL
+                                    SELECT
+                                        '04:00-05:00' HOUR
+                                    UNION ALL
+                                        SELECT
+                                            '05:00-06:00' HOUR
+                                        UNION ALL
+                                            SELECT
+                                                '06:00-07:00' HOUR
+                                            UNION ALL
+                                                SELECT
+                                                    '07:00-08:00' HOUR
+                                                UNION ALL
+                                                    SELECT
+                                                        '08:00-09:00' HOUR
+                                                    UNION ALL
+                                                        SELECT
+                                                            '09:00-10:00' HOUR
+                                                        UNION ALL
+                                                            SELECT
+                                                                '10:00-11:00' HOUR
+                                                            UNION ALL
+                                                                SELECT
+                                                                    '11:00-12:00' HOUR
+                                                                UNION ALL
+                                                                    SELECT
+                                                                        '12:00-13:00' HOUR
+                                                                    UNION ALL
+                                                                        SELECT
+                                                                            '13:00-14:00' HOUR
+                                                                        UNION ALL
+                                                                            SELECT
+                                                                                '14:00-15:00' HOUR
+                                                                            UNION ALL
+                                                                                SELECT
+                                                                                    '15:00-16:00' HOUR
+                                                                                UNION ALL
+                                                                                    SELECT
+                                                                                        '16:00-17:00' HOUR
+                                                                                    UNION ALL
+                                                                                        SELECT
+                                                                                            '17:00-18:00' HOUR
+                                                                                        UNION ALL
+                                                                                            SELECT
+                                                                                                '18:00-19:00' HOUR
+                                                                                            UNION ALL
+                                                                                                SELECT
+                                                                                                    '19:00-20:00' HOUR
+                                                                                                UNION ALL
+                                                                                                    SELECT
+                                                                                                        '20:00-21:00' HOUR
+                                                                                                    UNION ALL
+                                                                                                        SELECT
+                                                                                                            '21:00-22:00' HOUR
+                                                                                                        UNION ALL
+                                                                                                            SELECT
+                                                                                                                '22:00-23:00' HOUR
+                                                                                                            UNION ALL
+                                                                                                                SELECT
+                                                                                                                    '23:00-24:00' HOUR
+                ) a
+            LEFT JOIN (
+                SELECT
+                    HOUR (INSERT_TIME) HOUR,
+                    MAX(ACTIVE_ELECTRICITY) AS stopCodePower,
+                    MIN(ACTIVE_ELECTRICITY) AS initialCharge,
+                    MAX(ACTIVE_ELECTRICITY) - MIN(ACTIVE_ELECTRICITY) AS electricityQuantity
+                FROM
+                    t_ws_elec_box_monitor_data_${monitoringEquipment}
+                WHERE
+                    1 = 1
+                AND DATE_FORMAT(INSERT_TIME, '%Y-%m-%d') = #{statisticalPeriod}
+                GROUP BY
+                    date_format(INSERT_TIME, '%Y%m%d-%H'),
+                    HOUR
+            ) b ON a. HOUR = b. HOUR
+            ORDER BY
+                timeSlot
+    </select>
+
+    <select id="selectPowerConsumptionDetailsMonthList" parameterType="com.jlkj.project.ws.intelligence.domain.WsElectricityMonitorManage" resultMap="WsElectricityMonitorManageResult">
+        SELECT a.d as timeSlot,ifnull(tbr.electricityQuantity, 0) as electricityQuantity,ifnull(tbr.stopCodePower, 0) as stopCodePower,ifnull(tbr.initialCharge, 0) as initialCharge
+        from
+        (SELECT ADDDATE(y.first, x.d - 1) as d
+        FROM
+        (SELECT 1 AS d UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL
+        SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL
+        SELECT 15 UNION ALL SELECT 16 UNION ALL SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20 UNION ALL SELECT 21 UNION ALL
+        SELECT 22 UNION ALL SELECT 23 UNION ALL SELECT 24 UNION ALL SELECT 25 UNION ALL SELECT 26 UNION ALL SELECT 27 UNION ALL SELECT 28 UNION ALL
+        SELECT 29 UNION ALL SELECT 30 UNION ALL SELECT 31) x,
+        (SELECT CONCAT(#{statisticalPeriod},'-01') as FIRST, DAY(LAST_DAY(str_to_date(#{statisticalPeriod},'%Y-%m'))) AS last) y
+        WHERE x.d <![CDATA[<=]]> y.last )a
+        LEFT JOIN (
+        SELECT
+        MAX(ACTIVE_ELECTRICITY) AS stopCodePower,
+        MIN(ACTIVE_ELECTRICITY) AS initialCharge,
+        MAX(ACTIVE_ELECTRICITY) - MIN(ACTIVE_ELECTRICITY) as electricityQuantity,
+        DATE(INSERT_TIME) createdate
+        FROM t_ws_elec_box_monitor_data_${monitoringEquipment}
+        GROUP BY  createdate) AS tbr ON a.d = tbr.createdate
+        GROUP BY  timeSlot
+    </select>
+</mapper>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsQualityAcceptanceApplyMapper">
+    
+    <resultMap type="WsQualityAcceptanceApply" id="WsQualityAcceptanceApplyResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="applyPersonId"    column="apply_person_id"    />
+        <result property="acceptancePosition"    column="acceptance_position"    />
+        <result property="acceptanceContent"    column="acceptance_content"    />
+        <result property="applyDate"    column="apply_date"    />
+        <result property="planverificationDate"    column="planVerification_date"    />
+        <result property="acceptancePersonId"    column="acceptance_person_id"    />
+        <result property="acceptanceState"    column="acceptance_state"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="kssj"    column="kssj"    />
+        <result property="jssj"    column="jssj"    />
+        <result property="projectName"    column="projectName"    />
+        <result property="verifyPersonName"    column="verifyPersonName"    />
+        <result property="acceptanceStateName"    column="acceptanceStateName"    />
+        <result property="applyPersonName"    column="applyPersonName"    />
+        <result property="acceptanceNum"    column="acceptanceNum"    />
+        <result property="applyNum"    column="apply_num"    />
+    </resultMap>
+
+    <sql id="selectWsQualityAcceptanceApplyVo">
+        select id, project_id, apply_person_id, acceptance_position, acceptance_content, apply_date, planVerification_date, acceptance_person_id, acceptance_state, is_delete, created_by, created_time, updated_by, updated_time from t_ws_quality_acceptance_apply
+    </sql>
+
+    <select id="selectWsQualityAcceptanceApplyList" parameterType="WsQualityAcceptanceApply" resultMap="WsQualityAcceptanceApplyResult">
+        select t.id,t2.dict_label as acceptanceStateName,t3.project_name as projectName,t4.nick_name as applyPersonName,t.apply_date,t.acceptance_position,t.acceptance_content,t5.nick_name as verifyPersonName,t.acceptance_state,t.planVerification_date,
+        (select count(*) from t_ws_quality_acceptance_record t6 where t.id = t6.apply_id) as acceptanceNum
+        from t_ws_quality_acceptance_apply t
+        left join sys_dict_data t2 on t.acceptance_state = t2.dict_value and t2.dict_type = 'acceptance_state'
+        left join t_ws_project t3 on t.project_id = t3.id
+        left join sys_user t4 on t.apply_person_id = t4.user_id
+        left join sys_user t5 on t.acceptance_person_id = t5.user_id
+        <where>
+          1=1
+            <if test="wsQualityAcceptanceApply.projectId != null "> and t.project_id = #{wsQualityAcceptanceApply.projectId}</if>
+            <if test="wsQualityAcceptanceApply.acceptancePersonId != null "> and t.acceptance_person_id = #{wsQualityAcceptanceApply.acceptancePersonId}</if>
+            <if test="wsQualityAcceptanceApply.applyPersonId != null "> and t.apply_person_id = #{wsQualityAcceptanceApply.applyPersonId}</if>
+            <if test="wsQualityAcceptanceApply.kssj != null and wsQualityAcceptanceApply.kssj != ''">
+                and DATE_FORMAT(t.apply_date,'%Y-%m-%d') >= #{wsQualityAcceptanceApply.kssj}
+            </if>
+            <if test="wsQualityAcceptanceApply.jssj != null and wsQualityAcceptanceApply.jssj != ''">
+                and <![CDATA[DATE_FORMAT(t.apply_date,'%Y-%m-%d') <= #{wsQualityAcceptanceApply.jssj}]]>
+            </if>
+            <if test="wsQualityAcceptanceApply.acceptanceState != null "> and t.acceptance_state = #{wsQualityAcceptanceApply.acceptanceState}</if>
+            <if test="wsQualityAcceptanceApply.isDelete != null  and wsQualityAcceptanceApply.isDelete != ''"> and t.is_delete = #{wsQualityAcceptanceApply.isDelete}</if>
+            <if test="projectIds != null "> and t.project_id in
+                <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+                    #{projectId}
+                </foreach></if>
+             order by t.created_time desc
+        </where>
+    </select>
+    
+    <select id="selectWsQualityAcceptanceApplyById" parameterType="WsQualityAcceptanceApply" resultMap="WsQualityAcceptanceApplyResult">
+        select t.id,t.project_id,t2.dict_label as acceptanceStateName,t3.project_name as projectName,t4.nick_name as applyPersonName,t.apply_date,t.acceptance_position,t.acceptance_content,t5.nick_name as verifyPersonName,t.acceptance_state,t.planVerification_date,t.acceptance_person_id,t.apply_num from t_ws_quality_acceptance_apply t
+        left join sys_dict_data t2 on t.acceptance_state = t2.dict_value and t2.dict_type = 'acceptance_state'
+        left join t_ws_project t3 on t.project_id = t3.id
+        left join sys_user t4 on t.apply_person_id = t4.user_id
+        left join sys_user t5 on t.acceptance_person_id = t5.user_id
+        <where>
+            1=1
+            and t.id = #{id}
+        </where>
+    </select>
+        
+    <insert id="insertWsQualityAcceptanceApply" parameterType="WsQualityAcceptanceApply" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_quality_acceptance_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="applyPersonId != null ">apply_person_id,</if>
+            <if test="acceptancePosition != null  and acceptancePosition != ''">acceptance_position,</if>
+            <if test="acceptanceContent != null  and acceptanceContent != ''">acceptance_content,</if>
+            <if test="applyDate != null ">apply_date,</if>
+            <if test="planverificationDate != null ">planVerification_date,</if>
+            <if test="acceptancePersonId != null ">acceptance_person_id,</if>
+            <if test="acceptanceState != null ">acceptance_state,</if>
+            <if test="applyNum != null ">apply_num,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="applyPersonId != null ">#{applyPersonId},</if>
+            <if test="acceptancePosition != null  and acceptancePosition != ''">#{acceptancePosition},</if>
+            <if test="acceptanceContent != null  and acceptanceContent != ''">#{acceptanceContent},</if>
+            <if test="applyDate != null ">#{applyDate},</if>
+            <if test="planverificationDate != null ">#{planverificationDate},</if>
+            <if test="acceptancePersonId != null ">#{acceptancePersonId},</if>
+            <if test="acceptanceState != null ">#{acceptanceState},</if>
+            <if test="applyNum != null ">#{applyNum},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsQualityAcceptanceApply" parameterType="WsQualityAcceptanceApply">
+        update t_ws_quality_acceptance_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="applyPersonId != null ">apply_person_id = #{applyPersonId},</if>
+            <if test="acceptancePosition != null  and acceptancePosition != ''">acceptance_position = #{acceptancePosition},</if>
+            <if test="acceptanceContent != null  and acceptanceContent != ''">acceptance_content = #{acceptanceContent},</if>
+            <if test="applyDate != null ">apply_date = #{applyDate},</if>
+            <if test="planverificationDate != null ">planVerification_date = #{planverificationDate},</if>
+            <if test="acceptancePersonId != null ">acceptance_person_id = #{acceptancePersonId},</if>
+            <if test="acceptanceState != null ">acceptance_state = #{acceptanceState},</if>
+            <if test="applyNum != null ">apply_num = #{applyNum},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsQualityAcceptanceApplyById" parameterType="Long">
+        delete from t_ws_quality_acceptance_apply where id = #{id}
+    </delete>
+
+    <delete id="deleteWsQualityAcceptanceApplyByIds" parameterType="String">
+        update t_ws_quality_acceptance_apply
+        <trim prefix="SET" suffixOverrides=",">
+            is_delete = 'Y'
+        </trim>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

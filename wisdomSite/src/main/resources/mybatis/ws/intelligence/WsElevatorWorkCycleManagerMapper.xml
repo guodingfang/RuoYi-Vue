@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsElevatorWorkCycleManagerMapper">
+
+    <resultMap type="WsElevatorWorkCycleManager" id="WsElevatorWorkCycleManagerResult">
+        <result property="oid"    column="OID"    />
+        <result property="blackBoxOid"    column="BLACK_BOX_OID"    />
+        <result property="blackBoxRrOid"    column="BLACK_BOX_RR_OID"    />
+        <result property="serialNumber"    column="SERIAL_NUMBER"    />
+        <result property="insertTime"    column="INSERT_TIME"    />
+        <result property="beginDate"    column="BEGIN_DATE"    />
+        <result property="endDate"    column="END_DATE"    />
+        <result property="driverName"    column="DRIVER_NAME"    />
+        <result property="driverCardNo"    column="DRIVER_CARD_NO"    />
+        <result property="weight"    column="WEIGHT"    />
+        <result property="weightPercent"    column="WEIGHT_PERCENT"    />
+        <result property="startHeight"    column="START_HEIGHT"    />
+        <result property="endHeight"    column="END_HEIGHT"    />
+        <result property="tripHeight"    column="TRIP_HEIGHT"    />
+        <result property="liftingDirection"    column="LIFTING_DIRECTION"    />
+        <result property="avgSpeed"    column="AVG_SPEED"    />
+        <result property="maxXTilt"    column="MAX_X_TILT"    />
+        <result property="maxYTilt"    column="MAX_Y_TILT"    />
+        <result property="loadPersons"    column="LOAD_PERSONS"    />
+        <result property="warningState"    column="WARNING_STATE"    />
+        <result property="warningStateWeight"    column="WARNING_STATE_WEIGHT"    />
+        <result property="warningStateIdentity"    column="WARNING_STATE_IDENTITY"    />
+        <result property="warningStateSpeed"    column="WARNING_STATE_SPEED"    />
+        <result property="warningStateHeight"    column="WARNING_STATE_HEIGHT"    />
+        <result property="warningStatePersons"    column="WARNING_STATE_PERSONS"    />
+        <result property="warningStateTilt"    column="WARNING_STATE_TILT"    />
+    </resultMap>
+
+    <resultMap type="WsElevatorWorkCycleManagerVO" id="WsElevatorWorkCycleManagerVOResult">
+
+        <result property="warningType"    column="warning_type"    />
+        <result property="insertTime"    column="insert_time"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="warningTag"    column="warning_tag"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="minutes"    column="minutes"    />
+        <result property="weight"    column="weight"    />
+        <result property="weightPercent"    column="weight_percent"    />
+    </resultMap>
+
+
+    <resultMap type="WsElevatorWorkCycleStatisticsVO" id="WsElevatorWorkCycleManagerStatisticsResult">
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="driverName"    column="driver_name"    />
+        <result property="alarmingNumber"    column="alarming_number"    />
+        <result property="preAlarmingNumber"    column="pre_alarming_number"    />
+        <result property="totalNumber"    column="total_number"    />
+        <result property="totalHour"    column="total_hour"    />
+        <result property="totalTravel"    column="total_travel"    />
+        <result property="totalWeight"    column="total_weight"    />
+    </resultMap>
+
+
+    <resultMap type="WsElevatorWorkCycleStatisticsVO" id="StatisticsAllInfoResult">
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="alarmingNumber"    column="alarming_number"    />
+        <result property="preAlarmingNumber"    column="pre_alarming_number"    />
+        <result property="realTimeWarningStatus"    column="real_time_warning_status"    />
+        <result property="totalWeight"    column="total_weight"    />
+        <result property="totalNumber"    column="total_number"    />
+        <result property="onlineStatus"    column="online_status"    />
+        <result property="authen"    column="authen"    />
+    </resultMap>
+
+    <select id="statisticsDriverIllegalRecord" parameterType="WsElevatorWorkCycleManagerDTO" resultMap="WsElevatorWorkCycleManagerStatisticsResult">
+        select ifnull(DRIVER_CARD_NO,"未知") id_number,if(DRIVER_NAME is null or DRIVER_NAME="" ,"未知",DRIVER_NAME) driver_name,
+        ifnull(count(1),0) total_number,
+        ifnull(count(if(WARNING_STATE=0 and (WARNING_STATE_WEIGHT=1 or WARNING_STATE_SPEED=1 or WARNING_STATE_HEIGHT=1 or WARNING_STATE_TILT=1),1,null)),0) pre_alarming_number,
+        ifnull(count(if(WARNING_STATE_WEIGHT=2 or WARNING_STATE_SPEED=2 or WARNING_STATE_HEIGHT=2 or WARNING_STATE_TILT=2 or WARNING_STATE_IDENTITY=0,1,null)),0) alarming_number
+        from  t_ws_elevator_work_cycle_manager
+        where  insert_time between #{beginTime} and #{endTime} and
+        ((WARNING_STATE_WEIGHT+WARNING_STATE_SPEED+WARNING_STATE_HEIGHT+WARNING_STATE_TILT) &gt;0 or WARNING_STATE_IDENTITY=0)  and
+        serial_number in
+        <foreach collection="serialNumbers" item="serialNumber" index="index" separator="," open="(" close=")">
+            #{serialNumber}
+        </foreach>
+        group by DRIVER_CARD_NO
+    </select>
+
+    <select id="statisticsElevatorWorkRecord" parameterType="WsElevatorWorkCycleManagerDTO" resultMap="WsElevatorWorkCycleManagerStatisticsResult">
+        select serial_number,
+        ifnull(count(if(WARNING_STATE=0 and (WARNING_STATE_WEIGHT=1 or WARNING_STATE_SPEED=1 or WARNING_STATE_HEIGHT=1 or WARNING_STATE_TILT=1),1,null)),0) pre_alarming_number,
+        ifnull(count(if(WARNING_STATE_WEIGHT=2 or WARNING_STATE_SPEED=2 or WARNING_STATE_HEIGHT=2 or WARNING_STATE_TILT=2 or WARNING_STATE_IDENTITY=0,1,null)),0) alarming_number,
+        ifnull(count(1),0) total_number,FORMAT(sum(timestampdiff(SECOND,BEGIN_DATE,END_DATE)) /60/60,1) total_hour,
+        ifnull(sum(WEIGHT),0) total_weight,
+        ifnull(sum(TRIP_HEIGHT),0) total_travel
+         from  t_ws_elevator_work_cycle_manager
+        where  serial_number in
+        <foreach collection="serialNumbers" item="serialNumber" index="index" separator="," open="(" close=")">
+            #{serialNumber}
+        </foreach>
+        <if test="beginTime !=null and endTime !=null ">
+           and  insert_time between #{beginTime} and #{endTime}
+        </if>
+        group by serial_number
+        <if test="rowNumber !=null ">
+            limit #{rowNumber}
+        </if>
+
+    </select>
+
+    <select id="selectElevatorWorkRecord" parameterType="WsElevatorWorkCycleManagerDTO" resultMap="WsElevatorWorkCycleManagerVOResult" >
+        select serial_number , begin_date,timestampdiff(minute ,BEGIN_DATE,END_DATE) minutes,weight,weight_percent,insert_time
+        from t_ws_elevator_work_cycle_manager
+        where   serial_number in
+        <foreach collection="serialNumbers" item="serialNumber" index="index" separator="," open="(" close=")">
+            #{serialNumber}
+        </foreach>
+        <if test="beginTime !=null and endTime !=null ">
+            and  insert_time between #{beginTime} and #{endTime}
+        </if>
+        order by insert_time desc , serial_number asc
+
+        <if test="rowNumber !=null ">
+            limit #{rowNumber}
+        </if>
+    </select>
+
+    <select id="selectElevatorIllegalWorkRecord" parameterType="WsElevatorWorkCycleManagerDTO" resultMap="WsElevatorWorkCycleManagerVOResult">
+        select serial_number ,insert_time,
+        if(WARNING_STATE_WEIGHT=2 or WARNING_STATE_SPEED=2 or WARNING_STATE_HEIGHT=2 or WARNING_STATE_TILT=2 or WARNING_STATE_IDENTITY=0,2,1) warning_type,
+        concat_ws(',',if(WARNING_STATE_WEIGHT!=0,'重量',null),if(WARNING_STATE_SPEED!=0,'速度',null),if(WARNING_STATE_HEIGHT!=0,'高度',null),if(WARNING_STATE_TILT!=0,'高度',null),if(WARNING_STATE_IDENTITY=0,'未认证',null)) warning_tag
+        from t_ws_elevator_work_cycle_manager
+        where   insert_time between #{beginTime} and #{endTime}  and  ((WARNING_STATE_WEIGHT+WARNING_STATE_SPEED+WARNING_STATE_HEIGHT+WARNING_STATE_TILT) &gt; 0 or WARNING_STATE_IDENTITY=0)
+        <if test="alarmingType!=null and alarmingType !=''" >and CONCAT(WARNING_STATE+1,'') =#{alarmingType} </if>
+        and serial_number in
+        <foreach collection="serialNumbers" item="serialNumber" index="index" separator="," open="(" close=")">
+            #{serialNumber}
+        </foreach>
+        order by insert_time desc
+    </select>
+
+    <select id="statisticsTodayAllInfo"  resultMap="StatisticsAllInfoResult">
+        select bb.serial_number serial_number,if(emd.AUTHEN=0,0,1) authen,
+        count(if(ewcm.WARNING_STATE=0 and (ewcm.WARNING_STATE_WEIGHT=1 or ewcm.WARNING_STATE_SPEED=1 or ewcm.WARNING_STATE_HEIGHT=1 or ewcm.WARNING_STATE_TILT=1),1,null)) pre_alarming_number,
+        count(if(ewcm.WARNING_STATE_WEIGHT=2 or ewcm.WARNING_STATE_SPEED=2 or ewcm.WARNING_STATE_HEIGHT=2 or ewcm.WARNING_STATE_TILT=2 or ewcm.WARNING_STATE_IDENTITY=0,1,null)) alarming_number,
+        IFNULL(sum(ewcm.weight),0) total_weight,
+        IFNULL(count(ewcm.oid),0) total_number,
+        bb.ONLINE_STATUS online_status,
+        if(emd.ALARM_STATUS=1,2,if(emd.WARNING_STATUS=1,1,0)) real_time_warning_status
+        from t_ws_black_box bb
+        left join   (select * from t_ws_elevator_work_cycle_manager where insert_time between FROM_UNIXTIME(UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE))) and SYSDATE()) ewcm on bb.serial_number=ewcm.serial_number
+        left join t_ws_elevator_monitor_data emd on emd.serial_number = bb.serial_number
+        where   bb.EQUIPMENT_TYPE='2'
+        and bb.serial_number in
+        <foreach collection="serialNumbers" item="serialNumber" index="index" separator="," open="(" close=")">
+            #{serialNumber}
+        </foreach>
+        group by bb.serial_number
+
+    </select>
+
+
+</mapper>

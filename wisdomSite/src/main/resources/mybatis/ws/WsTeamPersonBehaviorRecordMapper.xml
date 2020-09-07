@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsTeamPersonBehaviorRecordMapper">
+
+    <resultMap type="WsTeamPersonBehaviorRecord" id="WsTeamPersonBehaviorRecordResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="eventId"    column="event_id"    />
+        <result property="eventType"    column="event_type"    />
+        <result property="point"    column="point"    />
+        <result property="details"    column="details"    />
+        <result property="imageUrl"    column="image_url"    />
+        <result property="recorder"    column="recorder"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <resultMap type="WsTeamPersonBehaviorRecordVO" id="WsTeamPersonBehaviorRecordVOResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="eventId"    column="event_id"    />
+        <result property="eventType"    column="event_type"    />
+        <result property="point"    column="point"    />
+        <result property="details"    column="details"    />
+        <result property="imageUrl"    column="image_url"    />
+        <result property="recorder"    column="recorder"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="personName"    column="person_name"    />
+        <result property="faceUrl"    column="face_url"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="monthAwardPoints"    column="month_award_points"    />
+        <result property="totalDeductPoints"    column="total_deduct_points"    />
+        <result property="exchangeablePoints"    column="exchangeable_points"    />
+        <result property="workTypeName"    column="work_type_name"    />
+        <result property="hasPointPersons"    column="has_point_persons"    />
+        <result property="totalPersons"    column="total_persons"    />
+        <association property="event" javaType="WsBehaviorEventManagement">
+            <result property="id"    column="event_id"    />
+            <result property="projectId"    column="project_id"    />
+            <result property="eventName"    column="event_name"    />
+            <result property="eventType"    column="event_type"    />
+            <result property="point"    column="event_point"    />
+        </association>
+
+    </resultMap>
+
+    <sql id="selectWsTeamPersonBehaviorRecordVo">
+        select id, project_id, person_id, event_id, point, details, image_url,recorder, created_time, updated_time from t_ws_team_person_behavior_record
+    </sql>
+
+    <sql id="selectWsTeamPersonBehaviorRecordVo2">
+        select tpbr.id id , tpbr.project_id, tpbr.person_id, tpbr.event_id, tpbr.point, tpbr.details, tpbr.image_url,tpbr.recorder, tpbr.created_time ,
+        tp.name person_name,tp.id_number id_number,
+        pt.name team_name,
+        ppu.unit_name unit_name,
+        bem.id event_id,bem.event_name event_name,bem.event_type event_type,bem.point event_point
+        from t_ws_team_person_behavior_record tpbr
+        left join  t_ws_team_person tp on tp.id = tpbr.person_id
+        left join t_ws_behavior_event_management bem on tpbr.event_id = bem.id
+        left join t_ws_participating_team pt on pt.id = tp.team_id
+        left join t_ws_project_participating_unit ppu on tp.unit_id = ppu.id
+    </sql>
+
+    <select id="selectWsTeamPersonBehaviorRecordList"  resultMap="WsTeamPersonBehaviorRecordVOResult">
+        <include refid="selectWsTeamPersonBehaviorRecordVo2"/>
+        <where>
+            <if test="wsTeamPersonBehaviorRecord.projectId != null "> and tpbr.project_id = #{wsTeamPersonBehaviorRecord.projectId}</if>
+            <if test="wsTeamPersonBehaviorRecord.personId != null "> and tpbr.person_id = #{wsTeamPersonBehaviorRecord.personId}</if>
+            <if test="wsTeamPersonBehaviorRecord.eventId != null "> and tpbr.event_id = #{wsTeamPersonBehaviorRecord.eventId}</if>
+            <if test="wsTeamPersonBehaviorRecord.eventType != null "> and tpbr.event_type = #{wsTeamPersonBehaviorRecord.eventType}</if>
+            <if test="wsTeamPersonBehaviorRecord.point != null "> and tpbr.point = #{wsTeamPersonBehaviorRecord.point}</if>
+            <if test="wsTeamPersonBehaviorRecord.beginTime != null and wsTeamPersonBehaviorRecord.endTime != null ">
+                and tpbr.created_time between #{wsTeamPersonBehaviorRecord.beginTime} and #{wsTeamPersonBehaviorRecord.endTime}
+            </if>
+            <if test="wsTeamPersonBehaviorRecord.keyWordName != null and wsTeamPersonBehaviorRecord.keyWordName != '' ">
+             and (tp.name like concat('%', #{wsTeamPersonBehaviorRecord.keyWordName}, '%') or tp.id_number like concat('%', #{wsTeamPersonBehaviorRecord.keyWordName}, '%'))
+             </if>
+            <if test="dataScope !=null and dataScope.size>0">
+                and tpbr.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectWsTeamPersonBehaviorRecordListByPerson"  resultMap="WsTeamPersonBehaviorRecordVOResult">
+        select tpbr.id id , tpbr.project_id, tpbr.person_id, tpbr.event_id, sum(tpbr.point) point, tpbr.details, tpbr.image_url,tpbr.recorder, tpbr.created_time ,
+        tp.name person_name,tp.id_number id_number,
+        pt.name team_name,
+        ppu.unit_name unit_name,
+        bem.event_name event_name,bem.event_type event_type,bem.point event_point
+        from t_ws_team_person_behavior_record tpbr
+        left join  t_ws_team_person tp on tp.id = tpbr.person_id
+        left join t_ws_behavior_event_management bem on tpbr.event_id = bem.id
+        left join t_ws_participating_team pt on pt.id = tp.team_id
+        left join t_ws_project_participating_unit ppu on tp.unit_id = ppu.id
+        <where>
+            <if test="wsTeamPersonBehaviorRecord.projectId != null "> and tpbr.project_id = #{wsTeamPersonBehaviorRecord.projectId}</if>
+            <if test="wsTeamPersonBehaviorRecord.personId != null "> and tpbr.person_id = #{wsTeamPersonBehaviorRecord.personId}</if>
+            <if test="wsTeamPersonBehaviorRecord.eventType != null and wsTeamPersonBehaviorRecord.eventType !=null"> and bem.event_type= #{wsTeamPersonBehaviorRecord.eventType}</if>
+            <if test="wsTeamPersonBehaviorRecord.beginTime != null and wsTeamPersonBehaviorRecord.endTime != null ">
+                and tpbr.created_time between #{wsTeamPersonBehaviorRecord.beginTime} and #{wsTeamPersonBehaviorRecord.endTime}</if>
+
+            <if test="wsTeamPersonBehaviorRecord.keyWordName!=null and wsTeamPersonBehaviorRecord.keyWordName!=''">
+                and tp.name like concat('%', #{wsTeamPersonBehaviorRecord.keyWordName}, '%') or tp.id_number like concat('%', #{wsTeamPersonBehaviorRecord.keyWordName}, '%')
+            </if>
+            <if test="dataScope !=null and dataScope.size>0">insertWsTeamPersonBehaviorRecord
+                and tpbr.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+        </where>
+        group by tpbr.person_id
+    </select>
+
+    <select id="selectWsTeamPersonBehaviorRecordListByTeam" parameterType="WsTeamPersonBehaviorRecord" resultMap="WsTeamPersonBehaviorRecordVOResult">
+        select
+        count(distinct tp.id) total_persons,
+        count(distinct if(bem.event_type=#{eventType},tp.id,null)) has_point_persons ,
+        pt.name team_name,
+        ppu.unit_name unit_name
+        from t_ws_team_person tp
+        left join  t_ws_team_person_behavior_record tpbr on tp.id = tpbr.person_id
+        left join t_ws_behavior_event_management bem on tpbr.event_id = bem.id
+        left join t_ws_participating_team pt on pt.id = tp.team_id
+        left join t_ws_project_participating_unit ppu on tp.unit_id = ppu.id
+        where tp.is_delete ='0'
+            <if test="projectId != null "> and tpbr.project_id = #{projectId}</if>
+            <if test="beginTime != null and endTime != null ">
+                and tpbr.created_time between #{beginTime} and #{endTime}</if>
+        group by tp.team_id
+        HAVING count(distinct if(bem.event_type=0,tp.id,null)) >0
+    </select>
+
+    <select id="selectWsTeamPersonBehaviorRecordById" parameterType="WsTeamPersonBehaviorRecord" resultMap="WsTeamPersonBehaviorRecordVOResult">
+        <include refid="selectWsTeamPersonBehaviorRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="statisticstPersonTotalPoints" parameterType="Integer" resultMap="WsTeamPersonBehaviorRecordVOResult">
+        select tpbr.id id , sum(if(bem.event_type=0,0,tpbr.point)) point ,
+        (
+            select sum(if(event.event_type=1,0,record.point))
+            from
+            t_ws_team_person_behavior_record record
+            left join t_ws_behavior_event_management event on record.event_id=event.id
+            where person_id = #{personId}
+        ) total_deduct_points,
+        tp.name person_name,tp.id_number id_number,tp.face_url face_url,
+        pt.name team_name,
+        ppu.unit_name unit_name
+        from t_ws_team_person tp
+        left join  t_ws_team_person_behavior_record tpbr on tp.id = tpbr.person_id
+        left join t_ws_behavior_event_management bem on tpbr.event_id = bem.id
+        left join t_ws_participating_team pt on pt.id = tp.team_id
+        left join t_ws_project_participating_unit ppu on tp.unit_id = ppu.id
+        where tp.id = #{personId}
+    </select>
+
+
+
+    <select id="statisticstPersonExchangeablePoints" parameterType="Integer" resultMap="WsTeamPersonBehaviorRecordVOResult">
+        select
+        (
+            (
+               select IFNULL(sum(if(event.event_type=0,0,record.point)),0)
+            from
+            t_ws_team_person_behavior_record record
+            left join t_ws_behavior_event_management event on record.event_id=event.id
+            where person_id = #{personId}
+            )
+            -
+            (
+                select
+                    IFNULL(sum(cost_point),0)
+                from t_ws_team_person_exchange_record
+                where person_id = #{personId}
+
+            )
+
+        ) exchangeable_points ,
+        tp.name person_name,tp.id_number id_number,tp.face_url face_url,
+        pt.name team_name,
+        ppu.unit_name unit_name,
+        d.dict_label work_type_name
+        from  t_ws_team_person tp
+        left join  sys_dict_data d on (tp.work_type = d.dict_value and d.dict_type="ws_work_type")
+        left join t_ws_participating_team pt on pt.id = tp.team_id
+        left join t_ws_project_participating_unit ppu on tp.unit_id = ppu.id
+        where tp.id = #{personId}
+    </select>
+
+    <select id="selectPersonBehaviorEvaluate" resultMap="WsTeamPersonBehaviorRecordVOResult">
+        select
+        tp.name person_name,tp.id_number id_number,tp.face_url face_url,tp.id person_id,tp.project_id,
+        pt.name team_name,
+        ppu.unit_name unit_name,
+        IFNULL(tpbr.point-tper.exchangeable_points,tpbr.point) exchangeable_points,tpbr.total_deduct_points total_deduct_points,tpbr.point
+        from t_ws_team_person tp
+        left join t_ws_participating_team pt on pt.id = tp.team_id
+        left join t_ws_project_participating_unit ppu on tp.unit_id = ppu.id
+        left join (
+            select
+                record.person_id person_id,
+                IFNULL(sum(if(bem1.event_type=0,record.point,0)),0) total_deduct_points,
+                IFNULL(sum(if(bem1.event_type=1,record.point,0)),0) point
+            from t_ws_team_person_behavior_record record
+            left join t_ws_behavior_event_management bem1 on bem1.id = record.event_id
+            group  by person_id
+            ) tpbr on tpbr.person_id = tp.id
+        left join (
+            select
+               person_id,
+               IFNULL(sum(cost_point),0) exchangeable_points
+            from t_ws_team_person_exchange_record
+            group  by person_id
+        ) tper on tper.person_id = tp.id
+        where tp.is_delete='0'
+            <if test="wsTeamPersonBehaviorRecord.projectId !=null">
+                and tp.project_id = #{wsTeamPersonBehaviorRecord.projectId}
+            </if>
+            <if test="wsTeamPersonBehaviorRecord.keyWordName!=null and wsTeamPersonBehaviorRecord.keyWordName!=''">
+                and tp.name like concat('%', #{wsTeamPersonBehaviorRecord.keyWordName}, '%') or tp.id_number like concat('%', #{wsTeamPersonBehaviorRecord.keyWordName}, '%')
+            </if>
+            <if test="dataScope !=null and dataScope.size>0">
+                and tp.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+
+
+    </select>
+
+    <insert id="insertWsTeamPersonBehaviorRecord" parameterType="WsTeamPersonBehaviorRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_team_person_behavior_record(
+            <if test="projectId != null ">project_id,</if>
+            <if test="personId != null ">person_id,</if>
+            <if test="eventId != null ">event_id,</if>
+            <if test="eventType != null ">event_type,</if>
+            <if test="point != null ">point,</if>
+            <if test="details != null  and details != ''">details,</if>
+            <if test="imageUrl != null  and imageUrl != ''">image_url,</if>
+            <if test="recorder != null  and recorder != ''">recorder,</if>
+            created_time,updated_time
+            )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="personId != null ">#{personId},</if>
+            <if test="eventId != null ">#{eventId},</if>
+            <if test="eventType != null ">#{eventType},</if>
+            <if test="point != null ">#{point},</if>
+            <if test="details != null  and details != ''">#{details},</if>
+            <if test="imageUrl != null  and imageUrl != ''">#{imageUrl},</if>
+        <if test="recorder != null  and recorder != ''">#{recorder},</if>
+            sysdate(),sysdate()
+           )
+    </insert>
+
+    <update id="updateWsTeamPersonBehaviorRecord" parameterType="WsTeamPersonBehaviorRecord">
+        update t_ws_team_person_behavior_record set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="personId != null ">person_id = #{personId},</if>
+            <if test="eventId != null ">event_id = #{eventId},</if>
+            <if test="eventType != null ">event_type = #{eventType},</if>
+            <if test="point != null ">point = #{point},</if>
+            <if test="details != null  and details != ''">details = #{details},</if>
+            <if test="imageUrl != null  and imageUrl != ''">image_url = #{imageUrl},</if>
+            updated_time = sysdate()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsTeamPersonBehaviorRecordById" parameterType="Integer">
+        delete from t_ws_team_person_behavior_record where id = #{id}
+    </delete>
+
+    <delete id="deleteWsTeamPersonBehaviorRecordByIds" parameterType="String">
+        delete from t_ws_team_person_behavior_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsQualityEarlywarningManagerMapper">
+    
+    <resultMap type="WsQualityEarlywarningManager" id="WsQualityEarlywarningManagerResult">
+        <result property="id"    column="id"    />
+        <result property="qualityCheckManagerId"    column="quality_check_manager_id"    />
+        <result property="superviseContents"    column="supervise_contents"    />
+        <result property="overdueDate"    column="overdue_date"    />
+        <result property="personId"    column="person_id"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsQualityEarlywarningManagerVo">
+        select id, quality_check_manager_id, supervise_contents, overdue_date, person_id, created_by, created_time, updated_by, updated_time from t_ws_quality_earlywarning_manager
+    </sql>
+
+    <select id="selectWsQualityEarlywarningManagerList" parameterType="WsQualityEarlywarningManager" resultMap="WsQualityEarlywarningManagerResult">
+        <include refid="selectWsQualityEarlywarningManagerVo"/>
+        <where>  
+            <if test="qualityCheckManagerId != null "> and quality_check_manager_id = #{qualityCheckManagerId}</if>
+            <if test="superviseContents != null  and superviseContents != ''"> and supervise_contents = #{superviseContents}</if>
+            <if test="overdueDate != null "> and overdue_date = #{overdueDate}</if>
+            <if test="personId != null "> and person_id = #{personId}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsQualityEarlywarningManagerById" parameterType="Long" resultMap="WsQualityEarlywarningManagerResult">
+        <include refid="selectWsQualityEarlywarningManagerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWsQualityEarlywarningManager" parameterType="WsQualityEarlywarningManager" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_quality_earlywarning_manager
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="qualityCheckManagerId != null ">quality_check_manager_id,</if>
+            <if test="superviseContents != null  and superviseContents != ''">supervise_contents,</if>
+            <if test="overdueDate != null ">overdue_date,</if>
+            <if test="personId != null ">person_id,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="qualityCheckManagerId != null ">#{qualityCheckManagerId},</if>
+            <if test="superviseContents != null  and superviseContents != ''">#{superviseContents},</if>
+            <if test="overdueDate != null ">#{overdueDate},</if>
+            <if test="personId != null ">#{personId},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsQualityEarlywarningManager" parameterType="WsQualityEarlywarningManager">
+        update t_ws_quality_earlywarning_manager
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="qualityCheckManagerId != null ">quality_check_manager_id = #{qualityCheckManagerId},</if>
+            <if test="superviseContents != null  and superviseContents != ''">supervise_contents = #{superviseContents},</if>
+            <if test="overdueDate != null ">overdue_date = #{overdueDate},</if>
+            <if test="personId != null ">person_id = #{personId},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsQualityEarlywarningManagerById" parameterType="Long">
+        delete from t_ws_quality_earlywarning_manager where id = #{id}
+    </delete>
+
+    <delete id="deleteWsQualityEarlywarningManagerByIds" parameterType="String">
+        delete from t_ws_quality_earlywarning_manager where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

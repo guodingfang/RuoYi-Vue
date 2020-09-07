@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsEnterpriseMeasuredrealquantityPlanMapper">
+
+    <resultMap type="WsEnterpriseMeasuredrealquantityPlan" id="WsEnterpriseMeasuredrealquantityPlanResult">
+        <result property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="projectName" column="project_name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="pathIds" column="path_ids"/>
+        <result property="regionName" column="region_name"/>
+        <result property="planImageAddres" column="plan_image_addres"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="updatedTime" column="updated_time"/>
+    </resultMap>
+
+    <sql id="selectWsEnterpriseMeasuredrealquantityPlanVo">
+        select id, project_id, project_name, parent_id, path_ids, region_name, plan_image_addres, is_delete, created_by, created_time, updated_by, updated_time from t_ws_enterprise_measuredrealquantity_plan
+    </sql>
+
+    <select id="selectWsEnterpriseMeasuredrealquantityPlanList" parameterType="WsEnterpriseMeasuredrealquantityPlan"
+            resultMap="WsEnterpriseMeasuredrealquantityPlanResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityPlanVo"/>
+        <where>
+            <if test="projectName != null  and projectName != ''">and project_name like concat('%', #{projectName},
+                '%')
+            </if>
+            <if test="parentId != null  and parentId != ''">and parent_id = #{parentId}</if>
+            <if test="pathIds != null  and pathIds != ''">and path_ids = #{pathIds}</if>
+            <if test="regionName != null  and regionName != ''">and region_name like concat('%', #{regionName}, '%')
+            </if>
+            <if test="planImageAddres != null  and planImageAddres != ''">and plan_image_addres = #{planImageAddres}
+            </if>
+            <if test="createdBy != null ">and created_by = #{createdBy}</if>
+            <if test="createdTime != null ">and created_time = #{createdTime}</if>
+            <if test="updatedBy != null ">and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null ">and updated_time = #{updatedTime}</if>
+            and project_id = #{projectId}
+            and is_delete = 'N'
+        </where>
+    </select>
+    <resultMap id="TreeDataResultMap" type="com.jlkj.project.ws.domain.TreeData">
+        <result property="id" column="parent_id"/>
+        <result property="label" column="parent_name"/>
+        <collection property="children" ofType="TreeData">
+            <id property="id" column="chidren_id"/>
+            <result property="label" column="chidren_name"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectAllParentWsEnterpriseMeasuredrealquantityPlan" parameterType="WsEnterpriseMeasuredrealquantityPlan"
+            resultMap="WsEnterpriseMeasuredrealquantityPlanResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityPlanVo"/>
+        where is_delete = 'N' and parent_id = 0 and project_id = #{projectId}
+    </select>
+
+    <select id="selectAllChildrenWsEnterpriseMeasuredrealquantityPlan" parameterType="WsEnterpriseMeasuredrealquantityPlan"
+            resultMap="WsEnterpriseMeasuredrealquantityPlanResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityPlanVo"/>
+        where is_delete = 'N' and parent_id != 0 and project_id = #{projectId}
+    </select>
+
+    <select id="selectWsEnterpriseMeasuredrealquantityPlanById" parameterType="Integer"
+            resultMap="WsEnterpriseMeasuredrealquantityPlanResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityPlanVo"/>
+        where is_delete = 'N' and id = #{id}
+    </select>
+
+    <select id="selectParentWsEnterpriseMeasuredrealquantityPlan" parameterType="Integer"
+            resultMap="WsEnterpriseMeasuredrealquantityPlanResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityPlanVo"/>
+        where is_delete = 'N' and id = #{parentId}
+    </select>
+
+    <select id="selectWsEnterpriseMeasuredrealquantityPlanByParentId" parameterType="Integer"
+            resultMap="WsEnterpriseMeasuredrealquantityPlanResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityPlanVo"/>
+        where is_delete = 'N' and parent_id = 0 and project_id = #{projectId}
+    </select>
+
+    <select id="selectTotalCount" parameterType="WsEnterpriseMeasuredrealquantityPlan" resultType="int">
+       select count(*) from t_ws_enterprise_measuredrealquantity_plan  where is_delete  = 'N' and project_id = #{projectId}
+    </select>
+
+    <insert id="insertWsEnterpriseMeasuredrealquantityPlan" parameterType="WsEnterpriseMeasuredrealquantityPlan"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_enterprise_measuredrealquantity_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="projectName != null  and projectName != ''">project_name,</if>
+            <if test="parentId != null  and parentId != ''">parent_id,</if>
+            <if test="pathIds != null  and pathIds != ''">path_ids,</if>
+            <if test="regionName != null  and regionName != ''">region_name,</if>
+            <if test="planImageAddres != null  and planImageAddres != ''">plan_image_addres,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="projectName != null  and projectName != ''">#{projectName},</if>
+            <if test="parentId != null  and parentId != ''">#{parentId},</if>
+            <if test="pathIds != null  and pathIds != ''">#{pathIds},</if>
+            <if test="regionName != null  and regionName != ''">#{regionName},</if>
+            <if test="planImageAddres != null  and planImageAddres != ''">#{planImageAddres},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWsEnterpriseMeasuredrealquantityPlan" parameterType="WsEnterpriseMeasuredrealquantityPlan">
+        update t_ws_enterprise_measuredrealquantity_plan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="projectName != null  and projectName != ''">project_name = #{projectName},</if>
+            <if test="parentId != null  and parentId != ''">parent_id = #{parentId},</if>
+            <if test="pathIds != null  and pathIds != ''">path_ids = #{pathIds},</if>
+            <if test="regionName != null  and regionName != ''">region_name = #{regionName},</if>
+            <if test="planImageAddres != null  and planImageAddres != ''">plan_image_addres = #{planImageAddres},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id} and is_delete = 'N'
+    </update>
+
+    <update id="deleteWsEnterpriseMeasuredrealquantityPlanById" parameterType="Integer">
+        update  t_ws_enterprise_measuredrealquantity_plan set is_delete = 'Y', updated_time = sysdate() where id = #{id}  OR parent_id = #{id}
+    </update>
+
+</mapper>

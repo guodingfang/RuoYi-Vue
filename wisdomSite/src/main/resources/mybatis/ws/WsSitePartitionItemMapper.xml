@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsSitePartitionItemMapper">
+
+    <resultMap type="WsSitePartitionItem" id="WsSitePartitionItemResult">
+        <result property="id"    column="id"    />
+        <result property="sitePartitionId"    column="site_partition_id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="itemType"    column="item_type"    />
+    </resultMap>
+
+    <sql id="selectWsSitePartitionItemVo">
+        select id, site_partition_id, item_id, item_type from t_ws_site_partition_item
+    </sql>
+
+    <select id="ExistsSitePartitionItem" parameterType="int" resultType="String">
+        SELECT GROUP_CONCAT(DISTINCT(t2.dict_label)) FROM t_ws_site_partition_item t
+        LEFT JOIN sys_dict_data t2 ON t.item_type = t2.dict_value AND t2.dict_type = 'sys_item_type'
+        WHERE t.site_partition_id = #{sitePartitionId}
+    </select>
+    <insert id="insertWsSitePartitionItem" parameterType="WsSitePartitionItem" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_site_partition_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sitePartitionId != null ">site_partition_id,</if>
+            <if test="itemId != null ">item_id,</if>
+            <if test="itemType != null  and itemType != ''">item_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sitePartitionId != null">#{sitePartitionId},</if>
+            <if test="itemId != null  ">#{itemId},</if>
+            <if test="itemType != null  and itemType != ''">#{itemType},</if>
+        </trim>
+    </insert>
+    <delete id="deleteWsSitePartitionItemByItemAndType"  >
+        delete from t_ws_site_partition_item where item_type = #{itemType} and item_id = #{itemId}
+    </delete>
+
+    <update id="updateWsSitePartitionItemByItemAndType" parameterType="WsSitePartitionItem">
+        update t_ws_site_partition_item set site_partition_id = #{sitePartitionId}
+        where item_type = #{itemType} and item_id = #{itemId}
+    </update>
+
+
+</mapper>

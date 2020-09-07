@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsQualityProblemTypeMapper">
+    
+    <resultMap type="WsQualityProblemType" id="WsQualityProblemTypeResult">
+        <result property="id"    column="id"    />
+        <result property="groupId"    column="groupId"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="pathIds"    column="path_ids"    />
+        <result property="problemTypeName"    column="problem_type_name"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsQualityProblemTypeVo">
+        select id, group_id, parent_id, path_ids, problem_type_name, is_delete, created_by, created_time, updated_by, updated_time from t_ws_quality_problem_type
+    </sql>
+
+    <select id="selectWsQualityProblemTypeList" parameterType="WsQualityProblemType" resultMap="WsQualityProblemTypeResult">
+        <include refid="selectWsQualityProblemTypeVo"/>
+        <where>
+            <if test="groupId != null "> and group_id = #{groupId}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="pathIds != null  and pathIds != ''"> and path_ids = #{pathIds}</if>
+            <if test="problemTypeName != null  and problemTypeName != ''"> and problem_type_name like concat('%', #{problemTypeName}, '%')</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsQualityProblemTypeById" parameterType="Long" resultMap="WsQualityProblemTypeResult">
+        <include refid="selectWsQualityProblemTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="checkNameType" parameterType="WsQualityProblemType" resultMap="WsQualityProblemTypeResult">
+		select id, problem_type_name from t_ws_quality_problem_type where problem_type_name = #{problemTypeName} and group_id = #{groupId}
+	</select>
+        
+    <insert id="insertWsQualityProblemType" parameterType="WsQualityProblemType" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_quality_problem_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupId != null ">group_id,</if>
+            <if test="parentId != null ">parent_id,</if>
+            <if test="pathIds != null  and pathIds != ''">path_ids,</if>
+            <if test="problemTypeName != null  and problemTypeName != ''">problem_type_name,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupId != null ">#{groupId},</if>
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="pathIds != null  and pathIds != ''">#{pathIds},</if>
+            <if test="problemTypeName != null  and problemTypeName != ''">#{problemTypeName},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsQualityProblemType" parameterType="WsQualityProblemType">
+        update t_ws_quality_problem_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupId != null ">group_id = #{groupId}</if>
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="pathIds != null  and pathIds != ''">path_ids = #{pathIds},</if>
+            <if test="problemTypeName != null  and problemTypeName != ''">problem_type_name = #{problemTypeName},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsQualityProblemTypeById" parameterType="Long">
+        delete from t_ws_quality_problem_type where id = #{id}
+    </delete>
+
+    <delete id="deleteWsQualityProblemTypeByIds" parameterType="WsQualityProblemType">
+        update t_ws_quality_problem_type
+        <trim prefix="SET" suffixOverrides=",">
+            is_delete = 'Y'
+        </trim>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

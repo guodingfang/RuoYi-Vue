@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsExchangeItemManagementMapper">
+
+    <resultMap type="WsExchangeItemManagement" id="WsExchangeItemManagementResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="unit"    column="unit"    />
+        <result property="changePoint"    column="change_point"    />
+        <result property="inventoryMount"    column="inventory_mount"    />
+        <result property="hasChangeMount"    column="has_change_mount"    />
+        <result property="enabled"    column="is_enable"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsExchangeItemManagementVo">
+        select id, project_id, item_name, unit, change_point, inventory_mount, has_change_mount, is_enable, created_time, updated_time from t_ws_exchange_item_management
+    </sql>
+
+    <select id="selectWsExchangeItemManagementList" resultMap="WsExchangeItemManagementResult">
+        <include refid="selectWsExchangeItemManagementVo"/>
+        <where>
+            <if test="wsExchangeItemManagement.projectId != null "> and project_id = #{wsExchangeItemManagement.projectId}</if>
+            <if test="wsExchangeItemManagement.itemName != null  and wsExchangeItemManagement.itemName != ''"> and item_name like concat('%', #{wsExchangeItemManagement.itemName}, '%')</if>
+            <if test="wsExchangeItemManagement.unit != null  and wsExchangeItemManagement.unit != ''"> and unit = #{wsExchangeItemManagement.unit}</if>
+            <if test="wsExchangeItemManagement.changePoint != null "> and change_point = #{wsExchangeItemManagement.changePoint}</if>
+            <if test="wsExchangeItemManagement.inventoryMount != null "> and inventory_mount = #{wsExchangeItemManagement.inventoryMount}</if>
+            <if test="wsExchangeItemManagement.hasChangeMount != null "> and has_change_mount = #{wsExchangeItemManagement.hasChangeMount}</if>
+            <if test="wsExchangeItemManagement.enabled != null  and wsExchangeItemManagement.enabled != ''"> and is_enable = #{wsExchangeItemManagement.enabled}</if>
+            <if test="wsExchangeItemManagement.createdTime != null "> and created_time = #{wsExchangeItemManagement.createdTime}</if>
+            <if test="wsExchangeItemManagement.updatedTime != null "> and updated_time = #{wsExchangeItemManagement.updatedTime}</if>
+            <if test="dataScope !=null">
+                and project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWsExchangeItemManagementById" parameterType="Integer" resultMap="WsExchangeItemManagementResult">
+        <include refid="selectWsExchangeItemManagementVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWsExchangeItemManagement" parameterType="WsExchangeItemManagement" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_exchange_item_management(
+            <if test="projectId != null ">project_id,</if>
+            <if test="itemName != null  and itemName != ''">item_name,</if>
+            <if test="unit != null  and unit != ''">unit,</if>
+            <if test="changePoint != null ">change_point,</if>
+            <if test="inventoryMount != null ">inventory_mount,</if>
+            <if test="hasChangeMount != null ">has_change_mount,</if>
+            <if test="enabled != null  and enabled != ''">is_enable,</if>
+            created_time,updated_time
+         )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="itemName != null  and itemName != ''">#{itemName},</if>
+            <if test="unit != null  and unit != ''">#{unit},</if>
+            <if test="changePoint != null ">#{changePoint},</if>
+            <if test="inventoryMount != null ">#{inventoryMount},</if>
+            <if test="hasChangeMount != null ">#{hasChangeMount},</if>
+            <if test="enabled != null  and enabled != ''">#{enabled},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+    <update id="updateWsExchangeItemManagement" parameterType="WsExchangeItemManagement">
+        update t_ws_exchange_item_management set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="itemName != null  and itemName != ''">item_name = #{itemName},</if>
+            <if test="unit != null  and unit != ''">unit = #{unit},</if>
+            <if test="changePoint != null ">change_point = #{changePoint},</if>
+            <if test="inventoryMount != null ">inventory_mount = #{inventoryMount},</if>
+            <if test="hasChangeMount != null ">has_change_mount = #{hasChangeMount},</if>
+            <if test="enabled != null  and enabled != ''">is_enable = #{enabled},</if>
+            updated_time = sysdate()
+
+        where id = #{id}
+    </update>
+
+    <update id="updateItemStockByName" parameterType="WsTeamPersonExchangeRecord">
+        update t_ws_exchange_item_management set
+
+        inventory_mount = inventory_mount-#{exchangeMount},
+        has_change_mount = has_change_mount+#{exchangeMount},
+        updated_time = sysdate()
+
+        where project_id = #{projectId} and item_name=#{itemName}
+    </update>
+
+    <delete id="deleteWsExchangeItemManagementById" parameterType="Integer">
+        delete from t_ws_exchange_item_management where id = #{id}
+    </delete>
+
+    <delete id="deleteWsExchangeItemManagementByIds" parameterType="String">
+        delete from t_ws_exchange_item_management where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 获取项目下同名物品数量 -->
+    <select id="countItemOfProjectByName" parameterType="WsExchangeItemManagement" resultType="int">
+        select count(*) from t_ws_exchange_item_management
+        where project_id =#{projectId} and item_name = #{itemName}
+        <if test="id != null">
+           and id !=#{id}
+        </if>
+    </select>
+
+    <!-- 获取项目下同名物品列表 -->
+    <select id="getItemOfProjectListByName" parameterType="WsExchangeItemManagement" resultType="int">
+        select count(*) from t_ws_exchange_item_management
+        where project_id =#{projectId} and item_name = #{itemName}
+    </select>
+
+    <select id="getItemStockByName" resultType="int">
+        select  ifnull(inventory_mount,0) from t_ws_exchange_item_management
+        where project_id =#{projectId} and item_name=#{itemName}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsSafetyInspectionRecordMapper">
+    
+    <resultMap type="WsSafetyInspectionRecord" id="WsSafetyInspectionRecordResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="checkPosition"    column="check_position"    />
+        <result property="hazardLevel"    column="hazard_level"    />
+        <result property="operationTypeId"    column="operation_type_id"    />
+        <result property="hazardDescribe"    column="hazard_describe"    />
+        <result property="rectifyRequire"    column="rectify_require"    />
+        <result property="rectifyPersonId"    column="rectify_person_id"    />
+        <result property="rectifyLimitDate"    column="rectify_limit_date"    />
+        <result property="verifyPersonId"    column="verify_person_id"    />
+        <result property="status"    column="status"    />
+        <result property="checkPositionId"    column="check_position_id"    />
+        <result property="checkDate"    column="check_date"    />
+        <result property="checkResult"    column="check_result"    />
+        <result property="senderId"    column="sender_id"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsSafetyInspectionRecordVo">
+        select id, project_id, check_position, hazard_level, operation_type_id, hazard_describe, rectify_require, rectify_person_id, rectify_limit_date, verify_person_id, status, check_position_id, check_date, check_result, sender_id, created_by, created_time, updated_by, updated_time from t_ws_safety_inspection_record
+    </sql>
+
+    <select id="selectWsSafetyInspectionRecordList"  resultMap="WsSafetyInspectionRecordResult">
+        SELECT t.id, t.project_id, t2.project_name AS projectName,  t.check_position,
+        t.hazard_level,t7.dict_label AS hazardLevelName, t.operation_type_id, t3.operation_name AS operationName,t.hazard_describe,
+        t.rectify_require,t.rectify_person_id,t4.nick_name AS repairPersonName,t.rectify_limit_date,t.verify_person_id, t.check_result,
+        t5.nick_name AS verifyPersonName,t.status, t8.dict_label AS statusName, t.check_position_id,t6.nick_name AS checkPositionName ,t.check_date,t.sender_id
+        FROM `t_ws_safety_inspection_record` t
+        LEFT JOIN `t_ws_project` t2  ON t.`project_id` = t2.`id`
+        LEFT JOIN `t_ws_safety_operation_type` t3 ON t.operation_type_id = t3.`id`
+        LEFT JOIN `sys_user` t4 ON t.`rectify_person_id` = t4.user_id
+        LEFT JOIN `sys_user` t5 ON t.`verify_person_id` = t5.user_id
+        LEFT JOIN `sys_user` t6 ON t.`check_position_id` = t6.user_id
+        LEFT JOIN sys_dict_data t7 ON t.hazard_level = t7.dict_value AND t7.dict_type = 'quality_problem_level'
+        LEFT JOIN sys_dict_data t8 ON t.status = t8.dict_value AND t8.dict_type = 'qualityCheck_status'
+
+        <where>
+
+            <if test="wsSafetyInspectionRecord.beginTime != null and wsSafetyInspectionRecord.beginTime != ''">
+                and t.check_date >= #{wsSafetyInspectionRecord.beginTime, jdbcType = DATE }
+            </if>
+            <if test="wsSafetyInspectionRecord.endTime != null and wsSafetyInspectionRecord.endTime != ''">
+                and  <![CDATA[t.check_date <= #{wsSafetyInspectionRecord.endTime, jdbcType = DATE}]]>
+            </if>
+            <if test="wsSafetyInspectionRecord.checkPositionId !=null">
+                and t.check_position_id = #{wsSafetyInspectionRecord.checkPositionId}
+            </if>
+            <if test="wsSafetyInspectionRecord.verifyPersonId !=null">
+                and t.verify_person_id = #{wsSafetyInspectionRecord.verifyPersonId} and t.status = 2
+            </if>
+            <if test="wsSafetyInspectionRecord.rectifyPersonId !=null">
+                and t.rectify_person_id = #{wsSafetyInspectionRecord.rectifyPersonId} and t.status = 1
+            </if>
+            <if test="wsSafetyInspectionRecord.senderId !=null and wsSafetyInspectionRecord.senderId != '' ">
+                and find_in_set(#{wsSafetyInspectionRecord.senderId}, t.sender_id)
+            </if>
+                and t.project_id in
+            <foreach collection="projectIds" item="projectId" open="(" close=")" separator=",">
+                #{projectId}
+            </foreach>
+        </where>
+                order by t.created_time desc
+    </select>
+    
+    <select id="selectWsSafetyInspectionRecordById" parameterType="Integer" resultMap="WsSafetyInspectionRecordResult">
+       SELECT t.id, t.project_id, t2.project_name AS projectName, t9.`enterprise_name` AS projectUnitName, t.check_position, t.hazard_level,t7.dict_label AS hazardLevelName, t.operation_type_id, t3.operation_name AS operationName,
+        t.hazard_describe,t.rectify_require,t.rectify_person_id,t4.user_name AS repairPersonName,t.rectify_limit_date,t.verify_person_id, t.check_result,
+        t5.nick_name AS verifyPersonName,t.status, t8.dict_label AS statusName, t.check_position_id,t6.nick_name AS checkPositionName ,t.check_date,t.sender_id
+        FROM `t_ws_safety_inspection_record` t
+        LEFT JOIN `t_ws_project` t2  ON t.`project_id` = t2.`id`
+        LEFT JOIN `t_ws_safety_operation_type` t3 ON t.operation_type_id = t3.`id`
+        LEFT JOIN `sys_user` t4 ON t.`rectify_person_id` = t4.user_id
+        LEFT JOIN `sys_user` t5 ON t.`verify_person_id` = t5.user_id
+        LEFT JOIN `sys_user` t6 ON t.`check_position_id` = t6.user_id
+        LEFT JOIN sys_dict_data t7 on t.hazard_level = t7.dict_value and t7.dict_type = 'quality_problem_level'
+        LEFT JOIN sys_dict_data t8 on t.status = t8.dict_value and t8.dict_type = 'qualityCheck_status'
+        LEFT JOIN `sys_enterprise` AS t9  ON t9.enterprise_id =
+        (SELECT project_unit_id FROM `t_ws_project` AS p  WHERE p.id = t.`project_id`)
+        <where>
+            t.id = #{id}
+        </where>
+    </select>
+        
+    <insert id="insertWsSafetyInspectionRecord" parameterType="WsSafetyInspectionRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_safety_inspection_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            project_id,
+            <if test="checkPosition != null  and checkPosition != ''">check_position,</if>
+            <if test="hazardLevel != null  and hazardLevel != ''">hazard_level,</if>
+            <if test="operationTypeId != null ">operation_type_id,</if>
+            <if test="hazardDescribe != null  and hazardDescribe != ''">hazard_describe,</if>
+            <if test="rectifyRequire != null  and rectifyRequire != ''">rectify_require,</if>
+            <if test="rectifyPersonId != null ">rectify_person_id,</if>
+            <if test="rectifyLimitDate != null ">rectify_limit_date,</if>
+            <if test="verifyPersonId != null ">verify_person_id,</if>
+            <if test="status != null ">status,</if>
+            <if test="checkPositionId != null ">check_position_id,</if>
+            <if test="checkDate != null ">check_date,</if>
+            <if test="checkResult != null  and checkResult != ''">check_result,</if>
+            <if test="senderId != null  and senderId != ''">sender_id,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{projectId},
+            <if test="checkPosition != null  and checkPosition != ''">#{checkPosition},</if>
+            <if test="hazardLevel != null  and hazardLevel != ''">#{hazardLevel},</if>
+            <if test="operationTypeId != null ">#{operationTypeId},</if>
+            <if test="hazardDescribe != null  and hazardDescribe != ''">#{hazardDescribe},</if>
+            <if test="rectifyRequire != null  and rectifyRequire != ''">#{rectifyRequire},</if>
+            <if test="rectifyPersonId != null ">#{rectifyPersonId},</if>
+            <if test="rectifyLimitDate != null ">#{rectifyLimitDate},</if>
+            <if test="verifyPersonId != null ">#{verifyPersonId},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="checkPositionId != null ">#{checkPositionId},</if>
+            <if test="checkDate != null ">#{checkDate},</if>
+            <if test="checkResult != null  and checkResult != ''">#{checkResult},</if>
+            <if test="senderId != null  and senderId != ''">#{senderId},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsSafetyInspectionRecord" parameterType="WsSafetyInspectionRecord">
+        update t_ws_safety_inspection_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="checkPosition != null  and checkPosition != ''">check_position = #{checkPosition},</if>
+            <if test="hazardLevel != null  and hazardLevel != ''">hazard_level = #{hazardLevel},</if>
+            <if test="operationTypeId != null ">operation_type_id = #{operationTypeId},</if>
+            <if test="hazardDescribe != null  and hazardDescribe != ''">hazard_describe = #{hazardDescribe},</if>
+            <if test="rectifyRequire != null  and rectifyRequire != ''">rectify_require = #{rectifyRequire},</if>
+            <if test="rectifyPersonId != null ">rectify_person_id = #{rectifyPersonId},</if>
+            <if test="rectifyLimitDate != null ">rectify_limit_date = #{rectifyLimitDate},</if>
+            <if test="verifyPersonId != null ">verify_person_id = #{verifyPersonId},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="checkPositionId != null ">check_position_id = #{checkPositionId},</if>
+            <if test="checkDate != null ">check_date = #{checkDate},</if>
+            <if test="checkResult != null  and checkResult != ''">check_result = #{checkResult},</if>
+            <if test="senderId != null  and senderId != ''">sender_id = #{senderId},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsSafetyInspectionRecordById" parameterType="Integer">
+        delete from t_ws_safety_inspection_record where id = #{id}
+    </delete>
+
+    <delete id="deleteWsSafetyInspectionRecordByIds" parameterType="String">
+        delete from t_ws_safety_inspection_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

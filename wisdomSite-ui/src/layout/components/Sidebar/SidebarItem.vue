@@ -5,8 +5,8 @@
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
           <!-- <item v-if="ionlyOneChild.meta.icon" :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" /> -->
           <!-- <template v-if="ionlyOneChild.meta.icon === 'dashboard'"> -->
-            <!-- 123 -->
-            <!-- <item :icon="onlyOneChild.meta.icon" :title="onlyOneChild.meta.title" /> -->
+          <!-- 123 -->
+          <!-- <item :icon="onlyOneChild.meta.icon" :title="onlyOneChild.meta.title" /> -->
           <!-- </template> -->
           <template>
             <svg-icon v-if="onlyOneChild.meta.icon != '#'" :icon-class='onlyOneChild.meta.icon' />
@@ -19,6 +19,7 @@
         </el-menu-item>
       </app-link>
     </template>
+
 
     <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template slot="title">
@@ -66,8 +67,11 @@ export default {
     this.onlyOneChild = null
     return {}
   },
+
   methods: {
+
     hasOneShowingChild(children = [], parent) {
+
       const showingChildren = children.filter(item => {
         if (item.hidden) {
           return false
@@ -91,6 +95,7 @@ export default {
 
       return false
     },
+
     resolvePath(routePath) {
       if (isExternal(routePath)) {
         return routePath

@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsSiteAttendanceStatisticsMapper">
+
+    <resultMap type="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" id="WsSiteAttendanceStatisticsResult">
+        <result property="projectId"    column="projectId"    />
+        <result property="onDuty"    column="onDuty"    />
+        <result property="attendanceToday"    column="attendanceToday"    />
+        <result property="attendanceTodayRate"    column="attendanceTodayRate"    />
+        <result property="bePresent"    column="bePresent"    />
+        <result property="registered"    column="registered"    />
+        <result property="projectNumber"    column="projectNumber"    />
+        <result property="participatingUnitNumber"    column="participatingUnitNumber"    />
+        <result property="bePresentORattendanceTodayTime"    column="bePresentORattendanceTodayTime"    />
+        <result property="bePresentNumber"    column="bePresentNumber"    />
+        <result property="attendanceTodayNumber"    column="attendanceTodayNumber"    />
+        <result property="personnelProjectProportion"    column="personnelProjectProportion"    />
+        <result property="projectName"    column="projectName"    />
+        <result property="sceneNumber"    column="sceneNumber"    />
+        <result property="attendanceNumber"    column="attendanceNumber"    />
+        <result property="presenceNumber"    column="presenceNumber"    />
+        <result property="managementNumber"    column="managementNumber"    />
+        <result property="constructionWorkerNumber"    column="constructionWorkerNumber"    />
+        <result property="timeQuantum"    column="timeQuantum"    />
+        <result property="sevenDaysManagementNumber"    column="sevenDaysManagementNumber"    />
+        <result property="sevenDaysConstructionWorkerNumber"    column="sevenDaysConstructionWorkerNumber"    />
+        <result property="sevenDaysWholeNumber"    column="sevenDaysWholeNumber"    />
+        <result property="numberOfJobs"    column="numberOfJobs"    />
+        <result property="workName"    column="workName"    />
+        <result property="professionNumber"    column="professionNumber"    />
+        <result property="professionName"    column="professionName"    />
+        <result property="unitName"    column="unitName"    />
+        <result property="randomData"    column="randomData"    />
+        <result property="type"    column="type"    />
+        <result property="proportion"    column="proportion"    />
+    </resultMap>
+
+    <select id="selectPersonnelNumberOnDutyJc" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        SELECT ifnull(COUNT(*),0) as onDuty from (
+        select t.id,t.project_id as projectId from t_ws_team_person t
+        LEFT JOIN t_ws_attendance_record t2 on t.id = t2.team_person_id
+        LEFT JOIN t_ws_attendance_machine t3 on t2.machine_id = t3.id
+        where 1=1
+        and t3.machine_type = '1'
+        and t3.direction = '1'
+        and t.is_black = '0'
+        and to_days(t2.attendance_time) = to_days(now())
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY t.id) a
+    </select>
+
+    <select id="selectPersonnelNumberOnDutyCc" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        SELECT ifnull(COUNT(*),0) as onDuty from (
+        select t.id,t.project_id as projectId from t_ws_team_person t
+        LEFT JOIN t_ws_attendance_record t2 on t.id = t2.team_person_id
+        LEFT JOIN t_ws_attendance_machine t3 on t2.machine_id = t3.id
+        where 1=1
+        and t3.machine_type = '1'
+        and t3.direction = '2'
+        and t.is_black = '0'
+        and to_days(t2.attendance_time) = to_days(now())
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY t.id) a
+    </select>
+
+    <select id="selectPersonnelNumberAttendanceToday" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        SELECT ifnull(COUNT(*),0) as attendanceToday from (
+        select t.id,t.project_id as projectId from t_ws_team_person t
+        LEFT JOIN t_ws_attendance_record t2 on t.id = t2.team_person_id
+        LEFT JOIN t_ws_attendance_machine t3 on t2.machine_id = t3.id
+        where 1=1
+        and t3.machine_type = '1'
+        and t.is_black = '0'
+        and to_days(t2.attendance_time) = to_days(now())
+        and t.project_id in
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY t.id) a
+    </select>
+
+    <select id="selectPersonnelNumberBePresent" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select ifnull(COUNT(*),0) as bePresent from t_ws_team_person t
+        where 1=1
+        and t.person_status = '1'
+        and t.is_delete = '0'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </select>
+
+    <select id="selectPersonnelNumberRegistered" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select ifnull(COUNT(*),0) as registered from t_ws_team_person t
+        where 1=1
+        and t.is_delete = '0'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </select>
+
+    <select id="selectParticipatingUnitNumber" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        SELECT * from t_ws_project_participating_unit t
+        LEFT JOIN t_ws_participating_team t2 on t.id = t2.unit_id
+        where 1=1
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY t.id
+    </select>
+
+    <select id="selectBePresentORattendanceToday" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select a.bePresentORattendanceTodayTime,ifnull(b.attendanceTodayNumber,0) as attendanceTodayNumber
+        from (
+        SELECT curdate() as bePresentORattendanceTodayTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        )a left join (
+        SELECT date(a2.time1) as datetime,COUNT(*) as attendanceTodayNumber from (SELECT date(a1.attendance_time) as time1,a1.team_person_id from (select t2.attendance_time,t2.team_person_id
+        from t_ws_team_person t
+        LEFT JOIN t_ws_attendance_record t2 on t.id = t2.team_person_id
+        LEFT JOIN t_ws_attendance_machine t3 on t2.machine_id = t3.id
+        where 1=1
+        and t3.machine_type = '1'
+        and t.is_black = '0'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY t2.team_person_id,t2.attendance_time) a1
+        GROUP BY time1,a1.team_person_id) a2
+        GROUP BY datetime
+        )b on a.bePresentORattendanceTodayTime = b.datetime
+        ORDER BY a.bePresentORattendanceTodayTime
+    </select>
+
+    <select id="selectBePresentORattendanceTodayCq" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select count(*) as bePresentNumber from t_ws_team_person t
+        where 1=1
+        and t.person_status = '1'
+        and t.is_delete = '0'
+        and t.project_id in
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        and date_format(t.in_date, '%Y-%m-%d') <![CDATA[<=]]> #{bePresentORattendanceTodayTime}
+    </select>
+
+    <select id="selectPersonnelProjectProportion" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select t2.project_name as projectName,count(*) as personnelProjectProportion from t_ws_team_person t
+        left join t_ws_project t2 on t.project_id = t2.id
+        where 1=1
+        and t.person_status = '1'
+        and t.is_delete = '0'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY t.project_id
+        order by personnelProjectProportion desc limit 10
+    </select>
+
+    <select id="selectPersonnelProjectProportionWhole" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select t2.project_name as projectName,count(*) as personnelProjectProportion,
+        convert(count(*)/(select count(*) from t_ws_team_person t3
+        left join t_ws_project t4 on t3.project_id = t4.id
+        where 1=1
+        and t3.person_status = '1'
+        and t3.is_delete = '0'
+        and t3.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        ) * 100,decimal(15,2)) as proportion
+        from t_ws_team_person t
+        left join t_ws_project t2 on t.project_id = t2.id
+        where 1=1
+        and t.person_status = '1'
+        and t.is_delete = '0'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY t.project_id
+    </select>
+
+    <select id="selectProjectAttendance" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        SELECT case when ifnull(sum(a.sceneNumberAdd),0) - ifnull(sum(a1.sceneNumberOut),0) <![CDATA[<]]> 0 then 0 else ifnull(sum(a.sceneNumberAdd),0) - ifnull(sum(a1.sceneNumberOut),0) end as sceneNumber,ifnull(b.attendanceNumber,0) as attendanceNumber,ifnull(c.presenceNumber,0) as presenceNumber,c.project_name as projectName from (
+        (SELECT COUNT(*) as sceneNumberAdd from ( select t.project_id as project_id,t4.project_name from t_ws_team_person t
+        LEFT JOIN t_ws_attendance_record t2 on t.id = t2.team_person_id
+        LEFT JOIN t_ws_attendance_machine t3 on t2.machine_id = t3.id
+        LEFT JOIN t_ws_project t4 on t.project_id = t4.id
+        where 1=1
+        and t3.machine_type = '1'
+        and t3.direction = '1'
+        and t.is_black = '0'
+        and date_format(t2.attendance_time, '%Y-%m-%d') = #{randomData}
+        and t.project_id = #{projectId}
+        GROUP BY t2.team_person_id,t.project_id) ta) a,
+        (SELECT COUNT(*) as sceneNumberOut from ( select t.project_id as project_id,t4.project_name from t_ws_team_person t
+        LEFT JOIN t_ws_attendance_record t2 on t.id = t2.team_person_id
+        LEFT JOIN t_ws_attendance_machine t3 on t2.machine_id = t3.id
+        LEFT JOIN t_ws_project t4 on t.project_id = t4.id
+        where 1=1
+        and t3.machine_type = '1'
+        and t3.direction = '2'
+        and t.is_black = '0'
+        and date_format(t2.attendance_time, '%Y-%m-%d') = #{randomData}
+        and t.project_id = #{projectId}
+        GROUP BY t2.team_person_id,t.project_id) ta1) a1,
+        (SELECT COUNT(*) as attendanceNumber from (select t.project_id as project_id,t4.project_name from t_ws_team_person t
+        LEFT JOIN t_ws_attendance_record t2 on t.id = t2.team_person_id
+        LEFT JOIN t_ws_attendance_machine t3 on t2.machine_id = t3.id
+        LEFT JOIN t_ws_project t4 on t.project_id = t4.id
+        where 1=1
+        and t3.machine_type = '1'
+        and t.is_black = '0'
+        and date_format(t2.attendance_time, '%Y-%m-%d') = #{randomData}
+        and t.project_id = #{projectId}
+        GROUP BY t2.team_person_id,t.project_id) tb)b,
+        (select COUNT(*) as presenceNumber ,t.project_id as project_id,t2.project_name from t_ws_team_person t
+        LEFT JOIN t_ws_project t2 on t.project_id = t2.id
+        where 1=1
+        and t.person_status = '1'
+        and t.is_delete = '0'
+        and t.project_id = #{projectId}
+        )c
+        ) where 1=1
+    </select>
+
+    <select id="selectProjectAttendanceProject" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        SELECT t.id as projectId from t_ws_project t where 1=1
+        and t.id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </select>
+
+    <select id="selectScenePersonnelChangeTrend" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        SELECT
+            a.HOUR as timeQuantum ,
+            abs(ifnull(b.gljc, 0) - ifnull(d.glcc, 0)) as managementNumber,
+            abs(ifnull(c.jzjc, 0) - ifnull(e.jzcc, 0)) as constructionWorkerNumber
+        FROM
+            (
+                SELECT
+                    0 HOUR
+                UNION ALL
+                    SELECT
+                        1 HOUR
+                    UNION ALL
+                        SELECT
+                            2 HOUR
+                        UNION ALL
+                            SELECT
+                                3 HOUR
+                            UNION ALL
+                                SELECT
+                                    4 HOUR
+                                UNION ALL
+                                    SELECT
+                                        5 HOUR
+                                    UNION ALL
+                                        SELECT
+                                            6 HOUR
+                                        UNION ALL
+                                            SELECT
+                                                7 HOUR
+                                            UNION ALL
+                                                SELECT
+                                                    8 HOUR
+                                                UNION ALL
+                                                    SELECT
+                                                        9 HOUR
+                                                    UNION ALL
+                                                        SELECT
+                                                            10 HOUR
+                                                        UNION ALL
+                                                            SELECT
+                                                                11 HOUR
+                                                            UNION ALL
+                                                                SELECT
+                                                                    12 HOUR
+                                                                UNION ALL
+                                                                    SELECT
+                                                                        13 HOUR
+                                                                    UNION ALL
+                                                                        SELECT
+                                                                            14 HOUR
+                                                                        UNION ALL
+                                                                            SELECT
+                                                                                15 HOUR
+                                                                            UNION ALL
+                                                                                SELECT
+                                                                                    16 HOUR
+                                                                                UNION ALL
+                                                                                    SELECT
+                                                                                        17 HOUR
+                                                                                    UNION ALL
+                                                                                        SELECT
+                                                                                            18 HOUR
+                                                                                        UNION ALL
+                                                                                            SELECT
+                                                                                                19 HOUR
+                                                                                            UNION ALL
+                                                                                                SELECT
+                                                                                                    20 HOUR
+                                                                                                UNION ALL
+                                                                                                    SELECT
+                                                                                                        21 HOUR
+                                                                                                    UNION ALL
+                                                                                                        SELECT
+                                                                                                            22 HOUR
+                                                                                                        UNION ALL
+                                                                                                            SELECT
+                                                                                                                23 HOUR
+            ) a
+        LEFT JOIN (
+            SELECT
+                HOUR (t2.attendance_time) HOUR,
+                COUNT(DISTINCT t.id) AS gljc
+            FROM
+                t_ws_team_person t
+            LEFT JOIN t_ws_attendance_record t2 ON t.id = t2.team_person_id
+            LEFT JOIN t_ws_attendance_machine t3 ON t2.machine_id = t3.id
+            WHERE
+                1 = 1
+            AND t3.machine_type = '1'
+            AND t3.direction = '1'
+            AND t.is_black = '0'
+						and t.person_type = '1'
+            AND date_format(t2.attendance_time, '%Y-%m-%d') = CURRENT_DATE
+            and t.project_id = #{projectId}
+            GROUP BY
+                date_format(t2.attendance_time, '%Y%m%d-%H'),t2.team_person_id,
+                HOUR
+        ) b ON a.HOUR = b.HOUR
+				LEFT JOIN (
+            SELECT
+                HOUR (t2.attendance_time) HOUR,
+                 COUNT(DISTINCT t.id) AS jzjc
+            FROM
+                t_ws_team_person t
+            LEFT JOIN t_ws_attendance_record t2 ON t.id = t2.team_person_id
+            LEFT JOIN t_ws_attendance_machine t3 ON t2.machine_id = t3.id
+            WHERE
+                1 = 1
+            AND t3.machine_type = '1'
+            AND t3.direction = '1'
+            AND t.is_black = '0'
+						and t.person_type = '0'
+            AND date_format(t2.attendance_time, '%Y-%m-%d') = CURRENT_DATE
+            and t.project_id = #{projectId}
+            GROUP BY
+                date_format(t2.attendance_time, '%Y%m%d-%H'),t2.team_person_id,
+                HOUR
+        ) c ON a.HOUR = c.HOUR
+				LEFT JOIN (
+            SELECT
+                HOUR (t2.attendance_time) HOUR,
+								COUNT(DISTINCT t.id) as glcc
+            FROM
+                t_ws_team_person t
+            LEFT JOIN t_ws_attendance_record t2 ON t.id = t2.team_person_id
+            LEFT JOIN t_ws_attendance_machine t3 ON t2.machine_id = t3.id
+            WHERE
+                1 = 1
+            AND t3.machine_type = '1'
+            AND t3.direction = '2'
+            AND t.is_black = '0'
+						and t.person_type = '1'
+            AND date_format(t2.attendance_time, '%Y-%m-%d') = CURRENT_DATE
+            and t.project_id = #{projectId}
+            GROUP BY
+                date_format(t2.attendance_time, '%Y%m%d-%H'),t.id,t2.team_person_id,
+                HOUR
+        ) d ON a.HOUR = d.HOUR
+				LEFT JOIN (
+            SELECT
+                HOUR (t2.attendance_time) HOUR,
+								COUNT(DISTINCT t.id) as jzcc
+            FROM
+                t_ws_team_person t
+            LEFT JOIN t_ws_attendance_record t2 ON t.id = t2.team_person_id
+            LEFT JOIN t_ws_attendance_machine t3 ON t2.machine_id = t3.id
+            WHERE
+                1 = 1
+            AND t3.machine_type = '1'
+            AND t3.direction = '2'
+            AND t.is_black = '0'
+						and t.person_type = '0'
+            AND date_format(t2.attendance_time, '%Y-%m-%d') = CURRENT_DATE
+            and t.project_id = #{projectId}
+            GROUP BY
+                date_format(t2.attendance_time, '%Y%m%d-%H'),t.id,
+                HOUR
+        ) e ON a.HOUR = e.HOUR
+        ORDER BY
+            timeQuantum
+    </select>
+    <select id="selectSevenDaysPersonnelAttendance" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select a.bePresentORattendanceTodayTime,ifnull(c.sevenDaysManagementNumber,0) as sevenDaysManagementNumber,ifnull(b.sevenDaysConstructionWorkerNumber,0) as sevenDaysConstructionWorkerNumber
+        from (
+            SELECT curdate() as bePresentORattendanceTodayTime
+            union all
+            SELECT date_sub(curdate(), interval 1 day) as click_date
+            union all
+            SELECT date_sub(curdate(), interval 2 day) as click_date
+            union all
+            SELECT date_sub(curdate(), interval 3 day) as click_date
+            union all
+            SELECT date_sub(curdate(), interval 4 day) as click_date
+            union all
+            SELECT date_sub(curdate(), interval 5 day) as click_date
+            union all
+            SELECT date_sub(curdate(), interval 6 day) as click_date
+        ) a left join (
+          SELECT date(a2.time1) as datetime,COUNT(*) as sevenDaysConstructionWorkerNumber from (SELECT date(a1.attendance_time) as time1,a1.team_person_id from (select t2.attendance_time,t2.team_person_id
+          from t_ws_team_person t
+          LEFT JOIN t_ws_attendance_record t2 on t.id = t2.team_person_id
+          LEFT JOIN t_ws_attendance_machine t3 on t2.machine_id = t3.id
+          where 1=1
+                and t3.machine_type = '1'
+                and t.is_black = '0'
+                and t.project_id = #{projectId}
+								and t.person_type = '0'
+					GROUP BY t2.team_person_id,t2.attendance_time) a1
+					GROUP BY time1,a1.team_person_id) a2
+					GROUP BY datetime
+        ) b on a.bePresentORattendanceTodayTime = b.datetime left join (
+					SELECT date(a2.time1) as datetime,COUNT(*) as sevenDaysManagementNumber from (SELECT date(a1.attendance_time) as time1,a1.team_person_id from (select t2.attendance_time,t2.team_person_id
+          from t_ws_team_person t
+          LEFT JOIN t_ws_attendance_record t2 on t.id = t2.team_person_id
+          LEFT JOIN t_ws_attendance_machine t3 on t2.machine_id = t3.id
+          where 1=1
+                and t3.machine_type = '1'
+                and t.is_black = '0'
+                and t.project_id = #{projectId}
+								and t.person_type = '1'
+					GROUP BY t2.team_person_id,t2.attendance_time) a1
+					GROUP BY time1,a1.team_person_id) a2
+					GROUP BY datetime
+				) c on a.bePresentORattendanceTodayTime = c.datetime
+        ORDER BY a.bePresentORattendanceTodayTime
+    </select>
+
+    <select id="selectFieldWork" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+            SELECT COUNT(*) as numberOfJobs,workName from
+						(SELECT t4.dict_label as workName,t4.dict_value,t.id
+            FROM t_ws_team_person t
+            LEFT JOIN t_ws_attendance_record t2 ON t.id = t2.team_person_id
+            LEFT JOIN t_ws_attendance_machine t3 ON t2.machine_id = t3.id
+            left join sys_dict_data t4 on t.work_type = t4.dict_value and t4.dict_type = 'ws_work_type'
+            WHERE
+                1 = 1
+            AND t3.machine_type = '1'
+            AND t3.direction = '1'
+            AND t.is_black = '0'
+            AND date_format(t2.attendance_time, '%Y-%m-%d') = CURRENT_DATE
+            and t.project_id = #{projectId}
+            GROUP BY workName,t.id) a
+						GROUP BY workName
+            order by numberOfJobs desc limit 10
+    </select>
+
+    <select id="selectFieldWorkWhole" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+			SELECT t4.dict_label as workName,
+				COUNT(*) as numberOfJobs,
+				convert(COUNT(*)/(SELECT COUNT(*) as numberOfJobs
+            FROM t_ws_team_person tp
+            LEFT JOIN t_ws_attendance_record tr ON tp.id = tr.team_person_id
+            LEFT JOIN t_ws_attendance_machine tm ON tr.machine_id = tm.id
+             left join sys_dict_data td on tp.work_type = td.dict_value and td.dict_type = 'ws_work_type'
+            WHERE
+                1 = 1
+            AND tm.machine_type = '1'
+            AND tm.direction = '1'
+            AND tp.is_black = '0'
+            AND date_format(tr.attendance_time, '%Y-%m-%d') = CURRENT_DATE
+            and tp.project_id = #{projectId} )*100,decimal(15,2)) as proportion
+            FROM t_ws_team_person t
+            LEFT JOIN t_ws_attendance_record t2 ON t.id = t2.team_person_id
+            LEFT JOIN t_ws_attendance_machine t3 ON t2.machine_id = t3.id
+             left join sys_dict_data t4 on t.work_type = t4.dict_value and t4.dict_type = 'ws_work_type'
+            WHERE
+                1 = 1
+            AND t3.machine_type = '1'
+            AND t3.direction = '1'
+            AND t.is_black = '0'
+            AND date_format(t2.attendance_time, '%Y-%m-%d') = CURRENT_DATE
+            and t.project_id = #{projectId}
+            GROUP BY workName
+    </select>
+
+    <select id="selectConstructionWorkerRegion" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select province as professionName,count(*) as professionNumber from t_ws_team_person
+        where project_id = #{projectId}
+        and is_delete = '0'
+        GROUP BY professionName
+        order by professionNumber desc limit 10
+    </select>
+
+    <select id="selectConstructionWorkerAge" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select ageproportion as professionName,count(*) as professionNumber from
+        (
+        SELECT
+        CASE
+        when age>18 and age <![CDATA[<=]]> 25 then '18-25岁'
+        when age>25 and age <![CDATA[<=]]> 30 then '25-30岁'
+        when age>30 and age <![CDATA[<=]]> 40 then '30-40岁'
+        when age>40 and age <![CDATA[<=]]> 50 then '40-50岁'
+        when age>50 and age <![CDATA[<=]]> 54 then '50-54岁'
+        else '未知'
+        END
+        as ageproportion from t_ws_team_person
+        where project_id = #{projectId}
+        and is_delete = '0'
+        )a GROUP BY professionName
+         order by professionNumber desc limit 10
+    </select>
+
+    <select id="selectConstructionWorkerSex" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select ageproportion as professionName,count(*) as professionNumber from
+        (
+        SELECT
+        CASE
+        when sex = '1' then '男'
+        when sex = '0' then '女'
+        else '未知'
+        END
+        as ageproportion from t_ws_team_person
+        where project_id = #{projectId}
+        and is_delete = '0'
+        )a GROUP BY professionName
+        order by professionNumber desc limit 10
+    </select>
+
+    <select id="selectConstructionWorkerProfession" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select t2.dict_label as professionName,COUNT(*) as professionNumber FROM t_ws_team_person t
+        left join sys_dict_data t2 on t.work_type = t2.dict_value and t2.dict_type = 'ws_work_type'
+        where t.project_id = #{projectId}
+        and t.is_delete = '0'
+        GROUP BY professionName
+        order by professionNumber desc limit 10
+    </select>
+
+    <select id="selectConstructionWorkerRegionWhole" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+         select province as professionName,count(*) as professionNumber,
+          convert(count(*)/(select count(*)
+        from t_ws_team_person t
+        where t.project_id = #{projectId}
+        and t.is_delete = '0')*100,decimal(15,2)) as proportion
+          from t_ws_team_person
+        where project_id = #{projectId}
+        and is_delete = '0'
+        GROUP BY professionName
+    </select>
+
+    <select id="selectConstructionWorkerAgeWhole" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select ageproportion as professionName,count(*) as professionNumber,
+         convert(count(*)/(SELECT count(*) from t_ws_team_person
+        where project_id = #{projectId}
+        and is_delete = '0')*100,decimal(15,2)) as proportion
+        from
+        (
+        SELECT
+        CASE
+        when age>18 and age <![CDATA[<=]]> 25 then '18-25岁'
+        when age>25 and age <![CDATA[<=]]> 30 then '25-30岁'
+        when age>30 and age <![CDATA[<=]]> 40 then '30-40岁'
+        when age>40 and age <![CDATA[<=]]> 50 then '40-50岁'
+        when age>50 and age <![CDATA[<=]]> 54 then '50-54岁'
+        else '未知'
+        END
+        as ageproportion from t_ws_team_person
+        where project_id = #{projectId}
+        and is_delete = '0'
+        )a GROUP BY professionName
+    </select>
+
+    <select id="selectConstructionWorkerSexWhole" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select ageproportion as professionName,count(*) as professionNumber,
+          convert(count(*)/(SELECT count(*) from t_ws_team_person
+        where project_id = #{projectId}
+        and is_delete = '0')*100,decimal(15,2)) as proportion
+         from
+        (
+        SELECT
+        CASE
+        when sex = '1' then '男'
+        when sex = '0' then '女'
+        else '未知'
+        END
+        as ageproportion from t_ws_team_person
+        where project_id = #{projectId}
+        and is_delete = '0'
+        )a GROUP BY professionName
+    </select>
+
+    <select id="selectConstructionWorkerProfessionWhole" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        select t2.dict_label as professionName,COUNT(*) as professionNumber,
+        convert(COUNT(*)/(select COUNT(*)
+				FROM t_ws_team_person t3
+        left join sys_dict_data t4 on t3.work_type = t4.dict_value and t4.dict_type = 'ws_work_type'
+        where t3.project_id = #{projectId}
+        and t3.is_delete = '0')*100,decimal(15,2)) as proportion
+        FROM t_ws_team_person t
+        left join sys_dict_data t2 on t.work_type = t2.dict_value and t2.dict_type = 'ws_work_type'
+        where t.project_id = #{projectId}
+        and t.is_delete = '0'
+        GROUP BY professionName
+    </select>
+
+    <select id="selectParticipatingUnits" parameterType="com.jlkj.project.ws.dto.WsSiteAttendanceStatisticsDTO" resultMap="WsSiteAttendanceStatisticsResult">
+        SELECT a.unit_name as unitName,b.sceneNumber,c.attendanceNumber,d.presenceNumber from (
+            SELECT t.id,t.unit_name from t_ws_project_participating_unit t
+            where 1=1 and t.project_id =  #{projectId}
+            GROUP BY t.id
+        ) a LEFT JOIN (
+                            SELECT case when ifnull(sum(c1.sceneNumberAdd),0) - ifnull(sum(c2.sceneNumberOut),0) <![CDATA[<]]> 0 then 0 else ifnull(sum(c1.sceneNumberAdd),0) - ifnull(sum(c2.sceneNumberOut),0) end as sceneNumber,a1.unit_name,a1.id FROM (
+                            select t.id,t.unit_name from t_ws_project_participating_unit t where t.project_id =  #{projectId}
+                            ) a1 LEFT JOIN (
+                            select t2.id,t2.unit_id from t_ws_team_person t2 where 1=1 and t2.is_black = '0'
+                            ) b1 on b1.unit_id = a1.id LEFT JOIN (
+                            select COUNT(DISTINCT t3.team_person_id) as sceneNumberAdd,t3.team_person_id
+                            from t_ws_attendance_record t3
+                            LEFT JOIN t_ws_attendance_machine t4 on t3.machine_id = t4.id
+                            where 1=1
+                            and t4.machine_type = '1' and t4.direction = '1' AND date_format(t3.attendance_time, '%Y-%m-%d') = #{randomData}
+                            GROUP BY t3.team_person_id
+                            ) c1 on c1.team_person_id = b1.id LEFT JOIN (
+                            select COUNT(DISTINCT t5.team_person_id) as sceneNumberOut,t5.team_person_id
+                            from t_ws_attendance_record t5
+                            LEFT JOIN t_ws_attendance_machine t6 on t5.machine_id = t6.id
+                            where 1=1
+                            and t6.machine_type = '1' and t6.direction = '2' AND date_format(t5.attendance_time, '%Y-%m-%d') = #{randomData}
+                            GROUP BY t5.team_person_id
+                            ) c2 on c2.team_person_id = b1.id
+                            GROUP BY a1.id
+        ) b on a.id = b.id LEFT JOIN(
+							SELECT ifnull(sum(c2.attendanceNumber),0) as attendanceNumber,a2.unit_name,a2.id FROM (
+								select t.id,t.unit_name from t_ws_project_participating_unit t where t.project_id =  #{projectId}
+							) a2 LEFT JOIN (
+								select t2.id,t2.unit_id from t_ws_team_person t2 where 1=1 and t2.is_black = '0'
+							) b2 on b2.unit_id = a2.id LEFT JOIN (
+								select COUNT(DISTINCT t3.team_person_id) as attendanceNumber,t3.team_person_id
+								from t_ws_attendance_record t3
+								LEFT JOIN t_ws_attendance_machine t4 on t3.machine_id = t4.id
+								where 1=1
+								and t4.machine_type = '1' AND date_format(t3.attendance_time, '%Y-%m-%d') = #{randomData}
+								GROUP BY t3.team_person_id
+							) c2 on c2.team_person_id = b2.id
+							GROUP BY a2.id
+							) c on a.id = c.id LEFT JOIN(
+                        SELECT ifnull(SUM(t2.person_status = '1' and t2.is_delete = '0'),0) as presenceNumber,t.id,t.unit_name from t_ws_project_participating_unit t
+                        LEFT JOIN t_ws_team_person t2 on t.id = t2.unit_id
+                        where 1=1 and t.project_id =  #{projectId}
+                        GROUP BY t.id
+        ) d on a.id = d.id
+    </select>
+</mapper>

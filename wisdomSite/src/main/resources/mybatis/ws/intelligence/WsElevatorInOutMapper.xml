@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsElevatorInOutMapper">
+
+    <resultMap type="WsElevatorInOut" id="WsElevatorInOutResult">
+        <result property="id"    column="id"    />
+        <result property="elevatorId"    column="elevator_id"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="outDate"    column="out_date"    />
+    </resultMap>
+
+
+    <sql id="selectWsElevatorInOutVo">
+        select id, elevator_id,  in_date, out_date from t_ws_elevator_in_out
+    </sql>
+
+
+
+    <insert id="insertWsElevatorInOut" parameterType="WsElevatorInOut" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_elevator_in_out
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="elevatorId != null ">elevator_id,</if>
+            <if test="inDate != null ">in_date,</if>
+            <if test="outDate != null ">out_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="elevatorId != null ">#{elevatorId},</if>
+            <if test="inDate != null ">#{inDate},</if>
+            <if test="outDate != null ">#{outDate},</if>
+
+        </trim>
+    </insert>
+
+    <update id="updateWsElevatorInOut" parameterType="WsElevatorInOut" >
+        update t_ws_elevator_in_out
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="elevatorId != null ">elevator_id = #{elevatorId},</if>
+            <if test="inDate != null ">in_date = #{inDate},</if>
+            <if test="outDate != null ">out_date = #{outDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateWsElevatorOutDate" parameterType="WsElevatorInOut" >
+        update t_ws_elevator_in_out
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="outDate != null ">out_date = #{outDate},</if>
+            <if test="inDate != null ">in_date = #{inDate},</if>
+        </trim>
+        where elevator_id = #{elevatorId}  and  out_date is null
+    </update>
+
+
+
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsEnterpriseMeasuredrealquantityMeasuredLocationMapper">
+    
+    <resultMap type="WsEnterpriseMeasuredrealquantityMeasuredLocation" id="WsEnterpriseMeasuredrealquantityMeasuredLocationResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="respectiveRegionId"    column="respective_region_id"    />
+        <result property="measuredLocation"    column="measured_location"    />
+        <result property="measurementsNo"    column="measurements_no"    />
+        <result property="coordinateX"    column="coordinate_x"    />
+        <result property="coordinateY"    column="coordinate_y"    />
+        <result property="planImageAddres"    column="plan_image_addres"    />
+        <result property="qrCode"    column="qr_code"    />
+        <result property="comment"    column="comment"    />
+        <result property="status"    column="status"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsEnterpriseMeasuredrealquantityMeasuredLocationVo">
+        SELECT  t.id, t.project_id,  t3.project_name AS projectName, t.respective_region_id, t4.region_name
+        AS respectiveRegionName, t.measured_location, t.measurements_no, t.coordinate_x, t.coordinate_y,
+        t.plan_image_addres, t.qr_code, t.`COMMENT`, t.status,  t.is_delete, t.created_by, t2.`nick_name` AS createdName,
+        t.created_time, t.updated_by, t.updated_time
+        FROM t_ws_enterprise_measuredrealquantity_measured_location AS t
+        LEFT JOIN sys_user AS t2 ON created_by = t2.`user_id`
+        LEFT JOIN `t_ws_project` AS t3 ON t.`project_id` = t3.`id`
+        LEFT JOIN t_ws_enterprise_measuredrealquantity_plan AS t4 ON t4.id = t.`respective_region_id`
+    </sql>
+
+    <select id="selectWsEnterpriseMeasuredrealquantityMeasuredLocationList" parameterType="WsEnterpriseMeasuredrealquantityMeasuredLocation" resultMap="WsEnterpriseMeasuredrealquantityMeasuredLocationResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityMeasuredLocationVo"/>
+        <where>  
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+            <if test="respectiveRegionId != null "> and t.respective_region_id = #{respectiveRegionId}</if>
+            <if test="measurementsNo != null "> and t.measurements_no = #{measurementsNo}</if>
+            <if test="planImageAddres != null  and planImageAddres != ''"> and t.plan_image_addres = #{planImageAddres}</if>
+            <if test="qrCode != null  and qrCode != ''"> and t.qr_code = #{qrCode}</if>
+            <if test="comment != null  and comment != ''"> and t.comment = #{comment}</if>
+            <if test="createdBy != null "> and t.created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and t.created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and t.updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and t.updated_time = #{updatedTime}</if>
+             and t.is_delete = 'N'
+        </where>
+    </select>
+    
+    <select id="selectWsEnterpriseMeasuredrealquantityMeasuredLocationById" parameterType="Integer" resultMap="WsEnterpriseMeasuredrealquantityMeasuredLocationResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityMeasuredLocationVo"/>
+        where t.id = #{id} and t.is_delete = 'N'
+    </select>
+        
+    <insert id="insertWsEnterpriseMeasuredrealquantityMeasuredLocation" parameterType="WsEnterpriseMeasuredrealquantityMeasuredLocation" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_enterprise_measuredrealquantity_measured_location
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="respectiveRegionId != null ">respective_region_id,</if>
+            <if test="measuredLocation != null  and measuredLocation != ''">measured_location,</if>
+            <if test="measurementsNo != null ">measurements_no,</if>
+            <if test="coordinateX != null  and coordinateX != ''">coordinate_x,</if>
+            <if test="coordinateY != null  and coordinateY != ''">coordinate_y,</if>
+            <if test="planImageAddres != null  and planImageAddres != ''">plan_image_addres,</if>
+            <if test="qrCode != null  and qrCode != ''">qr_code,</if>
+            <if test="comment != null  and comment != ''">comment,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="respectiveRegionId != null ">#{respectiveRegionId},</if>
+            <if test="measuredLocation != null  and measuredLocation != ''">#{measuredLocation},</if>
+            <if test="measurementsNo != null ">#{measurementsNo},</if>
+            <if test="coordinateX != null  and coordinateX != ''">#{coordinateX},</if>
+            <if test="coordinateY != null  and coordinateY != ''">#{coordinateY},</if>
+            <if test="planImageAddres != null  and planImageAddres != ''">#{planImageAddres},</if>
+            <if test="qrCode != null  and qrCode != ''">#{qrCode},</if>
+            <if test="comment != null  and comment != ''">#{comment},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsEnterpriseMeasuredrealquantityMeasuredLocation" parameterType="WsEnterpriseMeasuredrealquantityMeasuredLocation">
+        update t_ws_enterprise_measuredrealquantity_measured_location
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="respectiveRegionId != null ">respective_region_id = #{respectiveRegionId},</if>
+            <if test="measuredLocation != null  and measuredLocation != ''">measured_location = #{measuredLocation},</if>
+            <if test="measurementsNo != null ">measurements_no = #{measurementsNo},</if>
+            <if test="coordinateX != null  and coordinateX != ''">coordinate_x = #{coordinateX},</if>
+            <if test="coordinateY != null  and coordinateY != ''">coordinate_y = #{coordinateY},</if>
+            <if test="planImageAddres != null  and planImageAddres != ''">plan_image_addres = #{planImageAddres},</if>
+            <if test="qrCode != null  and qrCode != ''">qr_code = #{qrCode},</if>
+            <if test="comment != null  and comment != ''">comment = #{comment},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id} and is_delete = 'N'
+    </update>
+
+    <update id="deleteWsEnterpriseMeasuredrealquantityMeasuredLocationById" parameterType="Integer">
+        update  t_ws_enterprise_measuredrealquantity_measured_location  set is_delete = 'Y' where id = #{id}
+    </update>
+
+    <update id="deleteWsEnterpriseMeasuredrealquantityMeasuredLocationByIds" parameterType="String">
+        update  t_ws_enterprise_measuredrealquantity_measured_location  set is_delete = 'Y' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

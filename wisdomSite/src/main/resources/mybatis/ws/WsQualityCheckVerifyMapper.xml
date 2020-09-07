@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsQualityCheckVerifyMapper">
+    
+    <resultMap type="WsQualityCheckVerify" id="WsQualityCheckVerifyResult">
+        <result property="id"    column="id"    />
+        <result property="checkmanagerId"    column="checkManager_id"    />
+        <result property="verifyPersonId"    column="verify_person_id"    />
+        <result property="verifyDate"    column="verify_date"    />
+        <result property="verifyResultDescription"    column="verify_result_description"    />
+        <result property="verifyResult"    column="verify_result"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="repairId"    column="repair_id"    />
+    </resultMap>
+
+    <sql id="selectWsQualityCheckVerifyVo">
+        select id,verify_person_id, checkManager_id, verify_date, verify_result_description,verify_result, created_by, created_time, updated_by, updated_time from t_ws_quality_check_verify
+    </sql>
+
+    <select id="selectWsQualityCheckVerifyList" parameterType="WsQualityCheckVerify" resultMap="WsQualityCheckVerifyResult">
+        <include refid="selectWsQualityCheckVerifyVo"/>
+        <where>  
+            <if test="checkmanagerId != null "> and checkManager_id = #{checkmanagerId}</if>
+            <if test="verifyPersonId != null "> and verify_person_id = #{verifyPersonId}</if>
+            <if test="verifyDate != null "> and verify_date = #{verifyDate}</if>
+            <if test="verifyResultDescription != null  and verifyResultDescription != ''"> and verify_result_description = #{verifyResultDescription}</if>
+            <if test="verifyResult != null  and verifyResult != ''"> and verify_result = #{verifyResult}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsQualityCheckVerifyById" parameterType="Long" resultMap="WsQualityCheckVerifyResult">
+        <include refid="selectWsQualityCheckVerifyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWsQualityCheckVerify" parameterType="WsQualityCheckVerify" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_quality_check_verify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="checkmanagerId != null ">checkManager_id,</if>
+            <if test="verifyPersonId != null ">verify_person_id,</if>
+            <if test="repairId != null ">repair_id,</if>
+            <if test="verifyDate != null ">verify_date,</if>
+            <if test="verifyResultDescription != null  and verifyResultDescription != ''">verify_result_description,</if>
+            <if test="verifyResult != null  and verifyResult != ''">verify_result,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="checkmanagerId != null ">#{checkmanagerId},</if>
+            <if test="verifyPersonId != null ">#{verifyPersonId},</if>
+            <if test="repairId != null ">#{repairId},</if>
+            <if test="verifyDate != null ">#{verifyDate},</if>
+            <if test="verifyResultDescription != null  and verifyResultDescription != ''">#{verifyResultDescription},</if>
+            <if test="verifyResult != null  and verifyResult != ''">#{verifyResult},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsQualityCheckVerify" parameterType="WsQualityCheckVerify">
+        update t_ws_quality_check_verify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="checkmanagerId != null ">checkManager_id = #{checkmanagerId},</if>
+            <if test="verifyPersonId != null ">verify_person_id = #{verifyPersonId},</if>
+            <if test="verifyDate != null ">verify_date = #{verifyDate},</if>
+            <if test="verifyResultDescription != null  and verifyResultDescription != ''">verify_result_description = #{verifyResultDescription},</if>
+            <if test="verifyResult != null  and verifyResult != ''">verify_result = #{verifyResult},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsQualityCheckVerifyById" parameterType="Long">
+        delete from t_ws_quality_check_verify where id = #{id}
+    </delete>
+
+    <delete id="deleteWsQualityCheckVerifyByIds" parameterType="String">
+        delete from t_ws_quality_check_verify where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

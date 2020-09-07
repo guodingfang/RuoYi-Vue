@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsQualityCheckRepairMapper">
+    
+    <resultMap type="WsQualityCheckRepair" id="WsQualityCheckRepairResult">
+        <result property="id"    column="id"    />
+        <result property="checkmanagerId"    column="checkManager_id"    />
+        <result property="repairPersonId"    column="repairPerson_id"    />
+        <result property="repairDate"    column="repair_date"    />
+        <result property="repairResultDescription"    column="repair_result_description"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="repairPersonName"    column="repairPersonName"    />
+        <result property="verifyPersonNmae"    column="verifyPersonNmae"    />
+        <result property="verifyDate"    column="verifyDate"    />
+        <result property="verifyResultDescription"    column="verifyResultDescription"    />
+        <result property="verifyResult"    column="verifyResult"    />
+        <result property="verifyId"    column="verifyId"    />
+    </resultMap>
+
+    <sql id="selectWsQualityCheckRepairVo">
+        select id, checkManager_id, repair_date, repair_result_description, repair_image_addres, created_by, created_time, updated_by, updated_time from t_ws_quality_check_repair
+    </sql>
+
+    <select id="selectWsQualityCheckRepairList" parameterType="WsQualityCheckRepair" resultMap="WsQualityCheckRepairResult">
+        <include refid="selectWsQualityCheckRepairVo"/>
+        <where>  
+            <if test="checkmanagerId != null "> and checkManager_id = #{checkmanagerId}</if>
+            <if test="repairDate != null "> and repair_date = #{repairDate}</if>
+            <if test="repairResultDescription != null  and repairResultDescription != ''"> and repair_result_description = #{repairResultDescription}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsQualityCheckRepairByIdList" parameterType="WsQualityCheckRepair" resultMap="WsQualityCheckRepairResult">
+        SELECT t.id,t2.id as verifyId,t3.nick_name as repairPersonName,t.repair_date,t.repair_result_description,t4.nick_name as verifyPersonNmae,t2.verify_date as verifyDate,t2.verify_result_description as verifyResultDescription,t5.dict_label as verifyResult from t_ws_quality_check_repair t
+        left join t_ws_quality_check_verify t2 on t.id = t2.repair_id
+        left join sys_user t3 on t.repairPerson_id = t3.user_id
+        left join sys_user t4 on t2.verify_person_id = t4.user_id
+        left join sys_dict_data t5 on t2.verify_result = t5.dict_value and t5.dict_type = 'verify_result'
+        where 1=1 and t.checkManager_id = #{id} ORDER BY t.repair_date ASC
+    </select>
+
+    <select id="selectWsQualityCheckRepairByCheckmanagerId" parameterType="WsQualityCheckRepair" resultMap="WsQualityCheckRepairResult">
+        SELECT * FROM t_ws_quality_check_repair WHERE checkManager_id = #{checkmanagerId} ORDER BY repair_date DESC LIMIT 1
+    </select>
+        
+    <insert id="insertWsQualityCheckRepair" parameterType="WsQualityCheckRepair" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_quality_check_repair
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="checkmanagerId != null ">checkManager_id,</if>
+            <if test="repairPersonId != null ">repairPerson_id,</if>
+            <if test="repairDate != null ">repair_date,</if>
+            <if test="repairResultDescription != null  and repairResultDescription != ''">repair_result_description,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="checkmanagerId != null ">#{checkmanagerId},</if>
+            <if test="repairPersonId != null ">#{repairPersonId},</if>
+            <if test="repairDate != null ">#{repairDate},</if>
+            <if test="repairResultDescription != null  and repairResultDescription != ''">#{repairResultDescription},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsQualityCheckRepair" parameterType="WsQualityCheckRepair">
+        update t_ws_quality_check_repair
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="checkmanagerId != null ">checkManager_id = #{checkmanagerId},</if>
+            <if test="repairDate != null ">repair_date = #{repairDate},</if>
+            <if test="repairResultDescription != null  and repairResultDescription != ''">repair_result_description = #{repairResultDescription},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsQualityCheckRepairById" parameterType="Long">
+        delete from t_ws_quality_check_repair where id = #{id}
+    </delete>
+
+    <delete id="deleteWsQualityCheckRepairByIds" parameterType="String">
+        delete from t_ws_quality_check_repair where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

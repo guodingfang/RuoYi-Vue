@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsElevatorMonitorMapper">
+
+    <resultMap type="WsElevatorMonitorVO" id="WsElevatorMonitorResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="selfNumber"    column="self_number"    />
+        <result property="recordNumber"    column="record_number"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="outDate"    column="out_date"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="propertyUnit"    column="property_unit"    />
+        <result property="installationUnit"    column="installation_unit"    />
+        <result property="produceUnit"    column="produce_unit"    />
+        <result property="models"    column="models"    />
+        <result property="factoryNumber"    column="factory_number"    />
+        <result property="productDate"    column="product_date"    />
+        <result property="xOffset"    column="x_offset"    />
+        <result property="yOffset"    column="y__offset"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="layoutUrl"    column="layout_url"    />
+        <collection property="monitorDevices" ofType="WsElevatorMinitorDevice" >
+            <id property="id" column="device_id" />
+            <result property="manufacturer"    column="manufacturer"    />
+            <result property="equipmentType"    column="equipment_type"    />
+            <result property="cageMark"    column="cage_mark"    />
+            <result property="serialNumber"    column="serial_number"    />
+        </collection>
+    </resultMap>
+
+    <resultMap type="WsElevatorMonitorVO" id="WsElevatorMonitorVOResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="selfNumber"    column="self_number"    />
+        <result property="recordNumber"    column="record_number"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="outDate"    column="out_date"    />
+        <collection property="monitorDevices" ofType="WsElevatorMinitorDevice" >
+            <id property="id" column="device_id" />
+            <result property="manufacturer"    column="manufacturer"    />
+            <result property="equipmentType"    column="equipment_type"    />
+            <result property="cageMark"    column="cage_mark"    />
+            <result property="serialNumber"    column="serial_number"    />
+        </collection>
+    </resultMap>
+
+
+
+
+
+</mapper>

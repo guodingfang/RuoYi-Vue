@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsElevatorMonitorDataMapper">
+
+    <resultMap type="WsElevatorMonitorData" id="WsElevatorMonitorDataResult">
+        <result property="oid"    column="OID"    />
+        <result property="blackBoxOid"    column="BLACK_BOX_OID"    />
+        <result property="blackBoxRrOid"    column="BLACK_BOX_RR_OID"    />
+        <result property="projectOid"    column="PROJECT_OID"    />
+        <result property="serialNumber"    column="SERIAL_NUMBER"    />
+        <result property="hostSn"    column="HOST_SN"    />
+        <result property="insertTime"    column="INSERT_TIME"    />
+        <result property="weight"    column="WEIGHT"    />
+        <result property="weightPercent"    column="WEIGHT_PERCENT"    />
+        <result property="personNum"    column="PERSON_NUM"    />
+        <result property="height"    column="HEIGHT"    />
+        <result property="heightPercent"    column="HEIGHT_PERCENT"    />
+        <result property="speed"    column="SPEED"    />
+        <result property="speedStatus"    column="SPEED_STATUS"    />
+        <result property="tilt"    column="TILT"    />
+        <result property="tiltPercent"    column="TILT_PERCENT"    />
+        <result property="tilt2"    column="TILT2"    />
+        <result property="tilt2Percent"    column="TILT2_PERCENT"    />
+        <result property="authen"    column="AUTHEN"    />
+        <result property="foreDoorStatus"    column="FORE_DOOR_STATUS"    />
+        <result property="behindDoorStatus"    column="BEHIND_DOOR_STATUS"    />
+        <result property="lockstatus"    column="LOCKSTATUS"    />
+        <result property="systemStatusWeight"    column="SYSTEM_STATUS_WEIGHT"    />
+        <result property="systemStatusHeight"    column="SYSTEM_STATUS_HEIGHT"    />
+        <result property="systemStatusSpeed"    column="SYSTEM_STATUS_SPEED"    />
+        <result property="systemStatusNum"    column="SYSTEM_STATUS_NUM"    />
+        <result property="systemStatusTilt"    column="SYSTEM_STATUS_TILT"    />
+        <result property="systemStatusForelockStatus"    column="SYSTEM_STATUS_FORELOCK_STATUS"    />
+        <result property="systemStatusBehindlockStatus"    column="SYSTEM_STATUS_BEHINDLOCK_STATUS"    />
+        <result property="warningStatus"    column="WARNING_STATUS"    />
+        <result property="alarmStatus"    column="ALARM_STATUS"    />
+        <result property="abnormalStatus"    column="ABNORMAL_STATUS"    />
+        <result property="messageBody"    column="MESSAGE_BODY"    />
+        <result property="createDate"    column="CREATE_DATE"    />
+        <result property="updateDate"    column="UPDATE_DATE"    />
+    </resultMap>
+
+
+
+    <resultMap type="WsElevatorMonitorDataVO" id="WsElevatorMonitorDataVOResult">
+        <result property="oid"    column="OID"    />
+        <result property="blackBoxOid"    column="BLACK_BOX_OID"    />
+        <result property="blackBoxRrOid"    column="BLACK_BOX_RR_OID"    />
+        <result property="projectOid"    column="PROJECT_OID"    />
+        <result property="serialNumber"    column="SERIAL_NUMBER"    />
+        <result property="hostSn"    column="HOST_SN"    />
+        <result property="insertTime"    column="INSERT_TIME"    />
+        <result property="weight"    column="WEIGHT"    />
+        <result property="weightPercent"    column="WEIGHT_PERCENT"    />
+        <result property="personNum"    column="PERSON_NUM"    />
+        <result property="height"    column="HEIGHT"    />
+        <result property="heightPercent"    column="HEIGHT_PERCENT"    />
+        <result property="speed"    column="SPEED"    />
+        <result property="speedStatus"    column="SPEED_STATUS"    />
+        <result property="tilt"    column="TILT"    />
+        <result property="tiltPercent"    column="TILT_PERCENT"    />
+        <result property="tilt2"    column="TILT2"    />
+        <result property="tilt2Percent"    column="TILT2_PERCENT"    />
+        <result property="authen"    column="AUTHEN"    />
+        <result property="foreDoorStatus"    column="FORE_DOOR_STATUS"    />
+        <result property="behindDoorStatus"    column="BEHIND_DOOR_STATUS"    />
+        <result property="lockstatus"    column="LOCKSTATUS"    />
+        <result property="systemStatusWeight"    column="SYSTEM_STATUS_WEIGHT"    />
+        <result property="systemStatusHeight"    column="SYSTEM_STATUS_HEIGHT"    />
+        <result property="systemStatusSpeed"    column="SYSTEM_STATUS_SPEED"    />
+        <result property="systemStatusNum"    column="SYSTEM_STATUS_NUM"    />
+        <result property="systemStatusTilt"    column="SYSTEM_STATUS_TILT"    />
+        <result property="systemStatusForelockStatus"    column="SYSTEM_STATUS_FORELOCK_STATUS"    />
+        <result property="systemStatusBehindlockStatus"    column="SYSTEM_STATUS_BEHINDLOCK_STATUS"    />
+        <result property="onlineStatus"    column="online_status"    />
+        <result property="abnormalStatus"    column="ABNORMAL_STATUS"    />
+        <result property="runningStatus"    column="running_status"    />
+        <result property="maxHeight"    column="max_height"    />
+        <result property="maxWeight"    column="max_weight"    />
+        <result property="maxSpeed"    column="max_speed"    />
+        <result property="maxPeople"    column="max_people"    />
+        <result property="maxTilt"    column="max_tilt"    />
+
+
+    </resultMap>
+
+    <sql id="selectWsElevatorMonitorData">
+        select OID, BLACK_BOX_OID, BLACK_BOX_RR_OID, PROJECT_OID, SERIAL_NUMBER, HOST_SN, INSERT_TIME, WEIGHT, WEIGHT_PERCENT, PERSON_NUM, HEIGHT, HEIGHT_PERCENT, SPEED, SPEED_STATUS, TILT, TILT_PERCENT, TILT2, TILT2_PERCENT, AUTHEN, FORE_DOOR_STATUS, BEHIND_DOOR_STATUS, LOCKSTATUS, SYSTEM_STATUS_WEIGHT, SYSTEM_STATUS_HEIGHT, SYSTEM_STATUS_SPEED, SYSTEM_STATUS_NUM, SYSTEM_STATUS_TILT, SYSTEM_STATUS_FORELOCK_STATUS, SYSTEM_STATUS_BEHINDLOCK_STATUS, WARNING_STATUS, ALARM_STATUS, ABNORMAL_STATUS, MESSAGE_BODY, CREATE_DATE, UPDATE_DATE from t_ws_elevator_monitor_data
+    </sql>
+
+    <select id="selectWsElevatorMonitorDataList" parameterType="WsElevatorMonitorData" resultMap="WsElevatorMonitorDataResult">
+        <include refid="selectWsElevatorMonitorData"/>
+        <where>
+            <if test="serialNumber != null  and serialNumber != ''"> and SERIAL_NUMBER = #{serialNumber}</if>
+        </where>
+    </select>
+
+
+    <select id="selectWsElevatorMonitorDataBySerialNumber" parameterType="WsElevatorMonitorData" resultMap="WsElevatorMonitorDataVOResult">
+        select  emd.BLACK_BOX_OID, emd.SERIAL_NUMBER,emd.INSERT_TIME, emd.WEIGHT/1000 WEIGHT, emd.WEIGHT_PERCENT, emd.PERSON_NUM, emd.HEIGHT/10 HEIGHT, emd.HEIGHT_PERCENT, emd.SPEED/10 SPEED, emd.SPEED_STATUS, emd.TILT/100 TILT, emd.TILT2/100 TILT2, emd.AUTHEN, emd.FORE_DOOR_STATUS, emd.BEHIND_DOOR_STATUS, emd.LOCKSTATUS, emd.SYSTEM_STATUS_WEIGHT, emd.SYSTEM_STATUS_HEIGHT, emd.SYSTEM_STATUS_SPEED, emd.SYSTEM_STATUS_NUM, emd.SYSTEM_STATUS_TILT, emd.SYSTEM_STATUS_FORELOCK_STATUS, emd.SYSTEM_STATUS_BEHINDLOCK_STATUS, ABNORMAL_STATUS,
+        if(emd.ALARM_STATUS=1,2,if(emd.WARNING_STATUS=1,1,0)) running_status,
+        if(bb.online_status=1,1,0) online_status,
+        max_weight,max_height,max_speed,max_people,max_tilt
+        from  t_ws_black_box bb
+        left join  t_ws_elevator_monitor_data emd on  bb.serial_number = emd.serial_number
+        left join (select serial_number, ZDQZBJ max_weight,format(ZDQSGD/10,1) max_height,format(ZDSDBJ/10,1) max_speed,ZDCZRS max_people ,format(QXBJZ/10,1) max_tilt from t_ws_elevator_xianwei_setting where serial_number=#{serialNumber} order by create_date desc limit 1) base on base.serial_number=bb.serial_number
+        where
+            bb.equipment_type = '2'
+            <if test="serialNumber != null  and serialNumber != ''"> and bb.SERIAL_NUMBER = #{serialNumber}</if>
+
+    </select>
+
+
+</mapper>

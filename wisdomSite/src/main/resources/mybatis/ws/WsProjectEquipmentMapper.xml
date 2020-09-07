@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsProjectEquipmentMapper">
+
+    <resultMap type="WsProjectEquipment" id="WsProjectEquipmentResult">
+        <result property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="serialNumber" column="serialNumber"/>
+        <result property="equipmentType" column="equipment_type"/>
+        <result property="installationPosition" column="installation_position"/>
+        <result property="flowcardNo" column="flowCard_no"/>
+        <result property="enableStatus" column="enable_status"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="updatedTime" column="updated_time"/>
+    </resultMap>
+
+    <resultMap type="WsProjectEquipment" id="OldWsProjectEquipmentResult">
+        <result property="serialNumber" column="SERIAL_NUMBER"/>
+        <result property="equipmentType" column="EQUIPMENT_TYPE"/>
+        <result property="onlineStatus" column="ONLINE_STATUS"/>
+    </resultMap>
+
+    <sql id="selectWsProjectEquipmentVo">
+      SELECT t.id, t.project_id,t2.project_name AS projectName, t2.project_unit_id,  t3.`enterprise_name` AS enterpriseName, t.serialNumber, t.equipment_type, t.installation_position, t.flowCard_no,
+             t.enable_status, t.created_by, t.created_time, t.updated_by, t.updated_time
+      FROM t_ws_project_equipment AS t
+      LEFT JOIN `t_ws_project` AS t2 ON project_id = t2.id
+      LEFT JOIN `sys_enterprise` AS t3  ON t2.project_unit_id = t3.enterprise_id
+     </sql>
+
+    <select id="selectWsProjectEquipmentList" parameterType="WsProjectEquipment" resultMap="WsProjectEquipmentResult">
+        <include refid="selectWsProjectEquipmentVo"/>
+        <where>
+            <if test="projectId != null ">and t.project_id = #{projectId}</if>
+            <if test="serialNumber != null  and serialNumber != ''">and t.serialNumber like concat('%', #{serialNumber},'%')</if>
+            <if test="equipmentType != null ">and t.equipment_type = #{equipmentType}</if>
+            <if test="installationPosition != null  and installationPosition != ''">and t.installation_position =#{installationPosition}</if>
+            <if test="flowcardNo != null  and flowcardNo != ''">and t.flowCard_no = #{flowcardNo}</if>
+            <if test="enableStatus != null ">and t.enable_status = #{enableStatus}</if>
+            <if test="createdBy != null ">and t.created_by = #{createdBy}</if>
+            <if test="createdTime != null ">and t.created_time = #{createdTime}</if>
+            <if test="updatedBy != null ">and t.updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null ">and t.updated_time = #{updatedTime}</if>
+            <if test="projectIds != null ">   and t.project_id in
+                <foreach collection="projectIds" item="projectId" open="(" close=")" separator=",">
+                    #{projectId}
+                </foreach>
+            </if>
+        </where>
+            order by t.created_time desc
+    </select>
+
+    <select id="selectWsProjectEquipmentById" parameterType="Integer" resultMap="WsProjectEquipmentResult">
+        <include refid="selectWsProjectEquipmentVo"/>
+        where t.id = #{id}
+    </select>
+
+    <select id="selectWsProjectEquipmentByProjectId" parameterType="Integer" resultMap="WsProjectEquipmentResult">
+        SELECT t.id, t.project_id, t.serialNumber, t.equipment_type, t.installation_position, t.flowCard_no, t.enable_status, t.created_by, t.created_time, t.updated_by, t.updated_time
+        FROM t_ws_project_equipment AS t
+        where t.project_id = #{projectId}
+    </select>
+
+    <select id="selectBindingStatusBySerialNumber" parameterType="String" resultType="String">
+       select BINDING_STATE from t_ws_project_equipment where SERIAL_NUMBER_ONE = #{serialNumber} or SERIAL_NUMBER_TWO = #{serialNumber}
+    </select>
+
+
+    <select id="isExistBySerialNumber" parameterType="WsProjectEquipment" resultType="int">
+       select count(*) from `t_ws_black_box` where SERIAL_NUMBER = #{serialNumber} and EQUIPMENT_TYPE  = #{equipmentType}
+    </select>
+
+    <select id="selectWsProjectEquipmentBySerialNumber" parameterType="String" resultMap="WsProjectEquipmentResult">
+        <include refid="selectWsProjectEquipmentVo"/>
+        where t.serialNumber = #{serialNumber}
+    </select>
+
+    <select id="selectWsProjectEquipmentOnlineStatus" parameterType="WsProjectEquipment"
+            resultMap="OldWsProjectEquipmentResult">
+        select SERIAL_NUMBER, EQUIPMENT_TYPE, ONLINE_STATUS from t_ws_black_box where SERIAL_NUMBER in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.serialNumber}
+        </foreach>
+        and EQUIPMENT_TYPE in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.equipmentType}
+        </foreach>
+    </select>
+
+    <insert id="insertWsProjectEquipment" parameterType="WsProjectEquipment" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_project_equipment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="serialNumber != null  and serialNumber != ''">serialNumber,</if>
+            <if test="equipmentType != null ">equipment_type,</if>
+            <if test="installationPosition != null  and installationPosition != ''">installation_position,</if>
+            <if test="flowcardNo != null  and flowcardNo != ''">flowCard_no,</if>
+            <if test="enableStatus != null ">enable_status,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
+            <if test="equipmentType != null ">#{equipmentType},</if>
+            <if test="installationPosition != null  and installationPosition != ''">#{installationPosition},</if>
+            <if test="flowcardNo != null  and flowcardNo != ''">#{flowcardNo},</if>
+            <if test="enableStatus != null ">#{enableStatus},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWsProjectEquipmentBySerialNumber" parameterType="WsProjectEquipment">
+        update t_ws_project_equipment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="installationPosition != null  and installationPosition != ''">installation_position =
+                #{installationPosition},
+            </if>
+            <if test="flowcardNo != null  and flowcardNo != ''">flowCard_no = #{flowcardNo},</if>
+            <if test="enableStatus != null ">enable_status = #{enableStatus},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where serialNumber = #{serialNumber} and equipment_type = #{equipmentType}
+    </update>
+
+    <delete id="deleteWsProjectEquipmentById" parameterType="Integer">
+        delete from t_ws_project_equipment where id = #{id}
+    </delete>
+
+
+</mapper>

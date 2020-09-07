@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.system.mapper.SysOrganizationAccountMapper">
+    
+    <resultMap type="SysOrganizationAccount" id="SysOrganizationAccountResult">
+        <result property="organizationid"    column="organizationId"    />
+        <result property="accountid"    column="accountId"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectSysOrganizationAccountVo">
+        select organizationId, accountId, type from sys_organization_account
+    </sql>
+
+    <select id="selectSysOrganizationAccountList" parameterType="SysOrganizationAccount" resultMap="SysOrganizationAccountResult">
+        <include refid="selectSysOrganizationAccountVo"/>
+        <where>  
+            <if test="organizationid != null "> and organizationId = #{organizationid}</if>
+            <if test="accountid != null "> and accountId = #{accountid}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysOrganizationAccountById" parameterType="Long" resultMap="SysOrganizationAccountResult">
+        <include refid="selectSysOrganizationAccountVo"/>
+        where organizationId = #{organizationid}
+    </select>
+        
+    <insert id="insertSysOrganizationAccount" parameterType="SysOrganizationAccount">
+        insert into sys_organization_account (organizationId, accountId, type)
+        values (#{organizationid}, #{accountid}, #{type})
+    </insert>
+
+    <update id="updateSysOrganizationAccount" parameterType="SysOrganizationAccount">
+        update sys_organization_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountid != null ">accountId = #{accountid},</if>
+            <if test="type != null ">type = #{type},</if>
+        </trim>
+        where organizationId = #{organizationid}
+    </update>
+
+    <delete id="deleteSysOrganizationAccount" parameterType="SysOrganizationAccount">
+        delete from sys_organization_account
+        <where>
+            and organizationId = #{organizationid}
+            <if test="accountid !=null"> and accountid = #{accountid}</if>
+            and type = #{type}
+        </where>
+    </delete>
+
+    <delete id="deleteSysOrganizationAccountByIds" parameterType="String">
+        delete from sys_organization_account where organizationId in 
+        <foreach item="organizationid" collection="array" open="(" separator="," close=")">
+            #{organizationid}
+        </foreach>
+    </delete>
+
+    <delete id="removeOrgUser" parameterType="SysOrganizationAccount">
+        DELETE
+        FROM
+            sys_organization_account
+        WHERE
+            organizationId = #{organizationid}
+            AND accountid = #{accountid}
+    </delete>
+
+</mapper>

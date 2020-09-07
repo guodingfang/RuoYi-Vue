@@ -2,17 +2,20 @@
   <div class="wrap">
     <el-tabs v-model="activeName">
       <el-tab-pane label="实时监控" name="first">
-        <real-time v-if="activeName === 'first'"/>
+        <real-time v-if="activeName === 'first'" :role="curRole" />
       </el-tab-pane>
 
-      <el-tab-pane label="设备管理" name="second">
-         <device-manage v-if="activeName === 'second'"/>
-      </el-tab-pane>
+      <template v-if="curRole.type === 1">
+        <el-tab-pane label="设备管理" name="second">
+          <device-manage v-if="activeName === 'second'"/>
+        </el-tab-pane>
+      </template>
     </el-tabs>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from "vuex";
   import RealTime from "./RealTime";
   import DeviceManage from "./DeviceManage";
 
@@ -28,6 +31,9 @@
       }
     },
     mounted() {
+    },
+    computed: {
+      ...mapGetters(["curRole"]),
     },
     methods: {
 

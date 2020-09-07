@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsVideoChannelManagementMapper">
+
+    <resultMap type="WsVideoChannelManagement" id="WsVideoChannelManagementResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="installationPosition"    column="installation_position"    />
+        <result property="equipmentSerialnumber"    column="equipment_serialNumber"    />
+        <result property="verificationCode"    column="verification_code"    />
+        <result property="channelNumber"    column="channel_number"    />
+        <result property="enableStatus"    column="enable_status"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsVideoChannelManagementVo">
+        select id, project_id, installation_position, equipment_serialNumber, verification_code, channel_number, enable_status, created_by, created_time, updated_by, updated_time from t_ws_video_channel_management
+    </sql>
+
+    <select id="selectWsVideoChannelManagementList" parameterType="WsVideoChannelManagement" resultMap="WsVideoChannelManagementResult">
+        <include refid="selectWsVideoChannelManagementVo"/>
+        <where>
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="installationPosition != null  and installationPosition != ''"> and installation_position = #{installationPosition}</if>
+            <if test="equipmentSerialnumber != null  and equipmentSerialnumber != ''"> and equipment_serialNumber = #{equipmentSerialnumber}</if>
+            <if test="verificationCode != null  and verificationCode != ''"> and verification_code = #{verificationCode}</if>
+            <if test="channelNumber != null  and channelNumber != ''"> and channel_number = #{channelNumber}</if>
+            <if test="enableStatus != null "> and enable_status = #{enableStatus}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+            <if test="projectIds != null ">   and project_id in
+                <foreach collection="projectIds" item="projectId" open="(" close=")" separator=",">
+                    #{projectId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWsVideoChannelManagementById" parameterType="int" resultMap="WsVideoChannelManagementResult">
+        <include refid="selectWsVideoChannelManagementVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectWsVideoChannelManagementBySerialNumber" parameterType="String" resultMap="WsVideoChannelManagementResult">
+        <include refid="selectWsVideoChannelManagementVo"/>
+        where equipment_serialNumber = #{equipmentSerialnumber}
+    </select>
+
+    <select id="selectWsVideoChannelManagementBySerialNumberAndChannelNumber" parameterType="WsVideoChannelManagement" resultMap="WsVideoChannelManagementResult">
+        <include refid="selectWsVideoChannelManagementVo"/>
+        where equipment_serialNumber = #{equipmentSerialnumber} and channel_number = #{channelNumber}
+    </select>
+
+
+    <insert id="insertWsVideoChannelManagement" parameterType="WsVideoChannelManagement" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_video_channel_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="installationPosition != null  and installationPosition != ''">installation_position,</if>
+            <if test="equipmentSerialnumber != null  and equipmentSerialnumber != ''">equipment_serialNumber,</if>
+            <if test="verificationCode != null  and verificationCode != ''">verification_code,</if>
+            <if test="channelNumber != null  and channelNumber != ''">channel_number,</if>
+            <if test="enableStatus != null ">enable_status,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="installationPosition != null  and installationPosition != ''">#{installationPosition},</if>
+            <if test="equipmentSerialnumber != null  and equipmentSerialnumber != ''">#{equipmentSerialnumber},</if>
+            <if test="verificationCode != null  and verificationCode != ''">#{verificationCode},</if>
+            <if test="channelNumber != null  and channelNumber != ''">#{channelNumber},</if>
+            <if test="enableStatus != null ">#{enableStatus},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsVideoChannelManagementById" parameterType="WsVideoChannelManagement">
+        update t_ws_video_channel_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="installationPosition != null  and installationPosition != ''">installation_position = #{installationPosition},</if>
+            <if test="channelNumber != null  and channelNumber != ''">channel_number = #{channelNumber},</if>
+            <if test="enableStatus != null ">enable_status = #{enableStatus},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <update id="updateWsVideoChannelManagementByEquipmentSerialnumber" parameterType="WsVideoChannelManagement">
+        update t_ws_video_channel_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="installationPosition != null  and installationPosition != ''">installation_position = #{installationPosition},</if>
+            <if test="channelNumber != null  and channelNumber != ''">channel_number = #{channelNumber},</if>
+            <if test="enableStatus != null ">enable_status = #{enableStatus},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where equipment_serialNumber = #{equipmentSerialnumber}
+    </update>
+
+
+    <update id="updateWsVideoChannelManagementBySerialnumberAndChannel" parameterType="WsVideoChannelManagement">
+        update t_ws_video_channel_management set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="installationPosition != null  and installationPosition != ''">installation_position = #{installationPosition},</if>
+            <if test="equipmentSerialnumber != null  and equipmentSerialnumber != ''">equipment_serialNumber = #{equipmentSerialnumber},</if>
+            <if test="channelNumber != null  and channelNumber != ''">channel_number = #{channelNumber},</if>
+            <if test="enableStatus != null ">enable_status = #{enableStatus},</if>
+            updated_time = sysdate()
+        where equipment_serialNumber = #{equipmentSerialnumber} and channel_number=#{channelNumber}
+    </update>
+
+    <update id="updateEnabledBySerialnumberAndChannel" parameterType="WsVideoChannelManagement">
+        update t_ws_video_channel_management set
+
+        <if test="enableStatus != null ">enable_status = #{enableStatus},</if>
+        updated_time = sysdate()
+        where equipment_serialNumber = #{equipmentSerialnumber} and channel_number=#{channelNumber}
+    </update>
+
+    <delete id="deleteWsVideoChannelManagementById" parameterType="int">
+        delete from t_ws_video_channel_management where id = #{id} and enable_status = 0
+    </delete>
+
+
+
+    <delete id="deleteWsVideoChannelManagementByIds" parameterType="String">
+        delete from t_ws_video_channel_management where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectListHookVideo" parameterType="WsVideoChannelManagement" resultMap="WsVideoChannelManagementResult">
+        <include refid="selectWsVideoChannelManagementVo"/>
+        where 1=1
+        and project_id = #{projectId}
+        <if test="equipmentSerialnumber != null  and equipmentSerialnumber != ''"> and equipment_serialNumber like concat('%', #{equipmentSerialnumber}, '%')</if>
+        and enable_status = '1'
+    </select>
+</mapper>

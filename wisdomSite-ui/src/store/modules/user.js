@@ -86,8 +86,9 @@ const user = {
       })
     },
     // 设置当前的角色
-    SetCurrentRole({ commit }, role) {
+    SetCurrentRole({ dispatch, commit }, role) {
       setCurRole(role);
+      dispatch('SetRoutes');
       commit('SET_CUR_ROLE', role);
     },
     // 退出系统

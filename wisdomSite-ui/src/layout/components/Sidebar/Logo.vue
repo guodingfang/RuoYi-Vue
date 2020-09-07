@@ -95,6 +95,7 @@ export default {
         return false
       }
       const {id, type} = data
+      console.log('data', data);
       organizationSelect({organizationId: id, type}).then(res => {
         this.$store.dispatch('SetCurrentRole', data);
         this.reload()

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsSafetyHazardRectifyMapper">
+    
+    <resultMap type="WsSafetyHazardRectify" id="WsSafetyHazardRectifyResult">
+        <result property="id"    column="id"    />
+        <result property="inspectionId"    column="inspection_id"    />
+        <result property="rectifyPersonId"    column="rectify_person_id"    />
+        <result property="rectifyTime"    column="rectify_time"    />
+        <result property="resultDescription"    column="result_description"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="uodatedBy"    column="uodated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsSafetyHazardRectifyVo">
+        select id, inspection_id, rectify_person_id, rectify_time, result_description, created_by, created_time, uodated_by, updated_time from t_ws_safety_hazard_rectify
+    </sql>
+
+    <select id="selectWsSafetyHazardRectifyList" parameterType="WsSafetyHazardRectify" resultMap="WsSafetyHazardRectifyResult">
+        SELECT t.id, t.inspection_id, t.rectify_person_id, t2.nick_name AS rectifyPersonName, t.rectify_time, t.result_description
+        FROM `t_ws_safety_hazard_rectify` AS t
+        LEFT JOIN `sys_user` t2 ON t.`rectify_person_id` = t2.user_id
+        <where>  
+            <if test="inspectionId != null ">t.inspection_id = #{inspectionId}</if>
+        </where>
+        order by t.rectify_time desc
+    </select>
+    
+    <select id="selectWsSafetyHazardRectifyById" parameterType="Integer" resultMap="WsSafetyHazardRectifyResult">
+        <include refid="selectWsSafetyHazardRectifyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWsSafetyHazardRectify" parameterType="WsSafetyHazardRectify" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_safety_hazard_rectify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inspectionId != null ">inspection_id,</if>
+            <if test="rectifyPersonId != null ">rectify_person_id,</if>
+            <if test="rectifyTime != null ">rectify_time,</if>
+            <if test="resultDescription != null  and resultDescription != ''">result_description,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="uodatedBy != null ">uodated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inspectionId != null ">#{inspectionId},</if>
+            <if test="rectifyPersonId != null ">#{rectifyPersonId},</if>
+            <if test="rectifyTime != null ">#{rectifyTime},</if>
+            <if test="resultDescription != null  and resultDescription != ''">#{resultDescription},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="uodatedBy != null ">#{uodatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsSafetyHazardRectify" parameterType="WsSafetyHazardRectify">
+        update t_ws_safety_hazard_rectify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inspectionId != null ">inspection_id = #{inspectionId},</if>
+            <if test="rectifyPersonId != null ">rectify_person_id = #{rectifyPersonId},</if>
+            <if test="resultDescription != null  and resultDescription != ''">result_description = #{resultDescription},</if>
+            <if test="uodatedBy != null ">uodated_by = #{uodatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsSafetyHazardRectifyById" parameterType="Integer">
+        delete from t_ws_safety_hazard_rectify where id = #{id}
+    </delete>
+
+    <delete id="deleteWsSafetyHazardRectifyByIds" parameterType="String">
+        delete from t_ws_safety_hazard_rectify where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

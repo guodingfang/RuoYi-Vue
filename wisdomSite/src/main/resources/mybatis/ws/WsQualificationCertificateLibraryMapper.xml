@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsQualificationCertificateLibraryMapper">
+
+
+    <resultMap type="WsQualificationCertificateLibrary" id="WsQualificationCertificateLibraryResult">
+        <result property="id"    column="id"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="certificateName"    column="certificate_name"    />
+        <result property="certificateNumber"    column="certificate_number"    />
+        <result property="certificateType"    column="certificate_type"    />
+        <result property="certificateLevelCode"    column="certificate_level_code"    />
+        <result property="certificateLevel"    column="certificate_level"    />
+        <result property="effectiveDate"    column="effective_date"    />
+        <result property="invalidDate"    column="invalid_date"    />
+        <result property="frontImage"    column="front_image"    />
+        <result property="reverseImage"    column="reverse_image"    />
+
+    </resultMap>
+
+    <sql id = "selectWsQualificationCertificateLibraryVo">
+        select qc.id,qc.id_number,qc.certificate_name,qc.certificate_number,qc.certificate_type,qc.certificate_level_code,
+               qc.effective_date,qc.invalid_date,qc.front_image,qc.reverse_image,
+               d.dict_label certificate_level
+               from t_ws_qualification_certificate_library qc
+               left join t_ws_team_person tp on  tp.id_number = qc.id_number
+               left join sys_dict_data d on  (qc.certificate_level_code = d.dict_value and d.dict_type="ws_certificate_level")
+
+    </sql>
+
+    <select id="countWsQualificationCertificateLibraryByCertificateNumber" parameterType="String" resultType="int">
+        select count(1) from t_ws_qualification_certificate_library
+        where certificate_number = #{certificateNumber};
+
+    </select>
+
+    <select id="selectCertificateListByIdNumber" parameterType="String" resultMap="WsQualificationCertificateLibraryResult">
+        <include refid="selectWsQualificationCertificateLibraryVo"/>
+        where tp.id_number = #{idNumber}
+    </select>
+
+
+
+    <insert id="insertWsQualificationCertificateLibrary" parameterType="WsQualificationCertificateLibrary">
+        insert into t_ws_qualification_certificate_library (
+        <if test="idNumber != null and idNumber!=''">id_number,</if>
+        <if test="certificateName != null  and certificateName != ''">certificate_name,</if>
+        <if test="certificateNumber != null  and certificateNumber != ''">certificate_number,</if>
+        <if test="certificateType != null  and certificateType != ''">certificate_type,</if>
+        <if test="certificateLevelCode != null  and certificateLevelCode != ''">certificate_level_code,</if>
+        <if test="frontImage != null  and frontImage != ''">front_image,</if>
+        <if test="reverseImage != null  and reverseImage != ''">reverse_image,</if>
+        <if test="effectiveDate != null">effective_date,</if>
+        <if test="invalidDate != null">invalid_date,</if>
+        created_time,updated_time
+        )values (
+        <if test="idNumber != null and idNumber!=''">#{idNumber},</if>
+        <if test="certificateName != null  and certificateName != ''">#{certificateName},</if>
+        <if test="certificateNumber != null  and certificateNumber != ''">#{certificateNumber},</if>
+        <if test="certificateType != null  and certificateType != ''">#{certificateType},</if>
+        <if test="certificateLevelCode != null  and certificateLevelCode != ''">#{certificateLevelCode},</if>
+        <if test="frontImage != null  and frontImage != ''">#{frontImage},</if>
+        <if test="reverseImage != null  and reverseImage != ''">#{reverseImage},</if>
+        <if test="effectiveDate != null">#{effectiveDate},</if>
+        <if test="invalidDate != null">#{invalidDate},</if>
+        sysdate(),sysdate()
+        )
+    </insert>
+
+    <update id="updateWsQualificationCertificateLibrary" parameterType="WsQualificationCertificateLibrary">
+        update t_ws_qualification_certificate_library set
+        <if test="idNumber != null  and idNumber != ''">id_number=#{idNumber},</if>
+        <if test="certificateName != null  and certificateName != ''">certificate_name=#{certificateName},</if>
+        <if test="certificateType != null  and certificateType != ''">certificate_type=#{certificateType},</if>
+        <if test="certificateLevelCode != null  and certificateLevelCode != ''">certificate_level_code=#{certificateLevelCode},</if>
+        <if test="frontImage != null  and frontImage != ''">front_image=#{frontImage},</if>
+        <if test="reverseImage != null  and reverseImage != ''">reverse_image=#{reverseImage},</if>
+        <if test="effectiveDate != null">effective_date=#{effectiveDate},</if>
+        <if test="invalidDate != null">invalid_date=#{invalidDate},</if>
+        updated_time = sysdate()
+        where certificate_number =#{certificateNumber}
+    </update>
+
+    <delete id="deleteWsQualificationCertificateLibraryByIdNumber" parameterType="String">
+        delete from  t_ws_qualification_certificate_library where id_number=#{idNumber}
+    </delete>
+
+
+
+</mapper>

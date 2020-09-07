@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsBlacklistMapper">
+
+    <resultMap type="WsBlacklistVO" id="WsBlacklistResult">
+        <result property="id"    column="id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="illegalDate"    column="illegal_date"    />
+        <result property="illegalReason"    column="illegal_reason"    />
+        <result property="imageUrl"    column="image_url"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="recorder"    column="recorder"    />
+        <result property="participatingUnitName"    column="participating_unit_name"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="name"    column="name"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="workType"    column="work_type"    />
+        <result property="workTypeName" column="work_type_name"/>
+        <collection property="fileInfo" ofType="WsFileInfo" >
+            <result property="id"    column="file_id"    />
+            <result property="name"    column="file_name"    />
+            <result property="url"    column="file_url"    />
+        </collection>
+    </resultMap>
+
+    <sql id="selectWsBlacklistVo">
+        select b.id, b.person_id,b.illegal_date,remove_date, b.illegal_reason,b.image_url, b.updated_time, b.created_time,b.recorder,
+               p.name name,p.id_number id_number,p.work_type,d.dict_label work_type_name,
+               fi.name file_name,fi.url file_url ,fi.id file_id,
+               t.name team_name,
+               u.unit_name participating_unit_name,
+               pro.project_name
+        from t_ws_blacklist b left join t_ws_team_person p on b.person_id=p.id
+        left join t_ws_participating_team t on p.team_id = t.id
+        left join  t_ws_project_participating_unit u on t.unit_id = u.id
+        left join  t_ws_project pro on u.project_id = pro.id
+        left join sys_dict_data d on  (p.work_type = d.dict_value and d.dict_type="ws_work_type")
+        left join t_ws_file_info fi on fi.id = b.image_url
+    </sql>
+
+    <select id="selectWsBlacklistList" parameterType="WsBlacklistVO" resultMap="WsBlacklistResult">
+        <include refid="selectWsBlacklistVo"/>
+        <trim prefix="where"  prefixOverrides="and">
+            <if test="wsBlacklistVO.projectId != null "> and p.project_id = #{wsBlacklistVO.projectId}</if>
+            <if test="wsBlacklistVO.unitId != null "> and u.id= #{wsBlacklistVO.unitId}</if>
+            <if test="wsBlacklistVO.teamId != null "> and t.id = #{wsBlacklistVO.teamId}</if>
+            <if test="wsBlacklistVO.personId != null "> and b.person_id = #{wsBlacklistVO.personId}</if>
+            <if test="wsBlacklistVO.idNumber != null and wsBlacklistVO.idNumber!='' "> and b.id_number = #{wsBlacklistVO.idNumber}</if>
+            <if test="wsBlacklistVO.illegalDate != null "> and b.illegal_date = #{wsBlacklistVO.illegalDate}</if>
+            <if test="wsBlacklistVO.illegalReason != null  and wsBlacklistVO.illegalReason != ''"> and b.illegal_reason = #{wsBlacklistVO.illegalReason}</if>
+            <if test="wsBlacklistVO.imageUrl != null  and wsBlacklistVO.imageUrl != ''"> and b.image_url = #{wsBlacklistVO.imageUrl}</if>
+            <if test="wsBlacklistVO.keyWordName !=null and wsBlacklistVO.keyWordName !=''">and( p.name like concat('%', #{wsBlacklistVO.keyWordName}, '%') or p.id_number like concat('%', #{wsBlacklistVO.keyWordName}, '%') )  </if>
+            <if test="wsBlacklistVO.deleted != null  and wsBlacklistVO.deleted != ''">and b.is_deleted = #{wsBlacklistVO.deleted}</if>
+            <if test="wsBlacklistVO.beginTime != null and wsBlacklistVO.beginTime !='' and wsBlacklistVO.endTime !=null and wsBlacklistVO.endTime !=''">
+             and b.created_time  between  #{wsBlacklistVO.beginTime} and  #{wsBlacklistVO.endTime}
+            </if>
+            <if test="dataScope !=null and dataScope.size>0">
+                and p.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+
+        </trim>
+    </select>
+
+    <select id="selectWsBlacklistById" parameterType="int" resultMap="WsBlacklistResult">
+        <include refid="selectWsBlacklistVo"/>
+        where b.id = #{id}
+    </select>
+
+    <insert id="insertWsBlacklist" parameterType="WsBlacklist">
+        insert into t_ws_blacklist  (
+            <if test="personId != null ">person_id,</if>
+            <if test="idNumber != null and idNumber!='' ">id_number, </if>
+            <if test="recorder != null and recorder !='' ">recorder,</if>
+            <if test="illegalDate != null ">illegal_date,</if>
+            <if test="illegalReason != null  and illegalReason != ''">illegal_reason,</if>
+            <if test="imageUrl != null  and imageUrl != ''">image_url,</if>
+            updated_time,created_time
+         ) values(
+            <if test="personId != null ">#{personId},</if>
+            <if test="idNumber != null and idNumber!='' ">  #{idNumber},</if>
+            <if test="recorder != null and recorder !='' ">#{recorder},</if>
+            <if test="illegalDate != null ">#{illegalDate},</if>
+            <if test="illegalReason != null  and illegalReason != ''">#{illegalReason},</if>
+            <if test="imageUrl != null  and imageUrl != ''">#{imageUrl},</if>
+            sysdate(),sysdate()
+         )
+    </insert>
+
+    <insert id="batchInsertWsBlacklist" parameterType="WsBlacklist">
+        insert into t_ws_blacklist  (
+        person_id,recorder,illegal_date,illegal_reason,image_url,id_number,is_deleted,
+        updated_time,created_time
+        ) values
+        <foreach collection="list" item="item" index="index"  separator="," >
+           (
+                #{item.personId},#{item.recorder},#{item.illegalDate},#{item.illegalReason},#{item.imageUrl},#{item.idNumber},#{item.deleted},
+                sysdate(),sysdate()
+            )
+        </foreach>
+
+    </insert>
+
+    <update id="batchRemoveWsBlacklist" parameterType="int">
+    update t_ws_blacklist set
+        remove_date = sysdate(),
+        updated_time = sysdate(),
+        is_deleted = '1'
+        where person_id in (
+            <foreach collection="array" index="index" item="id" separator=",">
+                #{id}
+            </foreach>
+        )
+    </update>
+
+    <update id="updateWsBlacklist" parameterType="WsBlacklist">
+        update t_ws_blacklist set
+        <if test="recorder != null and recorder !='' ">recorder =#{recorder},</if>
+        <if test="illegalDate != null ">illegal_date =#{illegalDate},</if>
+        <if test="illegalReason != null  and illegalReason != ''">illegal_reason =#{illegalReason},</if>
+        <if test="imageUrl != null  and imageUrl != ''">image_url =#{imageUrl},</if>
+        updated_time = sysdate()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsBlacklistById" parameterType="int">
+        delete from t_ws_blacklist where id = #{id}
+    </delete>
+
+    <delete id="deleteWsBlacklistByIds" parameterType="String">
+        delete from t_ws_blacklist where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

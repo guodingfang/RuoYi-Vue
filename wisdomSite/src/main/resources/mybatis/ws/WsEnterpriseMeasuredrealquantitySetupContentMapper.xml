@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsEnterpriseMeasuredrealquantitySetupContentMapper">
+
+    <resultMap type="WsEnterpriseMeasuredrealquantitySetupContent"
+               id="WsEnterpriseMeasuredrealquantitySetupContentResult">
+        <result property="id" column="id"/>
+        <result property="measuredrealquantitySetupId" column="measuredRealQuantity_setup_id"/>
+        <result property="measuredContent" column="measured_content"/>
+        <result property="minNum" column="min_num"/>
+        <result property="maxNum" column="max_num"/>
+        <result property="company" column="company"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="updatedTime" column="updated_time"/>
+    </resultMap>
+
+    <sql id="selectWsEnterpriseMeasuredrealquantitySetupContentVo">
+        select t.id, t.measuredRealQuantity_setup_id, t2.subitem_project  as subitemProject, t.measured_content, t.min_num, t.max_num, t.company,
+        t.created_by, t.created_time, t.updated_by, t.updated_time
+        from t_ws_enterprise_measuredrealquantity_setup_content AS t
+        LEFT JOIN `t_ws_enterprise_measuredrealquantity_setup` AS t2 ON measuredRealQuantity_setup_id = t2.id
+    </sql>
+
+    <select id="selectWsEnterpriseMeasuredrealquantitySetupContentList"
+            parameterType="WsEnterpriseMeasuredrealquantitySetupContent"
+            resultMap="WsEnterpriseMeasuredrealquantitySetupContentResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantitySetupContentVo"/>
+        <where>
+            <if test="measuredrealquantitySetupId != null ">and t.measuredRealQuantity_setup_id = #{measuredrealquantitySetupId}</if>
+            <if test="subitemProject != null ">and t.subitem_project = #{subitemProject}</if>
+            <if test="measuredContent != null  and measuredContent != ''">and t.measured_content = #{measuredContent}</if>
+            <if test="minNum != null ">and t.min_num = #{minNum}</if>
+            <if test="maxNum != null ">and t.max_num = #{maxNum}</if>
+            <if test="company != null  and company != ''">and t.company = #{company}</if>
+            <if test="createdBy != null ">and t.created_by = #{createdBy}</if>
+            <if test="createdTime != null ">and t.created_time = #{createdTime}</if>
+            <if test="updatedBy != null ">and t.updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null ">and t.updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+
+    <select id="selectWsEnterpriseMeasuredrealquantitySetupContentById" parameterType="Integer"
+            resultMap="WsEnterpriseMeasuredrealquantitySetupContentResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantitySetupContentVo"/>
+        where t.measuredRealQuantity_setup_id = #{measuredrealquantitySetupId}
+    </select>
+
+
+    <insert id="insertWsEnterpriseMeasuredrealquantitySetupContent" parameterType="WsEnterpriseMeasuredrealquantitySetupContent" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_enterprise_measuredrealquantity_setup_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="measuredrealquantitySetupId != null ">measuredRealQuantity_setup_id,</if>
+            <if test="measuredContent != null  and measuredContent != ''">measured_content,</if>
+            <if test="minNum != null ">min_num,</if>
+            <if test="maxNum != null ">max_num,</if>
+            <if test="company != null  and company != ''">company,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="measuredrealquantitySetupId != null ">#{measuredrealquantitySetupId},</if>
+            <if test="measuredContent != null  and measuredContent != ''">#{measuredContent},</if>
+            <if test="minNum != null ">#{minNum},</if>
+            <if test="maxNum != null ">#{maxNum},</if>
+            <if test="company != null  and company != ''">#{company},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWsEnterpriseMeasuredrealquantitySetupContent"
+            parameterType="WsEnterpriseMeasuredrealquantitySetupContent">
+
+        update t_ws_enterprise_measuredrealquantity_setup_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="measuredrealquantitySetupId != null ">measuredRealQuantity_setup_id = #{measuredrealquantitySetupId}, </if>
+            <if test="measuredContent != null  and measuredContent != ''">measured_content = #{measuredContent},</if>
+            <if test="minNum != null ">min_num = #{minNum},</if>
+            <if test="maxNum != null ">max_num = #{maxNum},</if>
+            <if test="company != null  and company != ''">company = #{company},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsEnterpriseMeasuredrealquantitySetupContentById" parameterType="Integer">
+        delete from t_ws_enterprise_measuredrealquantity_setup_content where id = #{id}
+    </delete>
+
+    <delete id="deleteWsEnterpriseMeasuredrealquantitySetupContentByIds" parameterType="String">
+        delete from t_ws_enterprise_measuredrealquantity_setup_content where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

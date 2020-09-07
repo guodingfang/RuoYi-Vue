@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsSafetyPhotoMapper">
+    
+    <resultMap type="WsSafetyPhoto" id="WsSafetyPhotoResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="inspectionId"    column="inspection_id"    />
+        <result property="rectifyId"    column="rectify_id"    />
+        <result property="verifyId"    column="verify_id"    />
+        <result property="type"    column="type"    />
+        <result property="photoAddres"    column="photo_addres"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="uodatedBy"    column="uodated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsSafetyPhotoVo">
+        select id, project_id, inspection_id, rectify_id, verify_id, type, photo_addres, created_by, created_time, uodated_by, updated_time from t_ws_safety_photo
+    </sql>
+
+    <select id="selectWsSafetyPhotoList" parameterType="WsSafetyPhoto" resultMap="WsSafetyPhotoResult">
+        <include refid="selectWsSafetyPhotoVo"/>
+        <where>  
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="inspectionId != null "> and inspection_id = #{inspectionId}</if>
+            <if test="rectifyId != null "> and rectify_id = #{rectifyId}</if>
+            <if test="verifyId != null "> and verify_id = #{verifyId}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="photoAddres != null  and photoAddres != ''"> and photo_addres = #{photoAddres}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="uodatedBy != null "> and uodated_by = #{uodatedBy}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsSafetyPhotoById" parameterType="Integer" resultMap="WsSafetyPhotoResult">
+        <include refid="selectWsSafetyPhotoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWsSafetyPhoto" parameterType="WsSafetyPhoto" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_safety_photo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="inspectionId != null ">inspection_id,</if>
+            <if test="rectifyId != null ">rectify_id,</if>
+            <if test="verifyId != null ">verify_id,</if>
+            <if test="type != null ">type,</if>
+            <if test="photoAddres != null  and photoAddres != ''">photo_addres,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="uodatedBy != null ">uodated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="inspectionId != null ">#{inspectionId},</if>
+            <if test="rectifyId != null ">#{rectifyId},</if>
+            <if test="verifyId != null ">#{verifyId},</if>
+            <if test="type != null ">#{type},</if>
+            <if test="photoAddres != null  and photoAddres != ''">#{photoAddres},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="uodatedBy != null ">#{uodatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsSafetyPhoto" parameterType="WsSafetyPhoto">
+        update t_ws_safety_photo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="inspectionId != null ">inspection_id = #{inspectionId},</if>
+            <if test="rectifyId != null ">rectify_id = #{rectifyId},</if>
+            <if test="verifyId != null ">verify_id = #{verifyId},</if>
+            <if test="type != null ">type = #{type},</if>
+            <if test="photoAddres != null  and photoAddres != ''">photo_addres = #{photoAddres},</if>
+            <if test="uodatedBy != null ">uodated_by = #{uodatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsSafetyPhotoById" parameterType="Integer">
+        delete from t_ws_safety_photo where id = #{id}
+    </delete>
+
+    <delete id="deleteWsSafetyPhotoByIds" parameterType="String">
+        delete from t_ws_safety_photo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

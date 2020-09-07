@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsProjectMapper">
+    
+    <resultMap type="WsProject" id="WsProjectResult">
+        <result property="id"    column="id"    />
+        <result property="projectNo"    column="project_no"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="projectAbbreviation"    column="project_abbreviation"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="areaCode"    column="areaCode"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="district"    column="district"    />
+        <result property="projectUnitId"    column="project_unit_id"    />
+        <result property="projectPersonId"    column="project_person_id"    />
+        <result property="projectAddress"    column="project_address"    />
+        <result property="projectStatus"    column="project_status"    />
+        <result property="buildScale"    column="build_scale"    />
+        <result property="totalInvestment"    column="total_investment"    />
+        <result property="projectLogo"    column="project_logo"    />
+        <result property="buildPurpose"    column="build_purpose"    />
+        <result property="buildStructureType"    column="build_structure_type"    />
+        <result property="numMonomers"    column="num_monomers"    />
+        <result property="buildArea"    column="build_area"    />
+        <result property="groundArea"    column="ground_area"    />
+        <result property="undergroundArea"    column="underground_area"    />
+        <result property="buildHeight"    column="build_height"    />
+        <result property="groundLayernum"    column="ground_layerNum"    />
+        <result property="undergroundDepth"    column="underground_depth"    />
+        <result property="foundationpitDepth"    column="foundationPit_depth"    />
+        <result property="constructionUnit"    column="construction_unit"    />
+        <result property="designer"    column="designer"    />
+        <result property="controlUnit"    column="control_unit"    />
+        <result property="ceneralcontractUnit"    column="ceneralContract_unit"    />
+        <result property="safetySupervision"    column="safety_supervision"    />
+        <result property="qualitySupervision"    column="quality_supervision"    />
+        <result property="lnvestmentType"    column="lnvestment_type"    />
+        <result property="bidNo"    column="bid_no"    />
+        <result property="contractCost"    column="contract_cost"    />
+        <result property="constructionPermit"    column="construction_permit"    />
+        <result property="constructionPermitUrl"    column="construction_permit_url"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="completeTime"    column="complete_time"    />
+        <result property="projectManagerName"    column="project_manager_name"    />
+        <result property="contactNumber"    column="contact_number"    />
+        <result property="violationNotice"    column="violation_notice"    />
+        <result property="payBank"    column="pay_bank"    />
+        <result property="bankDeposit"    column="bank_deposit"    />
+        <result property="payAccountno"    column="pay_accountNo"    />
+        <result property="payDate"    column="pay_date"    />
+        <result property="qualityObjectives"    column="quality_objectives"    />
+        <result property="safetyObjectives"    column="safety_objectives"    />
+        <result property="contractRecordno"    column="contract_recordNo"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsProjectVo">
+        SELECT id,project_no, project_name, project_abbreviation, longitude, latitude, areaCode, province, city,
+        district, project_unit_id, t2.`enterprise_name` AS projectUnitName,  project_person_id, t3.nick_name as projectPersonName,
+        project_address, project_status, build_scale, total_investment, project_logo, build_purpose, build_structure_type, num_monomers,
+        build_area, ground_area, underground_area, build_height, ground_layerNum, underground_depth, foundationPit_depth,
+        construction_unit, designer, control_unit, ceneralContract_unit, safety_supervision, quality_supervision,
+        lnvestment_type, bid_no, contract_cost, construction_permit, construction_permit_url, start_time, complete_time,
+        project_manager_name, contact_number, violation_notice, pay_bank, bank_deposit, pay_accountNo, pay_date,
+        quality_objectives, safety_objectives, contract_recordNo, remarks, is_delete, created_by, created_time, updated_by, updated_time
+        FROM t_ws_project
+        LEFT JOIN `sys_enterprise` AS t2  ON project_unit_id = t2.enterprise_id
+        LEFT JOIN `sys_user` AS t3 ON project_person_id = t3.user_id
+
+  </sql>
+
+    <select id="selectWsProjectList"  resultMap="WsProjectResult">
+        <include refid="selectWsProjectVo"/>
+        <where>
+            <if test="projectNo != null and projectNo != ''">and project_no = #{projectNo}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="projectUnitId != null "> and project_unit_id = #{projectUnitId}</if>
+            <if test="projectUnitName != null  and projectUnitName != ''"> and project_unit_name like concat('%', #{projectUnitName}, '%')</if>
+            <if test="projectPersonId != null "> and project_person_id = #{projectPersonId}</if>
+            <if test="projectPersonName != null  and projectPersonName != ''"> and project_person_name like concat('%', #{projectPersonName}, '%')</if>
+            <if test="areaCode != null  and areaCode != ''"> and areaCode like concat(#{areaCode}, '%')</if>
+            <if test="projectIds != null">
+            and id in
+            <foreach collection="projectIds" item="projectId" open="(" close=")" separator=",">
+                #{projectId}
+            </foreach>
+            </if>
+             and is_delete = "N"
+        </where>
+
+    </select>
+
+
+    <select id="selectWsProjectByName" parameterType="WsProject" resultMap="WsProjectResult">
+        <include refid="selectWsProjectVo"/>
+        where project_name = #{projectName} and is_delete = "N" and id !=#{id}
+    </select>
+
+
+    <select id="selectWsProjectById" parameterType="int" resultMap="WsProjectResult">
+        <include refid="selectWsProjectVo"/>
+        where id = #{id} and is_delete = "N"
+    </select>
+
+    <insert id="insertWsProject" parameterType="WsProject" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectNo != null and projectNo != ''">project_no,</if>
+            <if test="projectName != null  and projectName != ''">project_name,</if>
+            <if test="projectAbbreviation != null  and projectAbbreviation != ''">project_abbreviation,</if>
+            <if test="longitude != null ">longitude,</if>
+            <if test="latitude != null ">latitude,</if>
+            <if test="areaCode != null ">areaCode,</if>
+            <if test="province != null ">province,</if>
+            <if test="city != null ">city,</if>
+            <if test="district != null ">district,</if>
+            <if test="projectUnitId != null ">project_unit_id,</if>
+            <if test="projectUnitName != null  and projectUnitName != ''">project_unit_name,</if>
+            <if test="projectPersonId != null ">project_person_id,</if>
+            <if test="projectPersonName != null  and projectPersonName != ''">project_person_name,</if>
+            <if test="projectAddress != null  and projectAddress != ''">project_address,</if>
+            <if test="projectStatus != null ">project_status,</if>
+            <if test="buildScale != null ">build_scale,</if>
+            <if test="totalInvestment != null ">total_investment,</if>
+            <if test="projectLogo != null  and projectLogo != ''">project_logo,</if>
+            <if test="buildPurpose != null ">build_purpose,</if>
+            <if test="buildStructureType != null  and buildStructureType != ''">build_structure_type,</if>
+            <if test="numMonomers != null ">num_monomers,</if>
+            <if test="buildArea != null ">build_area,</if>
+            <if test="groundArea != null ">ground_area,</if>
+            <if test="undergroundArea != null ">underground_area,</if>
+            <if test="buildHeight != null ">build_height,</if>
+            <if test="groundLayernum != null ">ground_layerNum,</if>
+            <if test="undergroundDepth != null ">underground_depth,</if>
+            <if test="foundationpitDepth != null ">foundationPit_depth,</if>
+            <if test="constructionUnit != null  and constructionUnit != ''">construction_unit,</if>
+            <if test="designer != null  and designer != ''">designer,</if>
+            <if test="controlUnit != null  and controlUnit != ''">control_unit,</if>
+            <if test="ceneralcontractUnit != null  and ceneralcontractUnit != ''">ceneralContract_unit,</if>
+            <if test="safetySupervision != null  and safetySupervision != ''">safety_supervision,</if>
+            <if test="qualitySupervision != null  and qualitySupervision != ''">quality_supervision,</if>
+            <if test="lnvestmentType != null ">lnvestment_type,</if>
+            <if test="bidNo != null  and bidNo != ''">bid_no,</if>
+            <if test="contractCost != null ">contract_cost,</if>
+            <if test="constructionPermit != null  and constructionPermit != ''">construction_permit,</if>
+            <if test="constructionPermitUrl != null  and constructionPermitUrl != ''">construction_permit_url,</if>
+            <if test="startTime != null ">start_time,</if>
+            <if test="completeTime != null ">complete_time,</if>
+            <if test="projectManagerName != null ">project_manager_name,</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number,</if>
+            <if test="violationNotice != null  and violationNotice != ''">violation_notice,</if>
+            <if test="payBank != null  and payBank != ''">pay_bank,</if>
+            <if test="bankDeposit != null  and bankDeposit != ''">bank_deposit,</if>
+            <if test="payAccountno != null  and payAccountno != ''">pay_accountNo,</if>
+            <if test="payDate != null ">pay_date,</if>
+            <if test="qualityObjectives != null  and qualityObjectives != ''">quality_objectives,</if>
+            <if test="safetyObjectives != null  and safetyObjectives != ''">safety_objectives,</if>
+            <if test="contractRecordno != null  and contractRecordno != ''">contract_recordNo,</if>
+            <if test="remarks != null  and remarks != ''">remarks,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectNo != null and projectNo != ''">#{projectNo},</if>
+            <if test="projectName != null  and projectName != ''">#{projectName},</if>
+            <if test="projectAbbreviation != null  and projectAbbreviation != ''">#{projectAbbreviation},</if>
+            <if test="longitude != null ">#{longitude},</if>
+            <if test="latitude != null ">#{latitude},</if>
+            <if test="areaCode != null ">#{areaCode},</if>
+            <if test="province != null ">#{province},</if>
+            <if test="city != null ">#{city},</if>
+            <if test="district != null ">#{district},</if>
+            <if test="projectUnitId != null ">#{projectUnitId},</if>
+            <if test="projectUnitName != null  and projectUnitName != ''">#{projectUnitName},</if>
+            <if test="projectPersonId != null ">#{projectPersonId},</if>
+            <if test="projectPersonName != null  and projectPersonName != ''">#{projectPersonName},</if>
+            <if test="projectAddress != null  and projectAddress != ''">#{projectAddress},</if>
+            <if test="projectStatus != null ">#{projectStatus},</if>
+            <if test="buildScale != null ">#{buildScale},</if>
+            <if test="totalInvestment != null ">#{totalInvestment},</if>
+            <if test="projectLogo != null  and projectLogo != ''">#{projectLogo},</if>
+            <if test="buildPurpose != null ">#{buildPurpose},</if>
+            <if test="buildStructureType != null  and buildStructureType != ''">#{buildStructureType},</if>
+            <if test="numMonomers != null ">#{numMonomers},</if>
+            <if test="buildArea != null ">#{buildArea},</if>
+            <if test="groundArea != null ">#{groundArea},</if>
+            <if test="undergroundArea != null ">#{undergroundArea},</if>
+            <if test="buildHeight != null ">#{buildHeight},</if>
+            <if test="groundLayernum != null ">#{groundLayernum},</if>
+            <if test="undergroundDepth != null ">#{undergroundDepth},</if>
+            <if test="foundationpitDepth != null ">#{foundationpitDepth},</if>
+            <if test="constructionUnit != null  and constructionUnit != ''">#{constructionUnit},</if>
+            <if test="designer != null  and designer != ''">#{designer},</if>
+            <if test="controlUnit != null  and controlUnit != ''">#{controlUnit},</if>
+            <if test="ceneralcontractUnit != null  and ceneralcontractUnit != ''">#{ceneralcontractUnit},</if>
+            <if test="safetySupervision != null  and safetySupervision != ''">#{safetySupervision},</if>
+            <if test="qualitySupervision != null  and qualitySupervision != ''">#{qualitySupervision},</if>
+            <if test="lnvestmentType != null ">#{lnvestmentType},</if>
+            <if test="bidNo != null  and bidNo != ''">#{bidNo},</if>
+            <if test="contractCost != null ">#{contractCost},</if>
+            <if test="constructionPermit != null  and constructionPermit != ''">#{constructionPermit},</if>
+            <if test="constructionPermitUrl != null  and constructionPermitUrl != ''">#{constructionPermitUrl},</if>
+            <if test="startTime != null ">#{startTime},</if>
+            <if test="completeTime != null ">#{completeTime},</if>
+            <if test="projectManagerName != null ">#{projectManagerName},</if>
+            <if test="contactNumber != null  and contactNumber != ''">#{contactNumber},</if>
+            <if test="violationNotice != null  and violationNotice != ''">#{violationNotice},</if>
+            <if test="payBank != null  and payBank != ''">#{payBank},</if>
+            <if test="bankDeposit != null  and bankDeposit != ''">#{bankDeposit},</if>
+            <if test="payAccountno != null  and payAccountno != ''">#{payAccountno},</if>
+            <if test="payDate != null ">#{payDate},</if>
+            <if test="qualityObjectives != null  and qualityObjectives != ''">#{qualityObjectives},</if>
+            <if test="safetyObjectives != null  and safetyObjectives != ''">#{safetyObjectives},</if>
+            <if test="contractRecordno != null  and contractRecordno != ''">#{contractRecordno},</if>
+            <if test="remarks != null  and remarks != ''">#{remarks},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsProject" parameterType="WsProject">
+        update t_ws_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectNo != null and projectNo != ''">project_no = #{projectNo},</if>
+            <if test="projectName != null  and projectName != ''">project_name = #{projectName},</if>
+            <if test="projectAbbreviation != null  and projectAbbreviation != ''">project_abbreviation = #{projectAbbreviation},</if>
+            <if test="longitude != null ">longitude = #{longitude},</if>
+            <if test="latitude != null ">latitude = #{latitude},</if>
+            <if test="areaCode != null ">areaCode = #{areaCode},</if>
+            <if test="province != null ">province = #{province},</if>
+            <if test="city != null ">city = #{city},</if>
+            <if test="district != null ">district = #{district},</if>
+            <if test="projectUnitId != null ">project_unit_id = #{projectUnitId},</if>
+            <if test="projectUnitName != null  and projectUnitName != ''">project_unit_name = #{projectUnitName},</if>
+            <if test="projectPersonId != null ">project_person_id = #{projectPersonId},</if>
+            <if test="projectPersonName != null  and projectPersonName != ''">project_person_name = #{projectPersonName},</if>
+            <if test="projectAddress != null  and projectAddress != ''">project_address = #{projectAddress},</if>
+            <if test="projectStatus != null ">project_status = #{projectStatus},</if>
+            <if test="buildScale != null ">build_scale = #{buildScale},</if>
+            <if test="totalInvestment != null ">total_investment = #{totalInvestment},</if>
+            <if test="projectLogo != null  and projectLogo != ''">project_logo = #{projectLogo},</if>
+            <if test="buildPurpose != null ">build_purpose = #{buildPurpose},</if>
+            <if test="buildStructureType != null  and buildStructureType != ''">build_structure_type = #{buildStructureType},</if>
+            <if test="numMonomers != null ">num_monomers = #{numMonomers},</if>
+            <if test="buildArea != null ">build_area = #{buildArea},</if>
+            <if test="groundArea != null ">ground_area = #{groundArea},</if>
+            <if test="undergroundArea != null ">underground_area = #{undergroundArea},</if>
+            <if test="buildHeight != null ">build_height = #{buildHeight},</if>
+            <if test="groundLayernum != null ">ground_layerNum = #{groundLayernum},</if>
+            <if test="undergroundDepth != null ">underground_depth = #{undergroundDepth},</if>
+            <if test="foundationpitDepth != null ">foundationPit_depth = #{foundationpitDepth},</if>
+            <if test="constructionUnit != null  and constructionUnit != ''">construction_unit = #{constructionUnit},</if>
+            <if test="designer != null  and designer != ''">designer = #{designer},</if>
+            <if test="controlUnit != null  and controlUnit != ''">control_unit = #{controlUnit},</if>
+            <if test="ceneralcontractUnit != null  and ceneralcontractUnit != ''">ceneralContract_unit = #{ceneralcontractUnit},</if>
+            <if test="safetySupervision != null  and safetySupervision != ''">safety_supervision = #{safetySupervision},</if>
+            <if test="qualitySupervision != null  and qualitySupervision != ''">quality_supervision = #{qualitySupervision},</if>
+            <if test="lnvestmentType != null ">lnvestment_type = #{lnvestmentType},</if>
+            <if test="bidNo != null  and bidNo != ''">bid_no = #{bidNo},</if>
+            <if test="contractCost != null ">contract_cost = #{contractCost},</if>
+            <if test="constructionPermit != null  and constructionPermit != ''">construction_permit = #{constructionPermit},</if>
+            <if test="constructionPermitUrl != null  and constructionPermitUrl != ''">construction_permit_url = #{constructionPermitUrl},</if>
+            <if test="startTime != null ">start_time = #{startTime},</if>
+            <if test="completeTime != null ">complete_time = #{completeTime},</if>
+            <if test="projectManagerName != null ">project_manager_name = #{projectManagerName},</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number = #{contactNumber},</if>
+            <if test="violationNotice != null  and violationNotice != ''">violation_notice = #{violationNotice},</if>
+            <if test="payBank != null  and payBank != ''">pay_bank = #{payBank},</if>
+            <if test="bankDeposit != null  and bankDeposit != ''">bank_deposit = #{bankDeposit},</if>
+            <if test="payAccountno != null  and payAccountno != ''">pay_accountNo = #{payAccountno},</if>
+            <if test="payDate != null ">pay_date = #{payDate},</if>
+            <if test="qualityObjectives != null  and qualityObjectives != ''">quality_objectives = #{qualityObjectives},</if>
+            <if test="safetyObjectives != null  and safetyObjectives != ''">safety_objectives = #{safetyObjectives},</if>
+            <if test="contractRecordno != null  and contractRecordno != ''">contract_recordNo = #{contractRecordno},</if>
+            <if test="remarks != null  and remarks != ''">remarks = #{remarks},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id} and is_delete = "N"
+    </update>
+
+    <update id="deleteWsProjectById" parameterType="int">
+        update t_ws_project set is_delete = "Y" where id = #{id}
+    </update>
+
+    <update id="deleteWsProjectByIds" parameterType="int">
+        update t_ws_project set is_delete = "Y" where id in
+        <foreach item="ids" collection="array" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </update>
+
+    <select id="selectRealTimeProjectSearch" parameterType="WsProject" resultMap="WsProjectResult">
+        <include refid="selectWsProjectVo"/>
+        where
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and project_name = like CONCAT('%',#{projectName},'%')
+        and is_delete = "N"
+    </select>
+
+    <select id="selectProjectByEnterpriseIds" parameterType="java.util.List" resultMap="WsProjectResult">
+        SELECT
+            id,project_name
+        FROM
+            t_ws_project
+        WHERE
+            project_unit_id IN
+        <foreach item="item" index="index" collection="projectUnitIds"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND is_delete = "N"
+    </select>
+
+
+
+</mapper>

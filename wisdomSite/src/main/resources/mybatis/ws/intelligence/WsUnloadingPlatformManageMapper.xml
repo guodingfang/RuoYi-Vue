@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsUnloadingPlatformManageMapper">
+    
+    <resultMap type="com.jlkj.project.ws.intelligence.domain.WsUnloadingPlatformManage" id="WsUnloadingPlatformManageResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="equipmentName"    column="equipment_name"    />
+        <result property="deviceNumber"    column="device_number"    />
+        <result property="coordinateX"    column="coordinate_x"    />
+        <result property="coordinateY"    column="coordinate_y"    />
+        <result property="radius"    column="radius"    />
+        <result property="enableDisable"    column="enable_disable"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="fieldlayoutAddress"    column="fieldlayoutAddress"    />
+        <result property="fieldlayoutId"    column="fieldlayoutId"    />
+    </resultMap>
+
+    <resultMap type="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" id="WsUnloadingPlatformManageDTOResult">
+        <result property="projectId"    column="projectId"    />
+        <result property="equipmentNum"    column="equipmentNum"    />
+        <result property="equipmentIdleRate"    column="equipmentIdleRate"    />
+        <result property="callPoliceEquipmentNum"    column="callPoliceEquipmentNum"    />
+        <result property="equipmentName"    column="equipmentName"    />
+        <result property="monitoringEquipmentNo"    column="monitoringEquipmentNo"    />
+        <result property="weight"    column="weight"    />
+        <result property="voltage"    column="voltage"    />
+        <result property="warningStatus"    column="warningStatus"    />
+        <result property="fieldlayoutAddress"    column="fieldlayoutAddress"    />
+        <result property="unloadingEquipmentName"    column="unloadingEquipmentName"    />
+        <result property="unloadingMonitoringEquipmentNo"    column="unloadingMonitoringEquipmentNo"    />
+        <result property="realUpdateTime"    column="realUpdateTime"    />
+        <result property="currentLoad"    column="currentLoad"    />
+        <result property="maxAllowableLoad"    column="maxAllowableLoad"    />
+        <result property="batteryPercentage"    column="batteryPercentage"    />
+        <result property="loadweight"    column="loadweight"    />
+        <result property="workRecordTime"    column="workRecordTime"    />
+        <result property="alarmTime"    column="alarmTime"    />
+        <result property="earlyWarningNum"    column="earlyWarningNum"    />
+        <result property="callPoliceNum"    column="callPoliceNum"    />
+        <result property="startTime"    column="startTime"    />
+        <result property="endTime"    column="endTime"    />
+        <result property="reportingTime"    column="reportingTime"    />
+        <result property="presentLoad"    column="presentLoad"    />
+        <result property="percentageLoad"    column="percentageLoad"    />
+        <result property="workingCondition"    column="workingCondition"    />
+        <result property="alarmStatus"    column="alarmStatus"    />
+        <result property="totalNum"    column="totalNum"    />
+        <result property="enableDisable"    column="enableDisable"    />
+    </resultMap>
+
+    <sql id="selectWsUnloadingPlatformManageVo">
+        select id,project_id, equipment_name, device_number,coordinate_x,coordinate_y,radius, enable_disable, created_time, updated_time from t_ws_unloading_platform_manage
+    </sql>
+
+    <select id="selectWsUnloadingPlatformManageList" parameterType="com.jlkj.project.ws.intelligence.domain.WsUnloadingPlatformManage" resultMap="WsUnloadingPlatformManageResult">
+        <include refid="selectWsUnloadingPlatformManageVo"/>
+        <where>
+            <if test="projectId != null"> and project_id = #{projectId}</if>
+            <if test="equipmentName != null  and equipmentName != ''"> and equipment_name like concat('%', #{equipmentName}, '%')</if>
+            <if test="deviceNumber != null  and deviceNumber != ''"> and device_number = #{deviceNumber}</if>
+            <if test="coordinateX != null  and coordinateX != ''"> and coordinate_x = #{coordinateX}</if>
+            <if test="coordinateY != null  and coordinateY != ''"> and coordinate_y = #{coordinateY}</if>
+            <if test="radius != null  and radius != ''"> and radius = #{radius}</if>
+            <if test="enableDisable != null "> and enable_disable = #{enableDisable}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsUnloadingPlatformManageById" parameterType="Integer" resultMap="WsUnloadingPlatformManageResult">
+        <include refid="selectWsUnloadingPlatformManageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWsUnloadingPlatformManage" parameterType="com.jlkj.project.ws.intelligence.domain.WsUnloadingPlatformManage" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_unloading_platform_manage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="equipmentName != null  and equipmentName != ''">equipment_name,</if>
+            <if test="deviceNumber != null  and deviceNumber != ''">device_number,</if>
+            <if test="coordinateX != null  and coordinateX != ''">coordinate_x,</if>
+            <if test="coordinateY != null  and coordinateY != ''">coordinate_y,</if>
+            <if test="radius != null  and radius != ''">radius,</if>
+            <if test="enableDisable != null ">enable_disable,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="equipmentName != null  and equipmentName != ''">#{equipmentName},</if>
+            <if test="deviceNumber != null  and deviceNumber != ''">#{deviceNumber},</if>
+            <if test="coordinateX != null  and coordinateX != ''">#{coordinateX},</if>
+            <if test="coordinateY != null  and coordinateY != ''">#{coordinateY},</if>
+            <if test="radius != null  and radius != ''">#{radius},</if>
+            <if test="enableDisable != null ">#{enableDisable},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsUnloadingPlatformManage" parameterType="com.jlkj.project.ws.intelligence.domain.WsUnloadingPlatformManage">
+        update t_ws_unloading_platform_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="equipmentName != null  and equipmentName != ''">equipment_name = #{equipmentName},</if>
+            device_number = #{deviceNumber},
+            <if test="coordinateX != null  and coordinateX != ''">coordinate_x = #{coordinateX},</if>
+            <if test="coordinateY != null  and coordinateY != ''">coordinate_y = #{coordinateY},</if>
+            <if test="radius != null  and radius != ''">radius = #{radius},</if>
+            <if test="enableDisable != null ">enable_disable = #{enableDisable},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateWsUnloadingPlatformManages" parameterType="com.jlkj.project.ws.intelligence.domain.WsUnloadingPlatformManage">
+        update t_ws_unloading_platform_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="equipmentName != null  and equipmentName != ''">equipment_name = #{equipmentName},</if>
+            <if test="deviceNumber != null  and deviceNumber != ''">device_number = #{deviceNumber},</if>
+            <if test="coordinateX != null  and coordinateX != ''">coordinate_x = #{coordinateX},</if>
+            <if test="coordinateY != null  and coordinateY != ''">coordinate_y = #{coordinateY},</if>
+            <if test="radius != null  and radius != ''">radius = #{radius},</if>
+            <if test="enableDisable != null ">enable_disable = #{enableDisable},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="editUnloadingPlatformManage" parameterType="com.jlkj.project.ws.intelligence.domain.WsUnloadingPlatformManage">
+        update t_ws_unloading_platform_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="equipmentName != null  and equipmentName != ''">equipment_name = #{equipmentName},</if>
+            <if test="deviceNumber != null  and deviceNumber != ''">device_number = #{deviceNumber},</if>
+            coordinate_x = #{coordinateX},
+            coordinate_y = #{coordinateY},
+            radius = #{radius},
+            <if test="enableDisable != null ">enable_disable = #{enableDisable},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsUnloadingPlatformManageById" parameterType="Integer">
+        delete from t_ws_unloading_platform_manage where id = #{id}
+    </delete>
+
+    <delete id="deleteWsUnloadingPlatformManageByIds" parameterType="String">
+        delete from t_ws_unloading_platform_manage where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectlistUnloadingPlatformManage" parameterType="com.jlkj.project.ws.intelligence.domain.WsUnloadingPlatformManage" resultMap="WsUnloadingPlatformManageResult">
+        SELECT t.* FROM t_ws_unloading_platform_manage t
+        where 1=1
+        and t.project_id = #{projectId}
+        and t.enable_disable = '1'
+        and (t.coordinate_x is null or t.coordinate_x = '')
+        and (t.coordinate_y is null or t.coordinate_y = '')
+    </select>
+
+
+    <update id="updateWsUnloadingPlatformManageList" parameterType="com.jlkj.project.ws.intelligence.domain.WsUnloadingPlatformManage">
+        update t_ws_unloading_platform_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="coordinateX != null  and coordinateX != ''">coordinate_x = #{coordinateX},</if>
+            <if test="coordinateY != null  and coordinateY != ''">coordinate_y = #{coordinateY},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="selectRealTimeMonitoring" parameterType="com.jlkj.project.ws.intelligence.domain.WsUnloadingPlatformManage" resultMap="WsUnloadingPlatformManageResult">
+        SELECT t.* FROM t_ws_unloading_platform_manage t
+        where 1=1
+        and t.project_id = #{projectId}
+        and t.enable_disable = '1'
+    </select>
+
+    <select id="selectRealTimeMonitorings" parameterType="com.jlkj.project.ws.intelligence.domain.WsUnloadingPlatformManage" resultMap="WsUnloadingPlatformManageResult">
+        SELECT t.* FROM t_ws_unloading_platform_manage t
+        where 1=1
+        and t.project_id = #{projectId}
+    </select>
+
+    <select id="selectRealTimeMonitoringUnloadingPlatform" parameterType="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" resultMap="WsUnloadingPlatformManageDTOResult">
+        SELECT t.device_number as monitoringEquipmentNo FROM t_ws_unloading_platform_manage t
+        where 1=1
+        and t.project_id = #{projectId}
+        and t.device_number != ''
+    </select>
+
+    <select id="selectEquipmentIdleRate" parameterType="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" resultMap="WsUnloadingPlatformManageDTOResult">
+        SELECT convert(sum(DQZZ = '0')/COUNT(*) * 100,decimal(15,0)) as equipmentIdleRate,sum(BJZZ = '2') as callPoliceEquipmentNum from t_ws_xl_monitor_data
+        where SERIAL_NUMBER in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+    </select>
+
+    <select id="selectRealTimeMonitoringData" parameterType="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" resultMap="WsUnloadingPlatformManageDTOResult">
+        SELECT ZZ as weight,convert(DQDCDY * 0.1,decimal(15,1)) as voltage,
+            BJZZ as warningStatus from t_ws_xl_monitor_data
+        where SERIAL_NUMBER = #{monitoringEquipmentNo}
+    </select>
+
+    <select id="selectUnloadingEquipmentName" parameterType="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" resultMap="WsUnloadingPlatformManageDTOResult">
+        SELECT equipment_name as unloadingEquipmentName,device_number as unloadingMonitoringEquipmentNo from t_ws_unloading_platform_manage
+        where device_number = #{monitoringEquipmentNo}
+    </select>
+
+    <select id="selectRealTimeInformation" parameterType="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" resultMap="WsUnloadingPlatformManageDTOResult">
+        SELECT ZZ as currentLoad,ZDZZ as maxAllowableLoad,
+            DQDLBFB as batteryPercentage,INSERTTIME as realUpdateTime from t_ws_xl_monitor_data
+        where SERIAL_NUMBER = #{monitoringEquipmentNo}
+    </select>
+
+    <select id="selectTodayWorkRecordList" parameterType="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" resultMap="WsUnloadingPlatformManageDTOResult">
+                SELECT
+                    INSERTTIME as workRecordTime,
+                   ifnull(FORMAT(ZZ * 0.001, 2),0.00) AS loadweight
+                FROM
+                    t_ws_xl_monitor_data_${monitoringEquipmentNo}
+                WHERE
+                    1 = 1
+                AND TO_DAYS(INSERTTIME) = TO_DAYS(NOW())
+    </select>
+
+
+    <select id="selectFifteenWorkRecordList" parameterType="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" resultMap="WsUnloadingPlatformManageDTOResult">
+        select t.INSERTTIME as workRecordTime,ifnull(FORMAT(t.ZZ * 0.001, 2),0.00) AS loadweight
+        from t_ws_xl_monitor_data_${monitoringEquipmentNo} t
+        where
+        DATE_SUB(CURDATE(), INTERVAL 14 DAY) <![CDATA[<=]]> date(t.INSERTTIME)
+    </select>
+
+    <select id="selectFifteenAlarmLogList" parameterType="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" resultMap="WsUnloadingPlatformManageDTOResult">
+        select a.statisticsTime as alarmTime,IFNULL(b.yj,0) as earlyWarningNum,IFNULL(b.bj,0) as callPoliceNum
+        from (
+        SELECT curdate() as statisticsTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 7 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 8 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 9 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 10 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 11 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 12 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 13 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 14 day) as click_date
+        ) a left join (
+        select date(t.INSERTTIME) as datetime,sum(t.BJZZ = '1') AS yj,sum(t.BJZZ = '2') AS bj
+        from t_ws_xl_monitor_data_${monitoringEquipmentNo} t
+        where 1=1
+        group by date(t.INSERTTIME)
+        ) b on a.statisticsTime = b.datetime
+        ORDER BY a.statisticsTime
+    </select>
+
+    <select id="selectEquipmentMoredetailsList" parameterType="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" resultMap="WsUnloadingPlatformManageDTOResult">
+        SELECT INSERTTIME as reportingTime,ZZ as presentLoad,ZZBFB as percentageLoad,
+        CASE
+        when DQZZ = '0' then '空闲'
+        when DQZZ = '1' then '工作'
+        END
+        as workingCondition,
+        CASE
+        when BJZZ = '0' then '正常'
+        when BJZZ = '1' then '预警'
+        when BJZZ = '2' then '报警'
+        END
+        as alarmStatus
+        FROM  t_ws_xl_monitor_data_${monitoringEquipmentNo}
+        where 1=1
+        <if test="startTime != null and startTime != '' ">
+            and DATE_FORMAT(INSERTTIME,'%Y-%m-%d') <![CDATA[>=]]>  #{startTime}
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            and DATE_FORMAT(INSERTTIME,'%Y-%m-%d') <![CDATA[<=]]>  #{endTime}
+        </if>
+        ORDER BY reportingTime desc
+    </select>
+
+
+    <select id="selectTodayAlarmLog" parameterType="com.jlkj.project.ws.intelligence.dto.WsUnloadingPlatformManageDTO" resultMap="WsUnloadingPlatformManageDTOResult">
+        select ifnull(sum(t.BJZZ = '1'),0) as totalNum,ifnull(sum(t.BJZZ = '2'),0) AS callPoliceNum
+        from t_ws_xl_monitor_data_${monitoringEquipmentNo} t
+        where TO_DAYS(t.INSERTTIME) = TO_DAYS(NOW())
+    </select>
+</mapper>

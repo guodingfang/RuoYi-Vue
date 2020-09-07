@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsEnterpriseMeasuredrealquantityMapper">
+    
+    <resultMap type="WsEnterpriseMeasuredrealquantity" id="WsEnterpriseMeasuredrealquantityResult">
+        <result property="id"    column="id"    />
+        <result property="measuredrealquantityMeasuredLocationId"    column="measuredRealQuantity_measured_location_id"    />
+        <result property="measuredrealquantitySetupId"    column="measuredRealQuantity_setup_id"    />
+        <result property="participant"    column="participant"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="comment"    column="comment"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectWsEnterpriseMeasuredrealquantityVo">
+          SELECT t.id, t.measuredRealQuantity_measured_location_id, t.measuredRealQuantity_setup_id, t3.subitem_project AS subitemProject, t.participant,
+          t.comment, t.created_by, t2.`nick_name` AS createdName, t.created_time, t.updated_by, t.updated_time
+          FROM t_ws_enterprise_measuredrealquantity AS t
+          LEFT JOIN sys_user AS t2 ON created_by = t2.`user_id`
+          LEFT JOIN `t_ws_enterprise_measuredrealquantity_setup` AS t3 ON t.measuredRealQuantity_setup_id = t3.id
+      </sql>
+
+    <select id="selectWsEnterpriseMeasuredrealquantityList" parameterType="WsEnterpriseMeasuredrealquantity" resultMap="WsEnterpriseMeasuredrealquantityResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityVo"/>
+        <where>
+            <if test="measuredrealquantityMeasuredLocationId != null "> and t.measuredRealQuantity_measured_location_id = #{measuredrealquantityMeasuredLocationId}</if>
+            <if test="measuredrealquantitySetupId != null "> and t.measuredRealQuantity_setup_id = #{measuredrealquantitySetupId}</if>
+            <if test="participant != null  and participant != ''"> and t.participant = #{participant}</if>
+            <if test="comment != null  and comment != ''"> and t.comment = #{comment}</if>
+            <if test="createdBy != null "> and t.created_by = #{createdBy}</if>
+            <if test="createdTime != null "> and t.created_time = #{createdTime}</if>
+            <if test="updatedBy != null "> and t.updated_by = #{updatedBy}</if>
+            <if test="updatedTime != null "> and t.updated_time = #{updatedTime}</if>
+             and t.is_delete = 'N'
+        </where>
+    </select>
+    
+    <select id="selectWsEnterpriseMeasuredrealquantityById" parameterType="Integer" resultMap="WsEnterpriseMeasuredrealquantityResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityVo"/>
+        where  t.measuredRealQuantity_measured_location_id = #{measuredrealquantityMeasuredLocationId}  and t.is_delete = 'N'
+    </select>
+
+    <select id="selectWsEnterpriseMeasuredrealquantityByMeasuredrealquantitySetupId" parameterType="Integer" resultMap="WsEnterpriseMeasuredrealquantityResult">
+        <include refid="selectWsEnterpriseMeasuredrealquantityVo"/>
+        where  t.measuredRealQuantity_setup_id = #{measuredrealquantitySetupId}  and t.is_delete = 'N'
+    </select>
+
+    <insert id="insertWsEnterpriseMeasuredrealquantity" parameterType="WsEnterpriseMeasuredrealquantity" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_enterprise_measuredrealquantity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="measuredrealquantityMeasuredLocationId != null ">measuredRealQuantity_measured_location_id,</if>
+            <if test="measuredrealquantitySetupId != null ">measuredRealQuantity_setup_id,</if>
+            <if test="participant != null  and participant != ''">participant,</if>
+            <if test="comment != null  and comment != ''">comment,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="measuredrealquantityMeasuredLocationId != null ">#{measuredrealquantityMeasuredLocationId},</if>
+            <if test="measuredrealquantitySetupId != null ">#{measuredrealquantitySetupId},</if>
+            <if test="participant != null  and participant != ''">#{participant},</if>
+            <if test="comment != null  and comment != ''">#{comment},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsEnterpriseMeasuredrealquantity" parameterType="WsEnterpriseMeasuredrealquantity">
+        update t_ws_enterprise_measuredrealquantity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="measuredrealquantityMeasuredLocationId != null ">measuredRealQuantity_measured_location_id = #{measuredrealquantityMeasuredLocationId},</if>
+            <if test="measuredrealquantitySetupId != null ">measuredRealQuantity_setup_id = #{measuredrealquantitySetupId},</if>
+            <if test="participant != null  and participant != ''">participant = #{participant},</if>
+            <if test="comment != null  and comment != ''">comment = #{comment},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            updated_time = sysdate()
+        </trim>
+        where id = #{id}  and is_delete = 'N'
+    </update>
+
+    <update id="updateWsEnterpriseMeasuredrealquantityById" parameterType="Integer">
+        update  t_ws_enterprise_measuredrealquantity  set is_delete = 'Y' where id = #{id}
+    </update>
+
+    <delete id="deleteWsEnterpriseMeasuredrealquantityById" parameterType="Integer">
+        delete from  `t_ws_enterprise_measuredrealquantity`  where id = #{id}
+    </delete>
+    
+</mapper>

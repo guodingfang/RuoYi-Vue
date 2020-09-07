@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsProjectParticipatingUnitMapper">
+
+    <resultMap type="WsProjectParticipatingUnit" id="WsProjectParticipatingUnitResult">
+        <result property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="unitTypeId" column="unit_type_id"/>
+        <result property="unitTypeName" column="type_name"/>
+        <result property="unitOrgcode" column="unit_orgcode"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="regAreaId" column="reg_area_id"/>
+        <result property="regCapital" column="reg_capital"/>
+        <result property="unitNatureCode" column="unit_nature_code"/>
+        <result property="legalPerson" column="legal_person"/>
+        <result property="address" column="address"/>
+        <result property="contacts" column="contacts"/>
+        <result property="contactNumber" column="contact_number"/>
+        <result property="officeNumber" column="office_number"/>
+        <result property="faxNumber" column="fax_number"/>
+        <result property="comment" column="comment"/>
+        <result property="updatedTime" column="updated_time"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="deleted" column="is_delete"/>
+        <result property="provinceId" column="province_id"/>
+        <result property="cityId" column="city_id"/>
+        <result property="countyId" column="county_id"/>
+        <result property="unitTypeParentId" column="unit_type_parent_id"/>
+        <result property="projectName" column="project_name"/>
+        <result property="buildStructureType" column="build_structure_type"/>
+        <result property="projectNo" column="project_no"/>
+        <collection  property="teams"  javaType="java.util.List"  resultMap="teamResult"/>
+    </resultMap>
+    <resultMap id="teamResult" type="WsParticipatingTeam">
+        <result property="id"    column="team_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="unitId"    column="id"    />
+        <result property="teamName"    column="name"    />
+       <!-- <result property="personList"  column="personResult"/>-->
+    </resultMap>
+
+    <resultMap id="personResult" type="WsTeamPerson">
+        <result property="id"    column="person_id"    />
+    </resultMap>
+
+    <resultMap id="TreeResult" type="WsProjectTeamTreeVO">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="nodeId"    column="node_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="nodeType"    column="node_type"    />
+        <result property="label"    column="label"    />
+    </resultMap>
+
+
+
+    <sql id="selectWsProjectParticipatingUnitVo">
+        select pu.id, pu.project_id, pu.unit_name, pu.unit_type_id, pu.unit_orgcode, pu.reg_date, pu.reg_area_id, pu.reg_capital, pu.unit_nature_code, pu.legal_person, pu.address, pu.contacts, pu.contact_number, pu.office_number, pu.fax_number, pu.comment, pu.updated_time,pu.created_time, pu.is_delete,
+        put.parent_id unit_type_parent_id,
+        a.province_id,a.city_id,a.county_id
+        from t_ws_project_participating_unit pu
+        left join(SELECT county.id county_id,city.id city_id , province.id province_id from t_ws_area as  county INNER JOIN t_ws_area as city  on county.parent_id = city.id INNER JOIN t_ws_area province on city.parent_id=province.id ) a on a.county_id=pu.reg_area_id
+        left join t_ws_participating_unit_type put on put.id = pu.unit_type_id
+    </sql>
+
+    <sql id="selectWsProjectParticipatingUnitVo2">
+        select u.id, u.project_id, u.unit_name, u.unit_type_id, u.unit_orgcode, u.reg_date, u.reg_area_id, u.reg_capital, u.unit_nature_code, u.legal_person, u.address, u.contacts, u.contact_number, u.office_number, u.fax_number, u.comment, u.updated_time, u.created_time, u.is_delete,
+               t.id team_id,t.name,
+               ut.type_name,
+               p.project_name,p.project_no,p.build_structure_type
+        from t_ws_project_participating_unit u
+        left join t_ws_participating_team t on u.id =t.unit_id
+        left join t_ws_participating_unit_type ut on ut.id=u.unit_type_id
+        left join t_ws_project p on p.id = u.project_id
+    </sql>
+
+    <select id="selectWsProjectParticipatingUnitList"
+            resultMap="WsProjectParticipatingUnitResult">
+        <include refid="selectWsProjectParticipatingUnitVo2"/>
+        where  u.is_delete ='0'and t.is_delete ='0'
+            <if test="wsProjectParticipatingUnit.projectId != null ">and u.project_id = #{wsProjectParticipatingUnit.projectId} </if>
+            <if test="wsProjectParticipatingUnit.unitName != null  and wsProjectParticipatingUnit.unitName != ''">and u.unit_name like concat('%', #{wsProjectParticipatingUnit.unitName}, '%') </if>
+            <if test="wsProjectParticipatingUnit.unitTypeId != null ">and u.unit_type_id = #{wsProjectParticipatingUnit.unitTypeId} </if>
+            <if test="wsProjectParticipatingUnit.unitOrgcode != null  and wsProjectParticipatingUnit.unitOrgcode != ''">and u.unit_orgcode = #{wsProjectParticipatingUnit.unitOrgcode} </if>
+            <if test="dataScope !=null  and dataScope.size>0">
+                and u.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+    </select>
+
+    <!-- 参建单位项目经历-->
+    <select id="selectWsProjectParticipatingUnitProjectExperience" parameterType="WsProjectParticipatingUnit"
+            resultMap="WsProjectParticipatingUnitResult">
+        <include refid="selectWsProjectParticipatingUnitVo2"/>
+        where  u.is_delete ='1' and u.unit_orgcode = #{unitOrgcode}
+    </select>
+
+    <select id="selectWsProjectParticipatingUnitById" parameterType="Integer" resultMap="WsProjectParticipatingUnitResult">
+        <include refid="selectWsProjectParticipatingUnitVo"/>
+        where pu.id = #{id}
+    </select>
+
+    <insert id="insertWsProjectParticipatingUnit" parameterType="WsProjectParticipatingUnit" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_ws_project_participating_unit (
+
+            <if test="projectId != null ">project_id,</if>
+            <if test="unitName != null  and unitName != ''">unit_name,</if>
+            <if test="unitTypeId != null ">unit_type_id,</if>
+            <if test="unitOrgcode != null  and unitOrgcode != ''">unit_orgcode,</if>
+            <if test="regDate != null ">reg_date,</if>
+            <if test="regAreaId != null ">reg_area_id,</if>
+            <if test="regCapital != null ">reg_capital,</if>
+            <if test="unitNatureCode != null  and unitNatureCode != ''">unit_nature_code,</if>
+            <if test="legalPerson != null  and legalPerson != ''">legal_person,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="contacts != null  and contacts != ''">contacts,</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number,</if>
+            <if test="officeNumber != null  and officeNumber != ''">office_number,</if>
+            <if test="faxNumber != null  and faxNumber != ''">fax_number,</if>
+            <if test="comment != null  and comment != ''">comment,</if>
+            <if test="deleted != null  and deleted != ''">is_delete,</if>
+            created_time,updated_time
+        )values (
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="unitName != null  and unitName != ''">#{unitName},</if>
+            <if test="unitTypeId != null ">#{unitTypeId},</if>
+            <if test="unitOrgcode != null  and unitOrgcode != ''">#{unitOrgcode},</if>
+            <if test="regDate != null ">#{regDate},</if>
+            <if test="regAreaId != null ">#{regAreaId},</if>
+            <if test="regCapital != null ">#{regCapital},</if>
+            <if test="unitNatureCode != null  and unitNatureCode != ''">#{unitNatureCode},</if>
+            <if test="legalPerson != null  and legalPerson != ''">#{legalPerson},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="contacts != null  and contacts != ''">#{contacts},</if>
+            <if test="contactNumber != null  and contactNumber != ''">#{contactNumber},</if>
+            <if test="officeNumber != null  and officeNumber != ''">#{officeNumber},</if>
+            <if test="faxNumber != null  and faxNumber != ''">#{faxNumber},</if>
+            <if test="comment != null  and comment != ''">#{comment},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            sysdate(),sysdate()
+        )
+    </insert>
+
+    <update id="updateWsProjectParticipatingUnit" parameterType="WsProjectParticipatingUnit">
+        update t_ws_project_participating_unit
+        set
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="unitName != null  and unitName != ''">unit_name = #{unitName},</if>
+            <if test="unitTypeId != null ">unit_type_id = #{unitTypeId},</if>
+            <if test="unitOrgcode != null  and unitOrgcode != ''">unit_orgcode = #{unitOrgcode},</if>
+            <if test="regDate != null ">reg_date = #{regDate},</if>
+            <if test="regAreaId != null ">reg_area_id = #{regAreaId},</if>
+            <if test="regCapital != null ">reg_capital = #{regCapital},</if>
+            <if test="unitNatureCode != null  and unitNatureCode != ''">unit_nature_code = #{unitNatureCode},</if>
+            <if test="legalPerson != null  and legalPerson != ''">legal_person = #{legalPerson},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="contacts != null  and contacts != ''">contacts = #{contacts},</if>
+            <if test="contactNumber != null  and contactNumber != ''">contact_number = #{contactNumber},</if>
+            <if test="officeNumber != null  and officeNumber != ''">office_number = #{officeNumber},</if>
+            <if test="faxNumber != null  and faxNumber != ''">fax_number = #{faxNumber},</if>
+            <if test="comment != null  and comment != ''">comment = #{comment},</if>
+            <if test="deleted != null  and deleted != ''">is_delete = #{deleted},</if>
+            updated_time = sysdate()
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsProjectParticipatingUnitById" parameterType="Integer">
+        delete from t_ws_project_participating_unit where id = #{id}
+    </delete>
+
+    <update id="deleteWsProjectParticipatingUnitByIds" parameterType="Integer">
+        update t_ws_project_participating_unit
+        set
+            is_delete ='1'
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="countWsProjectParticipatingUnitInProject" parameterType="WsProjectParticipatingUnit" resultType="int" >
+        select count(*) from t_ws_project_participating_unit
+        where project_id = #{projectId} and unit_type_id = #{unitTypeId}
+        and unit_orgcode=#{unitOrgcode} and  is_delete = 0
+    </select>
+
+
+    <select id="selectProjectTeamTree"  resultMap="TreeResult">
+       	 select * from (
+
+	        select  CONCAT_WS('-','a',p.id) id,  p.id node_id,0 parent_id,p.project_name label,1 node_type,p.id project_id,null unit_id
+            from t_ws_project p
+				where p.is_delete='N'
+            UNION
+            (select
+                 CONCAT_WS('-','b',ppu.project_id,ppu.unit_type_id) id, ppu.unit_type_id node_id, CONCAT_WS('-','a',ppu.project_id) parent_id,put.type_name label,2 node_type,ppu.project_id project_id,ppu.id unit_id
+                from t_ws_project_participating_unit ppu
+                left join t_ws_project p1 on p1.id = ppu.project_id
+                left join t_ws_participating_unit_type put on put.id = ppu.unit_type_id
+                where  ppu.is_delete='0' and p1.is_delete='N'
+                group by ppu.project_id,ppu.unit_type_id
+            )
+            UNION
+            (select
+                 CONCAT_WS('-','c',ppu.project_id,ppu.id) id,ppu.id node_id, CONCAT_WS('-','b',ppu.project_id,ppu.unit_type_id) parent_id,ppu.unit_name label,3 node_type,ppu.project_id project_id,null unit_id
+                from t_ws_project_participating_unit ppu
+                left join t_ws_project p1 on p1.id = ppu.project_id
+                where ppu.is_delete='0'and p1.is_delete='N'
+            )
+            union
+            (SELECT
+                 CONCAT_WS('-','d',pt.id) id,pt.id node_id, CONCAT_WS('-','c',ppu.project_id,ppu.id) parent_id,pt.name label,4 node_type,ppu.project_id project_id,null unit_id
+                FROM t_ws_participating_team pt
+                LEFT JOIN t_ws_project_participating_unit ppu on ppu.id = pt.unit_id
+                where pt.is_delete='0'and  ppu.is_delete='0'
+            )
+
+            ) tree
+
+			WHERE node_id is NOT NULL and parent_id is NOT NULL  and project_id is NOT NULL
+
+            <if test="dataScope !=null and dataScope.size>0">
+                and tree.project_id in (
+                <foreach collection="dataScope" separator="," item="project"  index="index">
+                    #{project.id}
+                </foreach>
+                )
+            </if>
+
+    </select>
+
+</mapper>

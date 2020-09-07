@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsTowerCraneEquipmentMonitorMapper">
+
+    <resultMap type="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" id="WsTowerCraneMonitoringRealtimeResult">
+        <result property="projectId"    column="projectId"    />
+        <result property="towerCraneNum"    column="towerCraneNum"    />
+        <result property="projectNum"    column="projectNum"    />
+        <result property="monitoringEquipmentNum"    column="monitoringEquipmentNum"    />
+        <result property="onlineNum"    column="onlineNum"    />
+        <result property="offlineNum"    column="offlineNum"    />
+        <result property="todayIllegalNum"    column="todayIllegalNum"    />
+        <result property="projectIllegalNum"    column="projectIllegalNum"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="county"    column="county"    />
+        <result property="projectName"    column="projectName"    />
+        <result property="propertyRecordno"    column="propertyRecordno"    />
+        <result property="equipmentName"    column="equipmentName"    />
+        <result property="monitoringEquipmentNo"    column="monitoringEquipmentNo"    />
+        <result property="onlineStatusName"    column="onlineStatusName"    />
+        <result property="violationTime"    column="violationTime"    />
+        <result property="violationContent"    column="violationContent"    />
+        <result property="areaCode"    column="areaCode"    />
+        <result property="number"    column="number"    />
+        <result property="provinceNum"    column="provinceNum"    />
+        <result property="cityNum"    column="cityNum"    />
+        <result property="countyNum"    column="countyNum"    />
+        <result property="projectEquipmentNum"    column="projectEquipmentNum"    />
+    </resultMap>
+
+    <resultMap type="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" id="WsTowerCraneMonitoringStatisticsResult">
+        <result property="projectId"    column="projectId"    />
+        <result property="towerCraneEquipmentNum"    column="towerCraneEquipmentNum"    />
+        <result property="towerCraneMonitoringEquipmentNum"    column="towerCraneMonitoringEquipmentNum"    />
+        <result property="monitoringOnlineRate"    column="monitoringOnlineRate"    />
+        <result property="monitoringOnlineNum"    column="monitoringOnlineNum"    />
+        <result property="violationsNum"    column="violationsNum"    />
+        <result property="proportionProjectViolation"    column="proportionProjectViolation"    />
+        <result property="projectName"    column="projectName"    />
+        <result property="projectNumber"    column="projectNumber"    />
+        <result property="statisticsTime"    column="statisticsTime"    />
+        <result property="days"    column="days"    />
+        <result property="companyId"    column="companyId"    />
+        <result property="faceNumber"    column="faceNumber"    />
+        <result property="violationsNumber"    column="violationsNumber"    />
+        <result property="violationsRate"    column="violationsRate"    />
+        <result property="driverName"    column="driverName"    />
+        <result property="towerCraneEquipmentName"    column="towerCraneEquipmentName"    />
+        <result property="liftingWeight"    column="liftingWeight"    />
+        <result property="hoistingTimes"    column="hoistingTimes"    />
+        <result property="workingHours"    column="workingHours"    />
+        <result property="liftingDistance"    column="liftingDistance"    />
+        <result property="conditionsDate"    column="conditionsDate"    />
+        <result property="towerCraneOnSiteNum"    column="towerCraneOnSiteNum"    />
+        <result property="tonitoringEquipmentNum"    column="tonitoringEquipmentNum"    />
+        <result property="monitorOnLineNum"    column="monitorOnLineNum"    />
+        <result property="monitorOnLineRate"    column="monitorOnLineRate"    />
+        <result property="equipmentViolationRate"    column="equipmentViolationRate"    />
+        <result property="equipmentHoistingNum"    column="equipmentHoistingNum"    />
+        <result property="equipmentViolationNum"    column="equipmentViolationNum"    />
+    </resultMap>
+
+
+    <resultMap type="com.jlkj.project.ws.dto.WsTowerCraneEquipmentDetailsDTO" id="WsTowerCraneEquipmentDetailsResult">
+        <result property="companyId"    column="companyId"    />
+        <result property="companyOrprojectName"    column="companyOrprojectName"    />
+        <result property="towerCraneEquipmentNum"    column="towerCraneEquipmentNum"    />
+        <result property="towerCraneMonitoringEquipmentNum"    column="towerCraneMonitoringEquipmentNum"    />
+        <result property="monitoringOnlineNum"    column="monitoringOnlineNum"    />
+        <result property="monitoringOnlineRate"    column="monitoringOnlineRate"    />
+    </resultMap>
+
+    <resultMap type="com.jlkj.project.ws.dto.WsTowerCraneEquipmentViolationDetailsDTO" id="WsTowerCraneEquipmentViolationDetailsResult">
+        <result property="companyId"    column="companyId"    />
+        <result property="projectId"    column="projectId"    />
+        <result property="startTime"    column="startTime"    />
+        <result property="endTime"    column="endTime"    />
+        <result property="violationTime"    column="violationTime"    />
+        <result property="violationContent"    column="violationContent"    />
+        <result property="projectName"    column="projectName"    />
+        <result property="propertyRightRecordNo"    column="propertyRightRecordNo"    />
+        <result property="equipmentName"    column="equipmentName"    />
+        <result property="monitoringEquipment"    column="monitoringEquipment"    />
+        <result property="companyName"    column="companyName"    />
+    </resultMap>
+
+    <resultMap type="com.jlkj.project.ws.dto.WsTowerCraneEquipmentWorkDetailsDTO" id="WsTowerCraneEquipmentWorkDetailsResult">
+        <result property="monitoringEquipmentNo"    column="monitoringEquipmentNo"    />
+        <result property="projectId"    column="projectId"    />
+        <result property="startTime"    column="startTime"    />
+        <result property="equipmentName"    column="equipmentName"    />
+        <result property="workingHours"    column="workingHours"    />
+        <result property="liftingWeight"    column="liftingWeight"    />
+        <result property="liftingDistance"    column="liftingDistance"    />
+        <result property="days"    column="days"    />
+        <result property="conditionsDate"    column="conditionsDate"    />
+    </resultMap>
+
+    <select id="selectRealTimeMonitoringTowerCraneNum" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select COUNT(*) as towerCraneNum from t_ws_towercrane_equipment t
+        where 1=1
+        and t.presence = '1'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </select>
+
+    <select id="selectRealTimeMonitoringMonitoringEquipmentNum" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select COUNT(*) as monitoringEquipmentNum from t_ws_towercrane_equipment t
+        where 1=1
+        and t.presence = '1'
+        and t.monitoring_equipment != ''
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </select>
+
+    <select id="selectEquipmentNoList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select t.monitoring_equipment as monitoringEquipmentNo from t_ws_towercrane_equipment t
+        where 1=1
+        and t.presence = '1'
+        and (t.monitoring_equipment != '' or t.monitoring_equipment != null)
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </select>
+
+    <select id="selectlistRealtimeDTO" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select t.monitoring_equipment as monitoringEquipmentNo from t_ws_towercrane_equipment t
+        where 1=1
+        and t.presence = '1'
+        and t.monitoring_equipment != ''
+        and t.project_id = #{projectId}
+    </select>
+
+    <select id="selectlistRealtimeDTOProjectNum" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select * from t_ws_towercrane_equipment t
+        where 1=1
+        and t.presence = '1'
+        and t.project_id in
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY t.project_id
+    </select>
+
+    <select id="selectlistRealtimeDTOProjectIds" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select t.monitoring_equipment as monitoringEquipmentNo from t_ws_towercrane_equipment t
+        where 1=1
+        and t.presence = '1'
+        and t.project_id in
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </select>
+
+    <select id="selectOnlineNum" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select SUM(ONLINE_STATUS = '1') as onlineNum,SUM(ONLINE_STATUS = '2') as offlineNum from t_ws_black_box
+        where 1=1
+        and SERIAL_NUMBER in
+        <foreach item="monitoringEquipmentNo" collection="monitoringEquipmentNos" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+    </select>
+
+    <select id="selectTodayIllegalNum" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select COUNT(*) as todayIllegalNum from t_ws_towercrane_illegal
+        where 1=1
+        and whether_illegal = '1'
+        and serial_number in
+        <foreach item="monitoringEquipmentNo" collection="monitoringEquipmentNos" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+    </select>
+
+    <select id="selectProjectIllegalNum" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select * from t_ws_towercrane_illegal
+        where 1=1
+        and whether_illegal = '1'
+        and serial_number in
+        <foreach item="monitoringEquipmentNo" collection="monitoringEquipmentNos" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        group by serial_number
+    </select>
+
+    <select id="selectEquipmentList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        SELECT t2.project_name as projectName,t.property_recordNo as propertyRecordno,t.equipment_name as equipmentName,t.monitoring_equipment as monitoringEquipmentNo,t2.areaCode as region,t2.province as province,t2.city as city,t2.district as county from t_ws_towercrane_equipment t
+        LEFT JOIN t_ws_project t2 on t.project_id = t2.id
+        <where>
+            1=1
+            and t.presence = '1'
+            <if test="towerCraneMonitoringRealtimeDTO.propertyRecordno != null and towerCraneMonitoringRealtimeDTO.propertyRecordno != ''"> and t.property_recordNo like CONCAT('%',#{towerCraneMonitoringRealtimeDTO.propertyRecordno},'%')</if>
+            <if test="towerCraneMonitoringRealtimeDTO.equipmentName != null and towerCraneMonitoringRealtimeDTO.equipmentName != ''"> and t.equipment_name like CONCAT('%',#{towerCraneMonitoringRealtimeDTO.equipmentName},'%')</if>
+            <if test="towerCraneMonitoringRealtimeDTO.projectName != null and towerCraneMonitoringRealtimeDTO.projectName != ''"> and t2.project_name like CONCAT('%',#{towerCraneMonitoringRealtimeDTO.projectName},'%')</if>
+            <if test="towerCraneMonitoringRealtimeDTO.monitoringEquipmentNo != null and towerCraneMonitoringRealtimeDTO.monitoringEquipmentNo != ''"> and t.monitoring_equipment like CONCAT('%',#{towerCraneMonitoringRealtimeDTO.monitoringEquipmentNo},'%')</if>
+            <if test="projectIds != null "> and t.project_id in
+            <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+                #{projectId}
+            </foreach></if>
+            order by t.enter_data desc
+        </where>
+    </select>
+
+    <select id="selectOnlineNumAndOfflineNum" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select
+        CASE
+        when ONLINE_STATUS = '1' then '在线'
+        when ONLINE_STATUS = '2' then '离线'
+        END
+        as onlineStatusName from t_ws_black_box
+        where 1=1
+        and SERIAL_NUMBER = #{monitoringEquipmentNo}
+    </select>
+
+    <select id="selectViolationContent" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select
+        CASE
+        when whether_illegal = '1' then '超重违章'
+        when whether_illegal = '2' then '风速违章'
+        else '暂无数据'
+        END
+        as violationContent,insertion_time as violationTime,serial_number as monitoringEquipmentNo from t_ws_towercrane_illegal
+        where 1=1
+        and serial_number = #{monitoringEquipmentNo}
+        and whether_illegal != '0'
+        <if test="startTime != null and startTime != ''">
+        and date_format(insertion_time,'%Y-%m-%d') <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+        and date_format(insertion_time,'%Y-%m-%d') <![CDATA[<=]]> #{endTime}
+        </if>
+        ORDER BY violationTime desc
+    </select>
+
+    <!--按企业 监控统计 -设备监控分析 7天-->
+    <select id="selectMonitoringEquipmentAnalysisSeven" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        <!--select a.statisticsTime,IFNULL(b.towerCraneMonitoringEquipmentNum,0) as towerCraneMonitoringEquipmentNum
+        from (
+        SELECT curdate() as statisticsTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        ) a left join (
+        select date(t.enter_data) as datetime,SUM(t.monitoring_equipment != '' or t.monitoring_equipment is not null) as towerCraneMonitoringEquipmentNum
+        from t_ws_towercrane_equipment t
+        where 1=1
+        and t.presence = '1'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY datetime
+        ) b on a.statisticsTime = b.datetime
+        ORDER BY a.statisticsTime-->
+
+        SELECT a1.statisticsTime as statisticsTime,sum(a1.towerCraneMonitoringEquipmentNum) as towerCraneMonitoringEquipmentNum from (select a.statisticsTime,IFNULL(b.towerCraneMonitoringEquipmentNum,0) as towerCraneMonitoringEquipmentNum
+        from (
+        SELECT curdate() as statisticsTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        ) a left join (
+        select date(t.enter_data) as datetime,SUM(t.monitoring_equipment != '' or t.monitoring_equipment is not null) as towerCraneMonitoringEquipmentNum
+        from t_ws_towercrane_equipment t
+        where 1=1
+        and t.presence = '1'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY datetime
+        ) b on a.statisticsTime >= b.datetime
+        ORDER BY a.statisticsTime) a1
+        GROUP BY a1.statisticsTime
+    </select>
+
+    <select id="selectMonitoringEquipmentTjs" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        select t.monitoring_equipment as monitoringEquipmentNo
+        from t_ws_towercrane_equipment t
+        where 1=1
+        and t.presence = '1'
+        and t.monitoring_equipment != ''
+        and t.project_id in
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        and date_format(t.enter_data, '%Y-%m-%d') <![CDATA[=]]> #{statisticsTime}
+    </select>
+
+    <select id="selectMonitoringEquipmentTjZxl" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        select *
+        from t_ws_tj_monitor_data_${monitoringEquipmentNo} t
+        where 1=1
+        and date_format(t.INSERTTIME, '%Y-%m-%d') <![CDATA[=]]> #{statisticsTime}
+    </select>
+
+    <select id="selectMonitoringEquipmentAnalysisSevenTj" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT IFNULL(SUM(t.presence = '1') - SUM(t.presence = '2'),0) as towerCraneEquipmentNum from t_ws_towercrane_entranceexit_record t
+        where 1=1
+        and t.project_id in
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        and date_format(t.enter_data, '%Y-%m-%d') <![CDATA[<=]]> #{statisticsTime}
+    </select>
+
+    <!--按企业 监控统计 -设备监控分析 30天-->
+    <select id="selectMonitoringEquipmentAnalysisThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        select a.statisticsTime,IFNULL(b.towerCraneEquipmentNum,0) as towerCraneEquipmentNum,IFNULL(b.towerCraneMonitoringEquipmentNum,0) as towerCraneMonitoringEquipmentNum,IFNULL(b.monitoringOnlineRate,0) as monitoringOnlineRate
+        from (
+        SELECT curdate() as statisticsTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 7 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 8 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 9 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 10 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 11 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 12 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 13 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 14 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 15 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 16 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 17 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 18 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 19 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 20 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 21 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 22 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 23 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 24 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 25 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 26 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 27 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 28 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 29 day) as click_date
+        ) a left join (
+        select date(t.enter_data) as datetime,COUNT(*) as towerCraneEquipmentNum,SUM(t2.monitoring_equipment != '') as towerCraneMonitoringEquipmentNum,ROUND(SUM(t2.monitoring_equipment != '')/COUNT(*) * 100,0) as monitoringOnlineRate
+        from t_ws_towercrane_entranceexit_record t
+        LEFT JOIN t_ws_towercrane_equipment t2 on t.towerCrane_equipment_id = t2.id
+        where 1=1
+        and t.presence = '1'
+        and t.project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        GROUP BY datetime
+        ) b on a.statisticsTime = b.datetime
+        ORDER BY a.statisticsTime
+    </select>
+
+
+    <!--按企业 监控统计 -设备违章分析 7天-->
+    <select id="selectEquipmentViolationAnalysisSeven" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        select a.statisticsTime,IFNULL(b.violationsNum,0) as violationsNum
+        from (
+        SELECT curdate() as statisticsTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        ) a left join (
+        select date(t.insertion_time) as datetime,SUM(t.whether_illegal != '0') as violationsNum
+        from t_ws_towerCrane_illegal t
+        where 1=1
+        and t.serial_number in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        GROUP BY datetime
+        ) b on a.statisticsTime = b.datetime
+        ORDER BY a.statisticsTime
+    </select>
+
+    <!--按企业 监控统计 -设备违章分析 30天-->
+    <select id="selectEquipmentViolationAnalysisThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        select a.statisticsTime,IFNULL(b.violationsNum,0) as violationsNum
+        from (
+        SELECT curdate() as statisticsTime
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 7 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 8 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 9 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 10 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 11 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 12 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 13 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 14 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 15 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 16 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 17 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 18 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 19 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 20 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 21 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 22 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 23 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 24 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 25 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 26 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 27 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 28 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 29 day) as click_date
+        ) a left join (
+        select date(t.insertion_time) as datetime,SUM(t.whether_illegal != '0') as violationsNum
+        from t_ws_towerCrane_illegal t
+        where 1=1
+        and t.serial_number in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        GROUP BY datetime
+        ) b on a.statisticsTime = b.datetime
+        ORDER BY a.statisticsTime
+    </select>
+
+
+    <!--按企业 监控统计 -违章项目占比 7天-->
+    <select id="selectQueryIllegalEquipmentSeven" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT serial_number as monitoringEquipmentNo FROM t_ws_towerCrane_illegal WHERE date_sub(curdate(), interval 6 day)  <![CDATA[<=]]> date(insertion_time)
+        and serial_number in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        and whether_illegal != '0'
+        GROUP BY monitoringEquipmentNo
+    </select>
+
+    <select id="selectProjectIllegalSeven" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT project_id as projectId from t_ws_towercrane_equipment
+        WHERE monitoring_equipment in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        GROUP BY project_id
+    </select>
+
+    <!--按企业 监控统计 -违章项目占比 30天-->
+    <select id="selectQueryIllegalEquipmentThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT serial_number as monitoringEquipmentNo FROM t_ws_towercrane_illegal WHERE date_sub(curdate(), interval 29 day)  <![CDATA[<=]]> date(insertion_time)
+        and serial_number in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        and whether_illegal != '0'
+        GROUP BY monitoringEquipmentNo
+    </select>
+
+    <select id="selectProjectIllegalThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT * from t_ws_towercrane_equipment
+        WHERE monitoring_equipment in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        GROUP BY project_id
+    </select>
+
+    <!--按企业 监控统计 -违章项目排名 7天-->
+    <select id="selectEquipmentNoListByProjectId" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        SELECT monitoring_equipment as monitoringEquipmentNo from t_ws_towercrane_equipment
+        WHERE project_id = #{projectId}
+        and monitoring_equipment != ''
+        and presence = '1'
+    </select>
+
+    <select id="selectEquipmentNoListByProjectIdSeven" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT COUNT(*) as projectNumber FROM t_ws_towerCrane_illegal WHERE date_sub(curdate(), interval 6 day)  <![CDATA[<=]]> date(insertion_time)
+        and serial_number in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        and whether_illegal != '0'
+    </select>
+
+    <select id="selectEquipmentNoListByProjectIdThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT COUNT(*) as projectNumber FROM t_ws_towerCrane_illegal WHERE date_sub(curdate(), interval 29 day)  <![CDATA[<=]]> date(insertion_time)
+        and serial_number in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        and whether_illegal != '0'
+    </select>
+
+    <select id="selectEquipmentViolationList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        SELECT equipment_name as equipmentName,monitoring_equipment as monitoringEquipmentNo from t_ws_towercrane_equipment
+        WHERE
+        project_id = #{projectId}
+    </select>
+
+    <!--设备违章-->
+    <select id="selectEquipmentViolationConditionsDate" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT sum(whether_illegal != '0') as violationsNumber ,convert(sum(whether_illegal != '0')/COUNT(*) * 100,decimal(15,1)) as violationsRate
+        FROM t_ws_towerCrane_illegal
+        WHERE
+        serial_number =  #{monitoringEquipmentNo}
+        and date_format(insertion_time, '%Y-%m-%d') = #{conditionsDate}
+    </select>
+
+    <select id="selectEquipmentViolationConditionsDateSeven" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT sum(whether_illegal != '0') as violationsNumber, convert(sum(whether_illegal != '0')/COUNT(*) * 100,decimal(15,1)) as violationsRate
+        FROM t_ws_towerCrane_illegal WHERE date_sub(curdate(), interval 6 day)  <![CDATA[<=]]> date(insertion_time)
+        and serial_number =  #{monitoringEquipmentNo}
+    </select>
+
+    <select id="selectEquipmentViolationConditionsDateThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT sum(whether_illegal != '0') as violationsNumber , convert(sum(whether_illegal != '0')/COUNT(*) * 100,decimal(15,1)) as violationsRate
+        FROM t_ws_towerCrane_illegal WHERE date_sub(curdate(), interval 29 day)  <![CDATA[<=]]> date(insertion_time)
+        and serial_number =  #{monitoringEquipmentNo}
+    </select>
+
+    <!--设备工作记录-->
+    <select id="selectEquipmentWorkRecordSeven" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT COUNT(*)as hoistingTimes,SUM(t.max_weight) as liftingWeight, abs(SUM(t.lifting_point_height) - SUM(t.unloading_point_height)) as liftingDistance,
+        sum(UNIX_TIMESTAMP(t.unloading_point_time)- UNIX_TIMESTAMP(t.lifting_time)) as workingHours
+        FROM t_ws_towerCrane_illegal t WHERE date_sub(curdate(), interval 6 day)  <![CDATA[<=]]> date(t.insertion_time)
+        and t.serial_number = #{monitoringEquipmentNo}
+    </select>
+
+    <select id="selectEquipmentWorkRecordThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT COUNT(*)as hoistingTimes,SUM(t.max_weight) as liftingWeight, abs(SUM(t.lifting_point_height) - SUM(t.unloading_point_height)) as liftingDistance,
+        sum(UNIX_TIMESTAMP(t.unloading_point_time)- UNIX_TIMESTAMP(t.lifting_time)) as workingHours
+        FROM t_ws_towerCrane_illegal t WHERE date_sub(curdate(), interval 29 day)  <![CDATA[<=]]> date(t.insertion_time)
+        and t.serial_number = #{monitoringEquipmentNo}
+    </select>
+
+    <select id="selectEquipmentWorkRecordData" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT COUNT(*)as hoistingTimes,SUM(t.max_weight) as liftingWeight, abs(SUM(t.lifting_point_height) - SUM(t.unloading_point_height)) as liftingDistance,
+        sum(UNIX_TIMESTAMP(t.unloading_point_time)- UNIX_TIMESTAMP(t.lifting_time)) as workingHours
+        FROM t_ws_towerCrane_illegal t
+        WHERE t.serial_number =  #{monitoringEquipmentNo}
+        and date_format(t.insertion_time, '%Y-%m-%d') = #{conditionsDate}
+    </select>
+
+    <!--自定义-->
+    <select id="selectEquipmentBePresent" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT COUNT(*) as towerCraneOnSiteNum,SUM(monitoring_equipment != '') as tonitoringEquipmentNum from t_ws_towercrane_equipment
+        WHERE
+        project_id in
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        and presence = '1'
+        and date_format(enter_data, '%Y-%m-%d') <![CDATA[<=]]> #{conditionsDate}
+    </select>
+
+    <select id="selectMonitoringEquipmentOrViolation" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        SELECT monitoring_equipment as monitoringEquipmentNo from t_ws_towercrane_equipment
+        WHERE
+        project_id in
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+        and presence = '1'
+        and monitoring_equipment != ''
+        and date_format(enter_data, '%Y-%m-%d') <![CDATA[<=]]> #{conditionsDate}
+    </select>
+
+    <select id="selectMonitoringEquipmentNosOrConditionsDate" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT SUM(ONLINE_STATUS = '1') as monitorOnLineNum FROM t_ws_black_box
+        where SERIAL_NUMBER in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+    </select>
+
+    <select id="selectMonitoringEquipmentNoViolation" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT COUNT(*)as equipmentHoistingNum,SUM(t.whether_illegal != '0') as equipmentViolationNum
+        FROM t_ws_towercrane_illegal t
+        where t.serial_number in
+        <foreach item="monitoringEquipmentNo" collection="monitoringEquipmentNos" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        and date_format(t.insertion_time, '%Y-%m-%d') = #{conditionsDate}
+    </select>
+
+    <!--按企业 监控统计 -违章项目占比 自定义-->
+    <select id="selectQueryIllegalEquipmentSameDay" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT serial_number as monitoringEquipmentNo FROM t_ws_towercrane_illegal WHERE date_format(insertion_time, '%Y-%m-%d') = #{conditionsDate}
+        and serial_number in
+        <foreach item="monitoringEquipmentNo" collection="monitoringEquipmentNos" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        and whether_illegal != '0'
+        GROUP BY monitoringEquipmentNo
+    </select>
+
+    <select id="selectProjectIllegalSameDay" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT * from t_ws_towercrane_equipment
+        WHERE monitoring_equipment in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        GROUP BY project_id
+    </select>
+
+    <select id="selectEquipmentNoListByProjectIdCustom" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT COUNT(*) as projectNumber FROM t_ws_towercrane_illegal WHERE date_format(insertion_time, '%Y-%m-%d') = #{conditionsDate}
+        and serial_number in
+        <foreach item="monitoringEquipmentNo" collection="monitoringEquipmentNos" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        and whether_illegal != '0'
+    </select>
+
+    <!--设备详情-->
+    <select id="selectDeviceDetailsByProjectId" parameterType="com.jlkj.project.ws.dto.WsTowerCraneEquipmentDetailsDTO" resultMap="WsTowerCraneEquipmentDetailsResult">
+        SELECT COUNT(*) as towerCraneEquipmentNum,SUM(monitoring_equipment != '') as towerCraneMonitoringEquipmentNum from t_ws_towercrane_equipment
+        WHERE
+        project_id = #{projectId}
+        and presence = '1'
+    </select>
+
+    <!--违章详情 - 按公司-->
+    <select id="selectViolationDetailsList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneEquipmentViolationDetailsDTO" resultMap="WsTowerCraneEquipmentViolationDetailsResult">
+        SELECT t2.project_name as projectName,t.property_recordNo as propertyRightRecordNo,t.equipment_name as equipmentName,t.monitoring_equipment as monitoringEquipmentNo,t3.enterprise_name as companyName from t_ws_towercrane_equipment t
+        LEFT JOIN t_ws_project t2 on t.project_id = t2.id
+        LEFT JOIN sys_enterprise t3 on t3.enterprise_id = t2.project_unit_id
+        <where>
+            1=1
+            and t.presence = '1'
+            <if test="wsTowerCraneEquipmentViolationDetailsDTO.propertyRightRecordNo != null "> and t.property_recordNo like CONCAT('%',#{wsTowerCraneEquipmentViolationDetailsDTO.propertyRightRecordNo},'%')</if>
+            <if test="wsTowerCraneEquipmentViolationDetailsDTO.equipmentName != null "> and t.equipment_name like CONCAT('%',#{wsTowerCraneEquipmentViolationDetailsDTO.equipmentName},'%')</if>
+            <if test="wsTowerCraneEquipmentViolationDetailsDTO.projectName != null "> and t2.project_name like CONCAT('%',#{wsTowerCraneEquipmentViolationDetailsDTO.projectName},'%')</if>
+            <if test="wsTowerCraneEquipmentViolationDetailsDTO.monitoringEquipment != null "> and t.monitoring_equipment like CONCAT('%',#{wsTowerCraneEquipmentViolationDetailsDTO.monitoringEquipment},'%')</if>
+            <if test="projectIds != null "> and t.project_id in
+                <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+                    #{projectId}
+                </foreach></if>
+            order by t.enter_data desc
+        </where>
+    </select>
+
+    <!--违章详情 - 按项目-->
+    <select id="selectViolationDetailsProjectList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneEquipmentViolationDetailsDTO" resultMap="WsTowerCraneEquipmentViolationDetailsResult">
+        SELECT t2.project_name as projectName,t.property_recordNo as propertyRightRecordNo,t.equipment_name as equipmentName,t.monitoring_equipment as monitoringEquipmentNo,t2.project_unit_id as companyName from t_ws_towercrane_equipment t
+        LEFT JOIN t_ws_project t2 on t.project_id = t2.id
+        <where>
+            1=1
+            and t.presence = '1'
+            <if test="propertyRightRecordNo != null "> and t.property_recordNo like CONCAT('%',#{propertyRightRecordNo},'%')</if>
+            <if test="equipmentName != null "> and t.equipment_name like CONCAT('%',#{equipmentName},'%')</if>
+            <if test="projectName != null "> and t2.project_name like CONCAT('%',#{projectName},'%')</if>
+            <if test="monitoringEquipment != null "> and t.monitoring_equipment like CONCAT('%',#{monitoringEquipment},'%')</if>
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+            order by t.enter_data desc
+        </where>
+    </select>
+
+    <!--工作详情 - 按项目-->
+    <select id="selectWorkDetailsProjectList" parameterType="com.jlkj.project.ws.dto.WsTowerCraneEquipmentWorkDetailsDTO" resultMap="WsTowerCraneEquipmentWorkDetailsResult">
+        SELECT t.equipment_name as equipmentName,t.monitoring_equipment as monitoringEquipmentNo from t_ws_towercrane_equipment t
+        <where>
+            1=1
+            <if test="equipmentName != null "> and t.equipment_name like CONCAT('%',#{equipmentName},'%')</if>
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+            order by t.enter_data desc
+        </where>
+    </select>
+
+    <select id="selectTowerCraneEquipmentWorkDetails" parameterType="com.jlkj.project.ws.dto.WsTowerCraneEquipmentWorkDetailsDTO" resultMap="WsTowerCraneEquipmentWorkDetailsResult">
+        SELECT t.max_weight as liftingWeight, abs(t.lifting_point_height - t.unloading_point_height) as liftingDistance,UNIX_TIMESTAMP(t.unloading_point_time)- UNIX_TIMESTAMP(t.lifting_time) as workingHours,t.lifting_time as startTime
+        FROM t_ws_towerCrane_illegal t
+        WHERE
+        t.serial_number = #{monitoringEquipmentNo}
+    </select>
+
+    <!--司机人脸设备查询 - 按项目-->
+    <select id="selectEquipmentNoListBymonitoringEquipmentNos" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT t2.serialNumber as faceNumber,t.monitoring_equipment as monitoringEquipmentNo from t_ws_towercrane_equipment t
+        LEFT JOIN t_ws_project_equipment t2 on t.face_id = t2.id
+        where
+        t.monitoring_equipment in
+        <foreach item="monitoringEquipmentNo" collection="array" open="(" separator="," close=")">
+            #{monitoringEquipmentNo}
+        </foreach>
+        and t.face_id != ''
+    </select>
+
+    <select id="selectEquipmentNoListByFaceNumber" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT t.USERNAME as driverName
+        FROM t_ws_monitor_workauth_info t
+        WHERE
+        t.SERIAL_NUMBER = #{faceNumber}
+        ORDER BY t.CREATE_DATE DESC LIMIT 0,1
+    </select>
+
+    <select id="selectEquipmentNoListByMonitoringEquipmentNo" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT sum(whether_illegal != '0') as violationsNumber,
+        convert(sum(whether_illegal != '0')/COUNT(*) * 100,decimal(15,1)) as violationsRate
+        FROM t_ws_towerCrane_illegal t
+        WHERE
+        t.serial_number = #{monitoringEquipmentNo}
+        and date_sub(curdate(), interval 6 day) <![CDATA[<=]]> date(t.insertion_time)
+    </select>
+
+    <select id="selectEquipmentNoListByMonitoringEquipmentNoThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT sum(whether_illegal != '0') as violationsNumber,
+        convert(sum(whether_illegal != '0')/COUNT(*) * 100,decimal(15,1)) as violationsRate
+        FROM t_ws_towerCrane_illegal t
+        WHERE
+        t.serial_number = #{monitoringEquipmentNo}
+        and date_sub(curdate(), interval 29 day) <![CDATA[<=]]> date(t.insertion_time)
+    </select>
+
+    <select id="selectEquipmentMonitoringEquipmentNoOneDay" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringStatisticsDTO" resultMap="WsTowerCraneMonitoringStatisticsResult">
+        SELECT sum(t.whether_illegal != '0') as violationsNumber,
+        convert(sum(t.whether_illegal != '0')/COUNT(*) * 100,decimal(15,1)) as violationsRate
+        FROM t_ws_towerCrane_illegal t
+        WHERE
+        t.serial_number = #{monitoringEquipmentNo}
+        and date_format(t.insertion_time, '%Y-%m-%d') = #{conditionsDate}
+    </select>
+
+    <select id="selectProjectDetailsQuerySeven" parameterType="com.jlkj.project.ws.dto.WsTowerCraneEquipmentWorkDetailsDTO" resultMap="WsTowerCraneEquipmentWorkDetailsResult">
+        select
+        insertion_time as startTime,sum(UNIX_TIMESTAMP(t.unloading_point_time)- UNIX_TIMESTAMP(t.lifting_time)) as workingHours,
+        convert(t.max_weight/1000,decimal(15,1)) as liftingWeight,abs(t.lifting_point_height - t.unloading_point_height) as liftingDistance from t_ws_towerCrane_illegal
+        where 1=1
+        and serial_number = #{monitoringEquipmentNo}
+        and date_sub(curdate(), interval 6 day) <![CDATA[<=]]> date(insertion_time)
+        ORDER BY startTime desc
+    </select>
+
+    <select id="selectProjectDetailsQueryThirty" parameterType="com.jlkj.project.ws.dto.WsTowerCraneEquipmentWorkDetailsDTO" resultMap="WsTowerCraneEquipmentWorkDetailsResult">
+        select
+        insertion_time as startTime,sum(UNIX_TIMESTAMP(t.unloading_point_time)- UNIX_TIMESTAMP(t.lifting_time)) as workingHours,
+        convert(t.max_weight/1000,decimal(15,1)) as liftingWeight,abs(t.lifting_point_height - t.unloading_point_height) as liftingDistance from t_ws_towerCrane_illegal
+        where 1=1
+        and serial_number = #{monitoringEquipmentNo}
+        and date_sub(curdate(), interval 29 day) <![CDATA[<=]]> date(insertion_time)
+        ORDER BY startTime desc
+    </select>
+
+    <select id="selectProjectDetailsQueryToday" parameterType="com.jlkj.project.ws.dto.WsTowerCraneEquipmentWorkDetailsDTO" resultMap="WsTowerCraneEquipmentWorkDetailsResult">
+        select
+        insertion_time as startTime,sum(UNIX_TIMESTAMP(t.unloading_point_time)- UNIX_TIMESTAMP(t.lifting_time)) as workingHours,
+        convert(t.max_weight/1000,decimal(15,1)) as liftingWeight,abs(t.lifting_point_height - t.unloading_point_height) as liftingDistance from t_ws_towerCrane_illegal
+        where 1=1
+        and serial_number = #{monitoringEquipmentNo}
+        and date_format(insertion_time, '%Y-%m-%d') = #{conditionsDate}
+        ORDER BY startTime desc
+    </select>
+
+
+
+    <!-- 按区域获取设备列表数据 -->
+    <select id="selectDeviceListByArea" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select
+        p.id as projectId,p.project_name as projectName
+        FROM t_ws_project p
+        left join t_ws_towercrane_equipment em   on em.project_id = p.id
+        left join (SELECT county.code county_code,county.name county_name, city.code city_code ,city.name city_name ,province.code province_code ,province.name province_name,county.code code ,county.ancestors from t_ws_area as  county INNER JOIN t_ws_area as city  on county.PARENT_ID = city.id INNER JOIN t_ws_area province on city.PARENT_ID=province.id) a on p.areaCode = a.code
+        where p.is_delete='N'
+        <if test="areaCode != null and areaCode!=''">
+            and (city_code=#{areaCode} or province_code=#{areaCode} or county_code=#{areaCode})
+        </if>
+
+    </select>
+
+    <select id="selectDeviceListByAreaProject" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select
+        p.id as projectId,p.project_name as projectName
+        FROM t_ws_project p
+        left join t_ws_towercrane_equipment em   on em.project_id = p.id
+        left join (SELECT county.code county_code,county.name county_name, city.code city_code ,city.name city_name ,province.code province_code ,province.name province_name,county.code code ,county.ancestors from t_ws_area as  county INNER JOIN t_ws_area as city  on county.PARENT_ID = city.id INNER JOIN t_ws_area province on city.PARENT_ID=province.id) a on p.areaCode = a.code
+        where p.is_delete='N'
+        <if test="areaCode != null and areaCode!=''">
+            and (city_code=#{areaCode} or province_code=#{areaCode} or county_code=#{areaCode})
+        </if>
+        group by projectId
+    </select>
+
+    <select id="selectListByAreaProject" parameterType="com.jlkj.project.ws.dto.WsTowerCraneMonitoringRealtimeDTO" resultMap="WsTowerCraneMonitoringRealtimeResult">
+        select
+        count(*) as  projectEquipmentNum
+        FROM t_ws_towercrane_equipment t
+        where t.presence='N'
+        and t.project_id = #{projectId}
+    </select>
+</mapper>

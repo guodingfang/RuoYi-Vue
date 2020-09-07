@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.intelligence.mapper.WsTowercraneEquipmentMapper">
+    
+    <resultMap type="WsTowercraneEquipment" id="WsTowercraneEquipmentResult">
+        <result property="id"    column="id"    />
+        <result property="selfNumbering"    column="self_numbering"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="propertyRecordno"    column="property_recordNo"    />
+        <result property="equipmentName"    column="equipment_name"    />
+        <result property="enterData"    column="enter_data"    />
+        <result property="exitData"    column="exit_data"    />
+        <result property="monitoringEquipment"    column="monitoring_equipment"    />
+        <result property="cliverVideoId"    column="cliver_video_id"    />
+        <result property="faceId"    column="face_id"    />
+        <result property="propertyUnit"    column="property_unit"    />
+        <result property="installUnit"    column="install_unit"    />
+        <result property="productionUnit"    column="production_unit"    />
+        <result property="specificationsModel"    column="specifications_model"    />
+        <result property="presence"    column="presence"    />
+        <result property="coordinateX"    column="coordinate_x"    />
+        <result property="coordinateY"    column="coordinate_y"    />
+        <result property="radius"    column="radius"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="faceNumber"    column="faceNumber"    />
+        <result property="videoEquipmentNo"    column="videoEquipmentNo"    />
+        <result property="fieldlayoutAddress"    column="fieldlayoutAddress"    />
+        <result property="fieldlayoutId"    column="fieldlayoutId"    />
+    </resultMap>
+
+    <sql id="selectWsTowercraneEquipmentVo">
+        select t.id, t.self_numbering, t.project_id, t.property_recordNo, t.equipment_name, t.enter_data, t.exit_data, t.monitoring_equipment, t.cliver_video_id, t.face_id, t.property_unit, t.install_unit, t.production_unit, t.specifications_model, t.presence, t.coordinate_x, t.coordinate_y,t.radius,t2.fieldLayout_address as fieldlayoutAddress,t2.id as fieldlayoutId,t3.equipment_serialNumber as videoEquipmentNo,t4.serialNumber as faceNumber from t_ws_towercrane_equipment t
+        left join t_ws_project_field_layout t2 on t.project_id = t2.project_id and t2.equipment_type = '1'
+        left join t_ws_video_channel_management t3 on t.cliver_video_id = t3.id
+        left join t_ws_project_equipment t4 on t.face_id = t4.id
+    </sql>
+
+    <select id="selectWsTowercraneEquipmentList" parameterType="WsTowercraneEquipment" resultMap="WsTowercraneEquipmentResult">
+        SELECT t.id,t.self_numbering,t.property_recordNo,t.equipment_name,t.enter_data,
+                t2.serialNumber as faceNumber,
+                concat_ws("-",t3.equipment_serialNumber,t3.channel_number) as videoEquipmentNo,t.monitoring_equipment,t.coordinate_x,t.coordinate_y,t.radius FROM t_ws_towercrane_equipment t
+        LEFT JOIN t_ws_project_equipment t2 ON t.face_id = t2.id
+        LEFT JOIN t_ws_video_channel_management t3 ON t.cliver_video_id = t3.id
+        LEFT JOIN t_ws_project_equipment t4 on t.monitoring_equipment = t4.serialNumber
+        <where>  
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+            <if test="presence != null "> and t.presence = #{presence}</if>
+        </where>
+        order by t.enter_data desc
+    </select>
+    
+    <select id="selectWsTowercraneEquipmentById" parameterType="WsTowercraneEquipment" resultMap="WsTowercraneEquipmentResult">
+        <include refid="selectWsTowercraneEquipmentVo"/>
+        where t.id = #{id}
+    </select>
+        
+    <insert id="insertWsTowercraneEquipment" parameterType="WsTowercraneEquipment" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ws_towercrane_equipment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="selfNumbering != null  and selfNumbering != ''">self_numbering,</if>
+            <if test="projectId != null ">project_id,</if>
+            <if test="propertyRecordno != null  and propertyRecordno != ''">property_recordNo,</if>
+            <if test="equipmentName != null  and equipmentName != ''">equipment_name,</if>
+            <if test="enterData != null ">enter_data,</if>
+            <if test="exitData != null ">exit_data,</if>
+            <if test="monitoringEquipment != null  and monitoringEquipment != ''">monitoring_equipment,</if>
+            <if test="cliverVideoId != null ">cliver_video_id,</if>
+            <if test="faceId != null ">face_id,</if>
+            <if test="propertyUnit != null  and propertyUnit != ''">property_unit,</if>
+            <if test="installUnit != null  and installUnit != ''">install_unit,</if>
+            <if test="productionUnit != null  and productionUnit != ''">production_unit,</if>
+            <if test="specificationsModel != null  and specificationsModel != ''">specifications_model,</if>
+            <if test="presence != null ">presence,</if>
+            <if test="coordinateX != null  and coordinateX != ''">coordinate_x,</if>
+            <if test="coordinateY != null  and coordinateY != ''">coordinate_y,</if>
+            <if test="radius != null  and radius != ''">radius,</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete,</if>
+            <if test="createdBy != null ">created_by,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="updatedBy != null ">updated_by,</if>
+            <if test="updatedTime != null ">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="selfNumbering != null  and selfNumbering != ''">#{selfNumbering},</if>
+            <if test="projectId != null ">#{projectId},</if>
+            <if test="propertyRecordno != null  and propertyRecordno != ''">#{propertyRecordno},</if>
+            <if test="equipmentName != null  and equipmentName != ''">#{equipmentName},</if>
+            <if test="enterData != null ">#{enterData},</if>
+            <if test="exitData != null ">#{exitData},</if>
+            <if test="monitoringEquipment != null  and monitoringEquipment != ''">#{monitoringEquipment},</if>
+            <if test="cliverVideoId != null ">#{cliverVideoId},</if>
+            <if test="faceId != null ">#{faceId},</if>
+            <if test="propertyUnit != null  and propertyUnit != ''">#{propertyUnit},</if>
+            <if test="installUnit != null  and installUnit != ''">#{installUnit},</if>
+            <if test="productionUnit != null  and productionUnit != ''">#{productionUnit},</if>
+            <if test="specificationsModel != null and specificationsModel != ''">#{specificationsModel},</if>
+            <if test="presence != null ">#{presence},</if>
+            <if test="coordinateX != null  and coordinateX != ''">#{coordinateX},</if>
+            <if test="coordinateY != null  and coordinateY != ''">#{coordinateY},</if>
+            <if test="radius != null  and radius != ''">#{radius},</if>
+            <if test="isDelete != null  and isDelete != ''">#{isDelete},</if>
+            <if test="createdBy != null ">#{createdBy},</if>
+            <if test="createdTime != null ">#{createdTime},</if>
+            <if test="updatedBy != null ">#{updatedBy},</if>
+            <if test="updatedTime != null ">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsTowercraneEquipment" parameterType="WsTowercraneEquipment">
+        update t_ws_towercrane_equipment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="selfNumbering != null  and selfNumbering != ''">self_numbering = #{selfNumbering},</if>
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="propertyRecordno != null  and propertyRecordno != ''">property_recordNo = #{propertyRecordno},</if>
+            <if test="equipmentName != null  and equipmentName != ''">equipment_name = #{equipmentName},</if>
+            <if test="enterData != null ">enter_data = #{enterData},</if>
+            <if test="exitData != null ">exit_data = #{exitData},</if>
+            monitoring_equipment = #{monitoringEquipment},
+            cliver_video_id = #{cliverVideoId},
+            face_id = #{faceId},
+            <if test="propertyUnit != null  and propertyUnit != ''">property_unit = #{propertyUnit},</if>
+            <if test="installUnit != null  and installUnit != ''">install_unit = #{installUnit},</if>
+            <if test="productionUnit != null  and productionUnit != ''">production_unit = #{productionUnit},</if>
+            <if test="specificationsModel != null and specificationsModel != ''">specifications_model = #{specificationsModel},</if>
+            <if test="presence != null ">presence = #{presence},</if>
+            <if test="coordinateX != null  and coordinateX != ''">coordinate_x = #{coordinateX},</if>
+            <if test="coordinateY != null  and coordinateY != ''">coordinate_y = #{coordinateY},</if>
+            <if test="radius != null  and radius != ''">radius = #{radius},</if>
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsTowercraneEquipmentById" parameterType="Integer">
+        delete from t_ws_towercrane_equipment where id = #{id}
+    </delete>
+
+    <delete id="deleteWsTowercraneEquipmentByIds" parameterType="String">
+        delete from t_ws_towercrane_equipment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectlistEquipment" parameterType="WsTowercraneEquipment" resultMap="WsTowercraneEquipmentResult">
+        SELECT t.* FROM t_ws_towercrane_equipment t
+        where 1=1
+        and t.project_id = #{projectId}
+        and t.presence = '1'
+        and (t.coordinate_x = '' or t.coordinate_x is null)
+        and (t.coordinate_y = '' or t.coordinate_y is null)
+    </select>
+
+
+    <update id="updateWsTowercraneEquipmentList" parameterType="java.util.List">
+        update t_ws_towercrane_equipment
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="coordinate_x =case" suffix="end,">
+                <foreach collection="wsTowercraneEquipmentList" item="item" index="index">
+                    <if test="item.coordinateX !=null">
+                        when coordinate_x=#{item.id} then #{item.coordinateX}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" coordinate_y =case" suffix="end,">
+                <foreach collection="wsTowercraneEquipmentList" item="item" index="index">
+                    <if test="item.coordinateY !=null">
+                        when coordinate_y=#{item.id} then #{item.coordinateY}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="radius =case" suffix="end," >
+                <foreach collection="wsTowercraneEquipmentList" item="item" index="index">
+                    <if test="item.radius !=null">
+                        when radius=#{item.id} then #{item.radius}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="wsTowercraneEquipmentList" separator="or" item="item" index="index" >
+            id=#{item.id}
+        </foreach>
+    </update>
+
+
+    <select id="listHookVideoRepeat" parameterType="WsTowercraneEquipment" resultMap="WsTowercraneEquipmentResult">
+        SELECT * FROM t_ws_towercrane_equipment t
+        where 1=1
+        and t.cliver_video_id = #{cliverVideoId}
+    </select>
+
+    <update id="editWsTowercraneEquipment" parameterType="WsTowercraneEquipment">
+        update t_ws_towercrane_equipment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="selfNumbering != null  and selfNumbering != ''">self_numbering = #{selfNumbering},</if>
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="propertyRecordno != null  and propertyRecordno != ''">property_recordNo = #{propertyRecordno},</if>
+            <if test="equipmentName != null  and equipmentName != ''">equipment_name = #{equipmentName},</if>
+            <if test="enterData != null ">enter_data = #{enterData},</if>
+            <if test="exitData != null ">exit_data = #{exitData},</if>
+            <if test="monitoringEquipment != null ">monitoring_equipment = #{monitoringEquipment},</if>
+            <if test="cliverVideoId != null ">cliver_video_id = #{cliverVideoId},</if>
+            <if test="faceId != null ">face_id = #{faceId},</if>
+            <if test="propertyUnit != null  and propertyUnit != ''">property_unit = #{propertyUnit},</if>
+            <if test="installUnit != null  and installUnit != ''">install_unit = #{installUnit},</if>
+            <if test="productionUnit != null  and productionUnit != ''">production_unit = #{productionUnit},</if>
+            <if test="specificationsModel != null and specificationsModel != ''">specifications_model = #{specificationsModel},</if>
+            <if test="presence != null ">presence = #{presence},</if>
+            coordinate_x = #{coordinateX},
+            coordinate_y = #{coordinateY},
+            radius = #{radius},
+            <if test="isDelete != null  and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="createdBy != null ">created_by = #{createdBy},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="updatedBy != null ">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null ">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="getSelfNumbering" parameterType="WsTowercraneEquipment" resultMap="WsTowercraneEquipmentResult">
+		select id, self_numbering from t_ws_towercrane_equipment where self_numbering = #{selfNumbering} and project_id = #{projectId}
+	</select>
+</mapper>

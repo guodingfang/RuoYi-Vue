@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jlkj.project.ws.mapper.WsAttendanceRegisterMapper">
+    
+    <resultMap type="WsAttendanceRegister" id="WsAttendanceRegisterResult">
+        <result property="id"    column="id"    />
+        <result property="uuid"    column="uuid"    />
+        <result property="personId"    column="person_id"    />
+    </resultMap>
+
+    <sql id="selectWsAttendanceRegisterVo">
+        select id, uuid, person_id from t_ws_attendance_register
+    </sql>
+
+    <select id="selectWsAttendanceRegisterList" parameterType="WsAttendanceRegister" resultMap="WsAttendanceRegisterResult">
+        <include refid="selectWsAttendanceRegisterVo"/>
+        <where>  
+            <if test="uuid != null  and uuid != ''"> and uuid = #{uuid}</if>
+            <if test="personId != null "> and person_id = #{personId}</if>
+        </where>
+    </select>
+    
+    <select id="selectWsAttendanceRegisterById" parameterType="Integer" resultMap="WsAttendanceRegisterResult">
+        <include refid="selectWsAttendanceRegisterVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWsAttendanceRegister" parameterType="WsAttendanceRegister">
+        insert into t_ws_attendance_register
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="uuid != null  and uuid != ''">uuid,</if>
+            <if test="personId != null ">person_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="uuid != null  and uuid != ''">#{uuid},</if>
+            <if test="personId != null ">#{personId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWsAttendanceRegister" parameterType="WsAttendanceRegister">
+        update t_ws_attendance_register
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uuid != null  and uuid != ''">uuid = #{uuid},</if>
+            <if test="personId != null ">person_id = #{personId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWsAttendanceRegisterById" parameterType="Integer">
+        delete from t_ws_attendance_register where id = #{id}
+    </delete>
+
+    <delete id="deleteWsAttendanceRegisterByIds" parameterType="String">
+        delete from t_ws_attendance_register where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
