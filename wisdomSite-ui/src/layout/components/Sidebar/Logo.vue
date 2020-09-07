@@ -94,14 +94,41 @@ export default {
       if (data.auth === 0) {
         return false
       }
+      const { curRole } = this.$store.state.user;
       const {id, type} = data
       console.log('data', data);
       organizationSelect({organizationId: id, type}).then(res => {
         this.$store.dispatch('SetCurrentRole', data);
-        this.reload()
+        this._routerChange({
+          beforeRoute: curRole,
+          currentRoute: data,
+        });
+        // this.reload()
       })
       // this.queryParams.enterpriseId = data.id;
       // this.getList();
+    },
+    _routerChange({beforeRoute, currentRoute}) {
+      if(beforeRoute.type !== currentRoute.type) {
+        const enterprise = ['TowerMonitor', 'ElevatorEnterprise', 'DustEnterprise'];      // 企业
+        const project = ['ProjTowerMonitor', 'ElevatorProject', 'DustProject'];           // 项目
+        if(currentRoute.type === 0) {
+          project.map((item, index) => {
+            if (item === this.$route.name) {
+              this.$router.push({ name: enterprise[index] });
+            }
+          })
+        }
+        if(currentRoute.type === 1) {
+          enterprise.map((item, index) => {
+            if (item === this.$route.name) {
+              this.$router.push({ name: project[index] });
+            }
+          })
+        }
+      } else {
+        this.reload()
+      }
     },
   },
   watch: {

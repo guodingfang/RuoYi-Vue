@@ -34,15 +34,16 @@ const permission = {
       })
     },
     // 设置路由
-    SetRoutes({ commit, state, rootState }) {
-      const { user: { curRole } } = rootState;
+    SetRoutes({ commit, state, rootState }, role) {
+      const _role = role || rootState.user.curRole;
+
       const { originalRoutes } = state;
       if(originalRoutes.length === 0) {
         commit('SET_NEW_ROUTES', originalRoutes);
         return;
       }
 
-      const routes = _setRoutes(originalRoutes, curRole)
+      const routes = _setRoutes(originalRoutes, _role)
       commit('SET_NEW_ROUTES', routes);
     }
   }
@@ -85,7 +86,11 @@ const _setRoutes = (routes, role) => {
           _children = _children.filter(v => v.name !== item)
         })
       }
-      _routes.push({...route, children: _children});
+      console.log('_children', _children);
+      _routes.push({
+        ...route,
+        children: _children.map(item => ({...item, meta: { ...item.meta, title:  /(-项目|-企业)$/.test(item.meta.title) ? item.meta.title.match(/(.+)(-项目|-企业)$/)[1] : item.meta.title } }))
+      });
     } else {
       _routes.push(route);
     }
