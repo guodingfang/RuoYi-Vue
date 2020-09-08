@@ -30,9 +30,8 @@
         <button class="control-btn zoom" @click="doCapture">抓拍</button>
         <button class="control-btn zoom" @click="playBack">回放</button>
       </div>
-      <div class="mt20">
+      <div class="mt20" v-if="showCalendar">
         <el-calendar>
-          <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
           <template
             slot="dateCell"
             slot-scope="{date, data}"
@@ -77,7 +76,8 @@
           minHeight: '600px'
         },
         playMode: 'hls',
-        playUrl: ''
+        playUrl: '',
+        showCalendar: false,
       }
     },
     mounted() {
@@ -168,6 +168,7 @@
       },
       playBack() {
         // this.getPlayUrl();
+        this.showCalendar = !this.showCalendar;
       },
       downloadIamge(imgsrc, name) {
         let _this = this
@@ -216,7 +217,7 @@
       font-size: 14px;
       border: 1px solid #09a17b;
       margin-left: 5px;
-      padding: 0 16px;
+      padding: 0 12px;
       .ctrl-group{
         display: flex;
         justify-content: space-between;
