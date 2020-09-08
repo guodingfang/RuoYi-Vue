@@ -60,6 +60,7 @@
       :isCreate="isCreate"
       :dialogFlag.sync="locationDialogFlag"
       :dataForms.sync="locationData"
+      :selectTableData.sync="selectTableData"
       @query="getMeasureList"
     />
     <measure-dialog
@@ -71,6 +72,7 @@
     <detail-dialog
       :dialogFlag.sync="detialDialogFlag"
       :dataForms.sync="detailData"
+      :selectTableData.sync="selectTableData"
       @query="getMeasureList"
       @refresh="refreshDetail"
     />
@@ -130,6 +132,7 @@
         ],
         total: 0,
         tableData: [],
+        selectTableData: [],
         queryParams: {
           measuredLocation: undefined,
           planImageAddres	: undefined,
@@ -169,12 +172,24 @@
       //查看详情
       async lookDetail(id) {
         const { data } = await getMeasureDetail(id);
+        this.getSelectTableData({id: data.wsEnterpriseMeasuredrealquantityMeasuredLocation.respectiveRegionId})
         this.detailData = data;
         this.detialDialogFlag = true;
       },
       async refreshDetail(id) {
         const { data } = await getMeasureDetail(id);
         this.detailData = data;
+      },
+      //获取所选图片的所有点信息
+      getSelectTableData({ id, editId = '' }) {
+        const _selectTableData = this.tableData.filter(item => item.respectiveRegionId === id);
+        console.log('_selectTableData', _selectTableData, 'editId', editId);
+        this.selectTableData = _selectTableData.map(item => ({
+          center: [Number(item.coordinateX||0), Number(item.coordinateY||0)],
+          radius: 6,
+          color: item.id === editId ? 'yellow' : 'red'
+        }));
+        console.log('selectTableData', this.selectTableData);
       },
       //获取工程下的实测实量
       getMeasureList() {
@@ -233,12 +248,16 @@
           planImageAddres: res.data[0].planImageAddres,
           projectId: res.data[0].projectId
         }
+        this.getSelectTableData({id: data.id});
         this.isCreate = true;
         this.locationDialogFlag = true;
       },
+      //编辑点位
       async editLocation(row) {
+        console.log('row', row);
         this.isCreate = false;
         this.locationData = row;
+        this.getSelectTableData({id: row.respectiveRegionId, editId: row.id});
         this.locationDialogFlag = true;
       },
       async lockLocation(id, status) {

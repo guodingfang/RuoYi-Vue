@@ -83,6 +83,7 @@
     <marker-dialog
       :isCreate="false"
       :dialogFlag.sync="markerMialogFlag"
+      :selectTableData.sync="selectTableData"
       :dataForms.sync="mapData"
       :readOnly="true"
     />
@@ -122,6 +123,10 @@
         type: Object,
         default: () => {},
       },
+      selectTableData: {
+        type: Array,
+        default: () => [],
+      }
     },
     data() {
       return {

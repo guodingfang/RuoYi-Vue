@@ -86,7 +86,7 @@ const _setRoutes = (routes, role) => {
           _children = _children.filter(v => v.name !== item)
         })
       }
-      console.log('_children', _children);
+
       _routes.push({
         ...route,
         children: _children.map(item => ({...item, meta: { ...item.meta, title:  /(-项目|-企业)$/.test(item.meta.title) ? item.meta.title.match(/(.+)(-项目|-企业)$/)[1] : item.meta.title } }))

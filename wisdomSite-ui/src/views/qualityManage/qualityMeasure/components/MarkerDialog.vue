@@ -20,13 +20,25 @@
           :fillOpacity="1"
         />
         <l-circle-marker
-          v-if="!isCreate"
+          v-for="(star, index) in selectTableData"
+          :key="index"
+
           :lat-lng="star.center"
           :radius="star.radius"
           :color="star.color"
           :fillColor="star.color"
           :fillOpacity="1"
         />
+<!--去除单点-->
+<!--        <l-circle-marker-->
+<!--          v-if="!isCreate"-->
+<!--          :lat-lng="star.center"-->
+<!--          :radius="star.radius"-->
+<!--          :color="star.color"-->
+<!--          :fillColor="star.color"-->
+<!--          :fillOpacity="1"-->
+<!--        />-->
+
 <!--        <l-marker-->
 <!--          v-for="star in stars"-->
 <!--          :key="star.name"-->
@@ -37,7 +49,11 @@
 <!--        </l-marker>-->
       </l-map>
     </div>
-    <div class="legend"><span class="red"></span>已标记<span class="blue"></span>现标记</div>
+    <div class="legend">
+      <span class="red"></span> 已标记
+      <span class="yellow"></span> 修改标记
+      <span class="blue"></span> 现标记
+    </div>
     <div slot="footer" v-if="!readOnly">
       <el-button type="primary" @click="setPoint">保存</el-button>
     </div>
@@ -71,6 +87,10 @@
       dataForms: {
         type: Object,
         default: () => {},
+      },
+      selectTableData: {
+        type: Array,
+        default: () => [],
       },
       isCreate: {
         type: Boolean,
@@ -206,6 +226,9 @@
       border-radius: 50%;
       &.blue{
         background-color: blue;
+      }
+      &.yellow {
+        background-color: yellow;
       }
       &.red{
         background-color: red;

@@ -28,6 +28,7 @@
       :isCreate="isCreate"
       :dialogFlag.sync="markerMialogFlag"
       :dataForms.sync="mapData"
+      :selectTableData.sync="selectTableData"
       @mChange="mChange"
     />
   </el-dialog>
@@ -51,6 +52,10 @@
         required: true,
         type: Boolean,
         default: false,
+      },
+      selectTableData: {
+        type: Array,
+        default: () => [],
       },
       isCreate: {
         type: Boolean,
