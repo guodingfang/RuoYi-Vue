@@ -110,9 +110,9 @@
             const center = this.getCenter();
             if (mapZoom < 8) {
               _this.queryParams.zoom = 1;
-            } else if (mapZoom < 13) {
+            } else if (mapZoom < 11) {
               _this.queryParams.zoom = 2;
-            } else if (mapZoom < 15) {
+            } else if (mapZoom < 13) {
               _this.queryParams.zoom = 3;
             } else {
               _this.queryParams.zoom = 4;
@@ -185,10 +185,14 @@
           padding: '2px 3px',
           cursor: 'pointer'
         });
-        label.addEventListener('click', () => {
+        label.addEventListener('click', (e) => {
           if(this.queryParams.zoom===4) {
-            // this.$parent.$parent.activeName = 'second';
-            console.log('我点了项目',this.$parent)
+            this.$emit('click-stats', {
+              projectId: String(info.projectId)
+            })
+            // this.$parent.$parent.currentName = 'second';
+            // this.$parent.$parent.value = 'second';
+            // console.log('我点了项目',this.$parent)
           } else {
             this.map.setCenter(point)
             this.map.setZoom(zoom)
@@ -210,17 +214,17 @@
             case 2:
               p.address = p.city;
               p.deviceNumber = p.cityNum;
-              _this.addMapLabel(p, 13);
+              _this.addMapLabel(p, 11);
               break;
             case 3:
               p.address = p.city;
               p.deviceNumber = p.cityNum;
-              _this.addMapLabel(p, 15);
+              _this.addMapLabel(p, 13);
               break;
             case 4:
               p.address = p.projectName;
               p.deviceNumber = p.projectEquipmentNum;
-              _this.addMapLabel(p, 15);
+              _this.addMapLabel(p, 14);
               break;
           }
 

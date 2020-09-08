@@ -47,10 +47,16 @@
       Customize,
       MoreDialog
     },
+    props: {
+      defaultId: {
+        type: String,
+        default: '',
+      }
+    },
     data() {
       return {
         queryDate: moment().format("yyyy-MM-DD"),
-        projectId: '',
+        projectId: this.defaultId,
         companyId: '',
         pickerOptions: {
           disabledDate(time) {
@@ -62,6 +68,7 @@
         type: 0,
       }
     },
+
     methods: {
       openDialog() {
         const { type, projectId, companyId } = this.$refs[this.activeName];
