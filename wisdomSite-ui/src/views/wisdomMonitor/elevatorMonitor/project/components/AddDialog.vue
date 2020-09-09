@@ -35,7 +35,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="进场日期" class="c_l cl_tw">
+            <el-form-item label="进场日期" class="c_l cl_tw" prop="inDate">
               <el-date-picker
                 v-model="dataForm.inDate"
                 type="date"
@@ -228,6 +228,9 @@
           zoneId: [
             { required: true, message: '请选择区域', trigger: 'blur' },
           ],
+          inDate: [
+            { required: true, message: '请选择进场日期', trigger: 'blur' },
+          ],
           installationPosition: [
             { required: true, message: '请填写安装位置', trigger: 'blur' },
           ],
@@ -271,6 +274,10 @@
       async selDevice(cageMark) {
         let result = {};
         const type = this.dataForm.equipmentType;
+        if (!type) {
+          this.msgError('先选择监控设备类型')
+          return false;
+        }
         switch (type) {
           case '2':
             this.selTit = '监控设备';
@@ -421,6 +428,11 @@
     //     border-top: none !important;
     //   }
     // }
+    .el-form-item__error{
+      z-index: 99;
+      top: 10px;
+      left: 10px;
+    }
     .c_l {
       .el-form-item__label {
         border-left: $--border-size;

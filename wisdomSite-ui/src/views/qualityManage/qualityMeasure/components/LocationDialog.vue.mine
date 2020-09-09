@@ -1,0 +1,181 @@
+<template>
+  <el-dialog  title="新增实测部位" :visible.sync="flag" width="800px" @close="closeDialog" :close-on-click-modal="false">
+    <el-form
+      ref="dataForm"
+      :model="dataForm"
+      :rules="dataRules"
+      size="medium"
+      label-width="180px"
+    >
+      <el-form-item label="区域" prop="respectiveRegionId" >
+        <el-input :disabled="true"  v-model="dataForm.respectiveRegionName"></el-input>
+      </el-form-item>
+      <el-form-item label="实测部位：" prop="measuredLocation">
+        <el-input  v-model="dataForm.measuredLocation"></el-input>
+      </el-form-item>
+      <el-form-item label="平面图标点：" prop="planImageAddres">
+        <el-image :src="picBase+dataForm.planImageAddres" @click="openMarker" style="width: 50%;cursor: pointer"></el-image>
+<!--        <el-input v-model="dataForm.planImageAddres"></el-input>-->
+      </el-form-item>
+      <el-form-item label="备注：" prop="comment">
+        <el-input v-model.number="dataForm.comment"></el-input>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="isCreate === false?handleUpdate():handleAdd()">保存</el-button>
+    </span>
+    <marker-dialog
+      :isCreate="isCreate"
+      :dialogFlag.sync="markerMialogFlag"
+      :dataForms.sync="mapData"
+      :selectTableData.sync="selectTableData"
+      @mChange="mChange"
+    />
+  </el-dialog>
+</template>
+
+<script>
+  import {
+    addLocation,
+    editLocation,
+  } from "@/api/quality/measure";
+  import ProjectSelect from "@/components/CommonSelect/ProjectSelect";
+  import MarkerDialog from "./MarkerDialog";
+  export default {
+    name: 'LocationDialog',
+    components: {
+      ProjectSelect,
+      MarkerDialog,
+    },
+    props: {
+      dialogFlag: {
+        required: true,
+        type: Boolean,
+        default: false,
+      },
+      selectTableData: {
+        type: Array,
+        default: () => [],
+      },
+      isCreate: {
+        type: Boolean,
+        default: true,
+      },
+      isMove: {
+        type: Boolean,
+        default: false,
+      },
+      dataForms: {
+        type: Object,
+        default: () => {},
+      },
+    },
+    data() {
+      return {
+        markerMialogFlag: false,
+        picBase: process.env.VUE_APP_BASE_PIC,
+        dataForm: {
+          equipmentType: '',
+          coordinateX: 0,
+          coordinateY: 0,
+        },
+        treeListProps: {
+          label: 'name',
+          value: 'id',
+        },
+        deviceType: [],
+        dataRules: {
+          respectiveRegionId: [
+            { required: true, message: '请填写区域名称', trigger: 'blur' },
+          ],
+          measuredLocation: [
+            { required: true, message: '请填写实测部位', trigger: 'blur' },
+          ],
+        },
+      };
+    },
+    created() {
+
+    },
+    methods: {
+      /* 添加 */
+      handleAdd() {
+        this.$refs.dataForm.validate(async (valid) => {
+          if (!valid) return;
+          try {
+            console.log(this.dataForm)
+            await addLocation(this.dataForm);
+            this.msgSuccess('添加成功');
+            this.flag = false;
+            this.$emit('query');
+          } catch (e) {
+            console.log(e);
+          }
+        });
+      },
+      /* 编辑 */
+      handleUpdate() {
+        this.$refs.dataForm.validate(async (valid) => {
+          if (!valid) return;
+          try {
+            await editLocation(this.dataForm);
+            this.msgSuccess('编辑成功');
+            this.flag = false;
+            this.$emit('query');
+          } catch (e) {
+            console.log(e);
+          }
+        });
+      },
+      /* 关闭 */
+      closeDialog() {
+        this.dataForm = {
+          coordinateX: 0,
+          coordinateY: 0,
+        };
+        this.$refs.dataForm.resetFields();
+      },
+      openMarker() {
+
+        this.markerMialogFlag = true
+      },
+      mChange(e) {
+        this.dataForm.coordinateX = e.center[0];
+        this.dataForm.coordinateY = e.center[1];
+        console.log(e)
+      },
+    },
+    computed: {
+      flag: {
+        get() {
+          return this.dialogFlag;
+        },
+        set(val) {
+          this.$emit('update:dialogFlag', val);
+          // this.$emit('update:dataForms', {});
+          this.isMove ? this.$emit('update:isMove', false) : ''
+        },
+      },
+      mapData() {
+        return{
+          ...this.dataForm,
+          mapUrl: this.picBase + this.dataForm.planImageAddres
+        }
+      },
+    },
+    watch: {
+      dataForms(val) {
+        // this.dataForm = Object.assign({ orderNum: 0 }, val);
+        this.dataForm = val;
+        // this.dataForm.officeId = Number(this.dataForm.officeId);
+      },
+    },
+  };
+</script>
+
+<style lang='scss' scoped>
+.form-des{
+  color: #cccccc;
+  padding-left: 10px;
+}
+</style>

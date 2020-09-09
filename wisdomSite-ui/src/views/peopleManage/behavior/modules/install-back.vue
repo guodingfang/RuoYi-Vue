@@ -44,7 +44,7 @@
           <el-table-column label="类型" align="left">
             <template slot-scope="scope">
               <span v-if="scope.row.eventType == 1">正向</span>
-              <span v-else>反向</span>
+              <span v-else>负向</span>
             </template>
           </el-table-column>
         </template>

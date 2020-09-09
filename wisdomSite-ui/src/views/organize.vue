@@ -83,11 +83,20 @@
         const {id, type} = data
         organizationSelect({organizationId: id, type}).then(res => {
           this.$store.dispatch('SetCurrentRole', data)
-          this.$router.push({ path: "/" });
+          this.$router.replace({ path: "/" });
         })
         // this.queryParams.enterpriseId = data.id;
         // this.getList();
       },
+    },
+    beforeRouteLeave (to, from, next) {
+      if( !this.$store.state.user.curRole ) {
+        this.$store.dispatch('LogOut').then(() => {
+          location.reload()
+        })
+      } else {
+        next()
+      }
     },
     watch: {
       // 根据名称筛选部门树

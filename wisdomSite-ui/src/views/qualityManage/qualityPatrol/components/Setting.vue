@@ -5,7 +5,7 @@
       <el-button
         type="text"
         style="margin-right:17px"
-        @click="showVisible(true)"
+        @click="addModel"
         >新增</el-button
       >
     </div>
@@ -71,13 +71,15 @@ export default {
         problemTypeName: [
           { required: true, message: "请输入分类名称", trigger: "blur" }
         ]
-      }
+      },
+      state: null
     };
   },
   watch: {
     visible(val) {
       if (!val) {
-        this.$refs["ruleForm"].resetFields();
+        // this.$refs["ruleForm"].resetFields();
+        this.state = null
       }
     }
   },
@@ -92,24 +94,29 @@ export default {
       }
       this.visible = flag;
     },
+    addModel() {
+      this.state = 'add'
+      this.ruleForm = {}
+      this.showVisible(true)
+    },
     _submit() {
-      this.$refs["ruleForm"].validate(valid => {
+      this.$refs["ruleForm"].validate(async valid => {
         if (!valid) return;
-        addProblemType(this.ruleForm)
-          .then(response => {
-            if (response.code == 200) {
-              this.$message({
-                message: response.msg,
-                type: "success",
-                duration: 1000
-              });
-              this.showVisible(false);
-              this.getData();
-            }
-          })
-          .catch(e => {
-            console.log(e);
+        let response
+        if (this.state == 'add') {
+          response = await addProblemType(this.ruleForm)
+        } else {
+          response = await updateProblemType(this.ruleForm)
+        }
+        if (response.code == 200) {
+          this.$message({
+            message: response.msg,
+            type: "success",
+            duration: 1000
           });
+          this.showVisible(false);
+          this.getData();
+        }
       });
     },
     // 删除

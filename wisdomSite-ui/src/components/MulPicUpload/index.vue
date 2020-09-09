@@ -1,6 +1,7 @@
 <template>
   <div class="mul-upload">
     <el-upload
+      v-if="!readOnly"
       :action="action"
       name="avatarfile"
       :headers="headers"
@@ -13,6 +14,9 @@
       :before-upload="beforeAvatarUpload">
       <i class="el-icon-plus"></i>
     </el-upload>
+    <div class="pic-list" v-else>
+      <img class="read-pic" @click="handlePictureCardPreview(pic)" v-for="pic in imageList" :key="pic.url" :src="pic.url"></img>
+    </div>
     <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
@@ -92,6 +96,7 @@
         this.$emit('input', pics)
       },
       handlePictureCardPreview (file) {
+        console.log(file)
         this.dialogImageUrl = file.url
         this.dialogVisible = true
       }
@@ -114,6 +119,12 @@
       height: 80px;
       line-height: 82px;
       border-radius: 0;
+    }
+    .read-pic{
+      width: 80px;
+      height: 80px;
+      margin: 0 8px 8px 0;
+      cursor: pointer;
     }
   }
 </style>

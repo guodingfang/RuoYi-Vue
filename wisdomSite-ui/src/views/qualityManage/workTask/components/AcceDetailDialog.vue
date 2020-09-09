@@ -83,7 +83,7 @@
             <span class="detail-val">{{ item.acceptanceDescribe }}</span>
           </el-form-item>
           <el-form-item label="现场照片：">
-            <mul-pic-upload :value="item.acceptanceDescribe"/>
+            <mul-pic-upload :value="item.acceptanceDescribe" :readOnly="true"/>
           </el-form-item>
           <el-form-item label="验收结果">
             <span class="detail-val">

@@ -258,7 +258,7 @@
 
           yAxis: [{
             type: 'value',
-            name: '单位：台',
+            name: '单位：kg',
             min: 0,
             position: 'left',
             axisLine: {
@@ -398,7 +398,7 @@
           yAxis: [
             {
               type: 'value',
-              name: '单位：台',
+              name: '单位：次',
               min: 0,
               position: 'left',
               axisLine: {

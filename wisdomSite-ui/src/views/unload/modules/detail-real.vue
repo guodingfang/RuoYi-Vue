@@ -472,8 +472,8 @@ export default {
       this.detailData.alarm = parseInt(obj.a) + parseInt(obj.b)
       console.log(123,obj.b);
       this.blOption = {
-        color: obj.b[0] == 0 ? ['#dbdbdc','#dbdbdc'] : ["#f7c376", "#f0874e"],
-        // color: ["#f7c376", "#f0874e"],
+        color: obj.b[0] == 0 ? ['#dbdbdc','#dbdbdc'] : ["#f0874e", "#f7c376"],
+        // color: ["#f0874e", "#f7c376"],
         tooltip: {
           trigger: "item",
           formatter: "{b}: {c} ({d}%)"

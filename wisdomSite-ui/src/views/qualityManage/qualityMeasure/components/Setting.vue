@@ -51,16 +51,16 @@
                   <el-form-item
                     :prop="'wsEnterpriseMeasuredrealquantitySetupContent.' + index + '.minNum'"
                     label=""
-                    :rules="[{ required: true, message: '请输入最小值', trigger: 'blur' }, { type: 'number', message: '必须为数字值'}]">
-                    <el-input v-model="item.minNum"></el-input>
+                    :rules="[{ required: true, message: '请输入最小值', trigger: 'blur' }]">
+                    <el-input type="number" v-model="item.minNum"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="5">
                   <el-form-item
                     :prop="'wsEnterpriseMeasuredrealquantitySetupContent.' + index + '.maxNum'"
                     label=""
-                    :rules="[{ required: true, message: '请输入最大值', trigger: 'blur' }, { type: 'number', message: '必须为数字值'}]">
-                    <el-input v-model="item.maxNum"></el-input>
+                    :rules="[{ required: true, message: '请输入最大值', trigger: 'blur' }]">
+                    <el-input type="number" v-model="item.maxNum"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="5">
