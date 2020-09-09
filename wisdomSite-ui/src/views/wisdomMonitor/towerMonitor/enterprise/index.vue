@@ -31,7 +31,6 @@
     },
     methods: {
       clickStats(e) {
-        console.log('e', e)
         const { projectId = '' } = e;
         this.activeName = 'second';
         this.projectId = projectId;

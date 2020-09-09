@@ -533,6 +533,17 @@
           this.getViolationsPerE();
         }
       },
+    },
+    computed: {
+      queryParams() {
+        const params = {
+          days: 7,
+        }
+        this.type === 0 ? params.companyId = this.companyId : params.projectId = this.projectId;
+        return {
+          ...params
+        }
+      }
     }
   }
 </script>

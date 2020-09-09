@@ -92,9 +92,9 @@
     },
     data() {
       return {
-        type: this.$store.state.user.curRole.type,
-        projectId: this.$store.state.user.curRole.id,
-        companyId: this.$store.state.user.curRole.id,
+        type: this.$store.state.user.selectRole.type,
+        projectId: this.$store.state.user.selectRole.id,
+        companyId: this.$store.state.user.selectRole.id,
         defaultProps: {
           children: "children",
           label: "regionName",
@@ -545,6 +545,10 @@
       this.projAlarmAnaE();
       this.alarmRankE();
     },
+    beforeDestroy() {
+      console.log('销毁');
+      this.$store.dispatch('SetSelectRole', this.$store.state.user.curRole)
+    },
     methods: {
       getEquipAnaE() {
         getEquipAnaE(this.queryParams).then(res => {
@@ -602,10 +606,13 @@
     },
     computed: {
       queryParams() {
-        return {
-          companyId: this.companyId,
+        const params = {
           days: - 7,
           statisticsDate: moment(new Date()).format('yyyy-MM-DD')
+        }
+        this.type === 0 ? params.companyId = this.companyId : params.projectId = this.projectId;
+        return {
+          ...params
         }
       }
     }
