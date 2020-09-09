@@ -2,23 +2,26 @@
     <div :class="{'has-logo':showLogo}">
         <logo v-if="showLogo" :collapse="isCollapse" />
         <el-scrollbar wrap-class="scrollbar-wrapper">
-            <el-menu
-                :default-active="activeMenu"
-                :collapse="isCollapse"
-                :background-color="variables.menuBg"
-                :text-color="variables.menuText"
-                :unique-opened="true"
-                :active-text-color="settings.theme"
-                :collapse-transition="false"
-                mode="vertical"
-            >
-                <sidebar-item
-                    v-for="(route, index) in permission_routes"
-                    :key="route.path  + index"
-                    :item="route"
-                    :base-path="route.path"
-                />
-            </el-menu>
+          <div class="menu-toggle-btn" @click="toggleSideBar">
+            <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="menu" width="14px" height="14px" fill="currentColor" aria-hidden="true"><path d="M904 160H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0 624H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0-312H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8z"></path></svg>
+          </div>
+          <el-menu
+              :default-active="activeMenu"
+              :collapse="isCollapse"
+              :background-color="variables.menuBg"
+              :text-color="variables.menuText"
+              :unique-opened="true"
+              :active-text-color="settings.theme"
+              :collapse-transition="false"
+              mode="vertical"
+          >
+              <sidebar-item
+                  v-for="(route, index) in permission_routes"
+                  :key="route.path  + index"
+                  :item="route"
+                  :base-path="route.path"
+              />
+          </el-menu>
         </el-scrollbar>
     </div>
 </template>
@@ -52,6 +55,11 @@ export default {
         isCollapse() {
             return !this.sidebar.opened;
         }
+    },
+    methods: {
+      toggleSideBar() {
+        this.$store.dispatch('app/toggleSideBar')
+      },
     }
 };
 </script>

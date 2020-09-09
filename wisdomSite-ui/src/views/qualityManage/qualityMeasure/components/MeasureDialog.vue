@@ -22,11 +22,11 @@
         :label="item.contentField"
         :key="item.contentField"
         :prop="'wsEnterpriseMeasuredrealquantityContentList.' + index + '.contentFieldValue'"
-        :rules="{
-          required: true, message: '不能为空', trigger: 'blur'
-        }"
+        :rules="[{
+          required: true, message: '不能为空', trigger: 'blur'}
+          ]"
       >
-        <el-input v-model="item.contentFieldValue"></el-input>
+        <el-input type="number" v-model="item.contentFieldValue"></el-input>
       </el-form-item>
 
       <el-form-item label="参与人：" prop="participant">

@@ -19,24 +19,24 @@
     <el-row>
       <el-col :span="12">
         <el-form-item label="单体数量(个)：">
-          <el-input v-model="engineeringForm.numMonomers" placeholder=""></el-input>
+          <el-input type="number" v-model="engineeringForm.numMonomers" placeholder=""></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="12">
         <el-form-item label="建筑面积(m²)：">
-          <el-input v-model="engineeringForm.buildArea" placeholder=""></el-input>
+          <el-input type="number" v-model="engineeringForm.buildArea" placeholder=""></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="12">
         <el-form-item label="地上面积(m²)：">
-          <el-input v-model="engineeringForm.groundArea" placeholder=""></el-input>
+          <el-input type="number" v-model="engineeringForm.groundArea" placeholder=""></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="12">
         <el-form-item label="地下面积(m²)：">
-          <el-input v-model="engineeringForm.undergroundArea" placeholder=""></el-input>
+          <el-input type="number" v-model="engineeringForm.undergroundArea" placeholder=""></el-input>
         </el-form-item>
       </el-col>
     </el-row>

@@ -14,7 +14,6 @@
     </div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="近7日" name="first">
-        <recent-chart />
         <recent-week-chart v-if="activeName === 'first'" :projectId="projectId"/>
       </el-tab-pane>
       <el-tab-pane label="近30日" name="second">
@@ -86,7 +85,7 @@
       position: absolute;
       top: 10px;
       right: 20px;
-      z-index: 99;
+      z-index: 1;
       .sel-date{
         width: 150px;
         margin-right: 20px;

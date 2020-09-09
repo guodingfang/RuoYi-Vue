@@ -16,7 +16,7 @@
             <template slot-scope="scope">
               <el-input-number
               v-model="scope.row.num"
-              @change="handleChange(scope.row.index,scope.row.num,scope.row.changePoint)" :min="1"
+              @change="handleChange(scope.row.index,scope.row.num,scope.row.changePoint)" :min="0"
               label="描述文字"></el-input-number>
             </template>
           </el-table-column>

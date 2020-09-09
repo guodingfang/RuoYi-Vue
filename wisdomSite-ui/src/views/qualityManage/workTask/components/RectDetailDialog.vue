@@ -94,7 +94,7 @@
           </el-col>
         </el-row>
         <el-form-item label="整改前照片：">
-          <mul-pic-upload :value="detailData.checkPositionAddres" />
+          <mul-pic-upload :value="detailData.checkPositionAddres" :readOnly="true"/>
         </el-form-item>
         <div class="line"></div>
 
@@ -119,7 +119,7 @@
           </el-form-item>
           <el-form-item label="整改后照片：">
             <ul>
-              <mul-pic-upload :value="item.repairImageAddres" />
+              <mul-pic-upload :value="item.repairImageAddres" :readOnly="true"/>
             </ul>
           </el-form-item>
           <!--    整改验证   -->

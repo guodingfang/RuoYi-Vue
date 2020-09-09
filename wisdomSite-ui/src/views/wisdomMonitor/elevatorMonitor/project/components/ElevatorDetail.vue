@@ -51,7 +51,7 @@
           title="倾角（°）"
           :min="0"
           :max="topData.maxTilt"
-          :cur="topData.tilt/(topData.tilt2||1)"
+          :cur="topData.tilt+'/'+topData.tilt2"
           :status="topData.systemStatusTilt|mapStatus"
         />
         <status-range
@@ -69,7 +69,7 @@
           :status="topData.behindDoorStatus|mapStatus"
         />
         <status-range
-          title="身份认证已通过"
+          title="身份认证状态"
           min=""
           max=""
           cur=""
@@ -121,7 +121,7 @@
           <div class="mt-btm-item">
             <img class="top-monitor-icon s-elevator" src="~@/assets/image/cage-icon.png">
             <p class="top-monitor-text">
-              <b>{{yeToData.today.alarmingNumber||0}}<span class="top-monitor-unit">次</span></b>
+              <b>{{yeToData.today.totalNumber||0}}<span class="top-monitor-unit">次</span></b>
               <span>今日装载次数</span>
             </p>
           </div>
@@ -285,7 +285,7 @@
 
           yAxis: [{
             type: 'value',
-            name: '单位：台',
+            name: '单位：kg',
             min: 0,
             position: 'left',
             axisLine: {
@@ -425,7 +425,7 @@
           yAxis: [
             {
               type: 'value',
-              name: '单位：台',
+              name: '单位：次',
               min: 0,
               position: 'left',
               axisLine: {

@@ -55,6 +55,7 @@ export const constantRoutes = [
   {
     path: '/organize-sel',
     component: (resolve) => require(['@/views/organize'], resolve),
+    hidden: true
   },
   {
     path: '',

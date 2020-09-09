@@ -15,7 +15,7 @@
       <div class="top-monitor-item">
         <img class="top-monitor-icon" src="~@/assets/image/s_pie.png">
         <p class="top-monitor-text">
-          <b>{{topData.totalMonitorDeviceNumber}}<span class="top-monitor-unit">%</span></b>
+          <b>{{(topData.onlineMonitorDeviceNumber*100/topData.totalMonitorDeviceNumber).toFixed(1)}}<span class="top-monitor-unit">%</span></b>
           <span>监控在线率</span>
         </p>
         <h5 class="elevator-num_h5_text">
@@ -61,7 +61,7 @@
         <div v-for="(item, i) in doubleEle" class="device-info-double-item" @click="openDetail(item)">
           <div class="device-info-item" style="margin-bottom: 0;border-bottom: 0">
 <!--            <span class="online-status"> {{item.statisticsList[0].onlineStatus === '2' ? '离线' : ''}}</span>-->
-            <span class="online-status"> {{devStatus(item.statisticsList[0].onlineStatus, item.statisticsList[0].inOutStatus)}}</span>
+            <span class="online-status"> {{item.statisticsList[0].deviceMonitorStatus}}</span>
             <div class="dev-info-left-cont">
               <p class="dev-info-left-cont-head">
               <span class="head-icon-box">
@@ -79,15 +79,15 @@
               </p>
               <span class="jl-green">左笼</span>
               <p class="status-box">
-                <span class="`status-item ${item.statisticsList[0].realTimeWarningStatus==='1'?'warn':''}`"><i></i>预警</span>
-                <span class="`status-item ${item.statisticsList[0].realTimeWarningStatus==='1'?'warn':''}`"><i></i>报警</span>
+                <span :class="`status-item ${item.statisticsList[0].realTimeWarningStatus==='1'?'warn':''}`"><i></i>预警</span>
+                <span :class="`status-item ${item.statisticsList[0].realTimeWarningStatus==='1'?'warn':''}`"><i></i>报警</span>
 <!--                <span class="status-item">&emsp;&emsp;</span>-->
               </p>
             </div>
             <img class="driver_photo" src="~@/assets/image/driver_pic.png" alt="">
           </div>
           <div class="device-info-item" style="border-top: 0">
-            <span class="online-status"> {{item.statisticsList[1].onlineStatus === '2' ? '离线' : ''}}</span>
+            <span class="online-status"> {{item.statisticsList[1].deviceMonitorStatus}}</span>
             <div class="dev-info-left-cont">
               <p class="dev-info-left-cont-head">
               <span class="head-icon-box">
@@ -105,8 +105,8 @@
               </p>
               <span class="jl-green">右笼</span>
               <p class="status-box">
-                <span class="`status-item ${item.statisticsList[1].realTimeWarningStatus==='1'?'warn':''}`"><i></i>预警</span>
-                <span class="`status-item ${item.statisticsList[1].realTimeWarningStatus==='1'?'warn':''}`"><i></i>报警</span>
+                <span :class="`status-item ${item.statisticsList[1].realTimeWarningStatus==='1'?'warn':''}`"><i></i>预警</span>
+                <span :class="`status-item ${item.statisticsList[1].realTimeWarningStatus==='1'?'warn':''}`"><i></i>报警</span>
               </p>
             </div>
             <img class="driver_photo" src="~@/assets/image/driver_pic.png" alt="">
@@ -115,7 +115,7 @@
         <p class="s_tit">单笼升降机</p>
         <div v-for="(item, i) in singleEle" class="device-info-item" @click="openDetail(item)">
 <!--          <span class="online-status"> {{item.statisticsList[0].onlineStatus === '2' ? '离线' : ''}}</span>-->
-          <span class="online-status"> {{devStatus(item.statisticsList[0].onlineStatus, item.statisticsList[0].inOutStatus)}}</span>
+          <span class="online-status"> {{item.statisticsList[0].deviceMonitorStatus}}</span>
           <div class="dev-info-left-cont">
             <p class="dev-info-left-cont-head">
               <span class="head-icon-box">

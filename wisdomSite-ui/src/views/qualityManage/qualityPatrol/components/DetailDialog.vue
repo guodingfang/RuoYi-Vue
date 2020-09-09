@@ -97,7 +97,7 @@
         </el-row>
          <div class="line"></div>
         <el-form-item label="整改前照片：">
-          <mul-pic-upload :value="detailData.checkPositionAddres" :readonly="true"/>
+          <mul-pic-upload :value="detailData.checkPositionAddres" :readOnly="true"/>
         </el-form-item>
 
         <!-- 循环回复+验证 -->
@@ -122,7 +122,7 @@
               <span class="detail-val">{{ item.repairResultDescription }}</span>
             </el-form-item>
             <el-form-item label="整改后照片：">
-              <mul-pic-upload :value="item.repairImageAddres" :readonly="true"/>
+              <mul-pic-upload :value="item.repairImageAddres" :readOnly="true"/>
             </el-form-item>
           </section>
           <!--    整改验证 verifyId  -->
@@ -145,7 +145,7 @@
               <span class="detail-val">{{ item.verifyResultDescription }}</span>
             </el-form-item>
             <el-form-item label="整改后照片：">
-              <mul-pic-upload :value="item.verifyImageAddres" :readonly="true"/>
+              <mul-pic-upload :value="item.verifyImageAddres" :readOnly="true"/>
             </el-form-item>
             <el-form-item label="验证结果：">
               <StatusTag :status="item.verifyResult"/>
