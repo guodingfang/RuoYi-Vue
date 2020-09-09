@@ -10,6 +10,7 @@ const user = {
     enterpriseId: '',
     avatar: '',
     curRole: {},
+    selectRole: {},
     roles: [],
     permissions: []
   },
@@ -38,6 +39,9 @@ const user = {
     },
     SET_CUR_ROLE: (state, curRole) => {
       state.curRole = curRole
+    },
+    SET_SELECT_ROLE: (state, selectRole) => {
+      state.selectRole = selectRole
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
@@ -90,6 +94,11 @@ const user = {
       setCurRole(role);
       dispatch('SetRoutes', role);
       commit('SET_CUR_ROLE', role);
+      commit('SET_SELECT_ROLE', role)
+    },
+    // 设置选择的路由
+    SetSelectRole({commit, state}, role) {
+      commit('SET_SELECT_ROLE', role)
     },
     // 退出系统
     LogOut({ commit, state }) {
@@ -99,6 +108,7 @@ const user = {
           commit('SET_ROLES', [])
           commit('SET_PERMISSIONS', [])
           commit('SET_CUR_ROLE', {});
+          commit('SET_SELECT_ROLE', {});
           removeToken()
           resolve()
         }).catch(error => {
