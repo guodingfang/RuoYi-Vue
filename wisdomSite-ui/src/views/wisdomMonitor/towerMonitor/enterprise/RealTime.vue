@@ -187,13 +187,6 @@
         });
         label.addEventListener('click', (e) => {
           if(this.queryParams.zoom===4) {
-            console.log('info', info);
-            this.$store.dispatch('SetSelectRole', {
-              auth: 1,
-              id: info.projectId,
-              label: info.projectName,
-              type: 1,
-            })
             this.$emit('click-stats', {
               projectId: String(info.projectId)
             })

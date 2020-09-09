@@ -70,8 +70,7 @@
       /** 获取组织树*/
       getOrgTree() {
         getOrgTree().then(res => {
-          // this.expandArr = [ res.data[0].id ];
-          this.expandArr = [ this.$store.state.user.selectRole.id || res.data[0].id ];
+          this.expandArr = [ res.data[0].id ];
           this.organizeData = res.data;
         })
       },

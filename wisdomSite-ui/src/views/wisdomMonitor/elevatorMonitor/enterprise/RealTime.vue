@@ -127,9 +127,9 @@
             const center = this.getCenter();
             if (mapZoom < 8) {
               _this.queryParams.zoom = 1;
-            } else if (mapZoom < 11) {
-              _this.queryParams.zoom = 2;
             } else if (mapZoom < 13) {
+              _this.queryParams.zoom = 2;
+            } else if (mapZoom < 15) {
               _this.queryParams.zoom = 3;
             } else {
               _this.queryParams.zoom = 4;
@@ -205,17 +205,8 @@
         label.addEventListener('click', () => {
 
           if(this.queryParams.zoom===4) {
-            this.$store.dispatch('SetSelectRole', {
-              auth: 1,
-              id: info.projectId,
-              label: info.projectName,
-              type: 1,
-            })
-            this.$emit('click-stats', {
-              projectId: String(info.projectId)
-            })
             // this.$parent.$parent.activeName = 'second';
-            // console.log('我点了项目',this.$parent)
+            console.log('我点了项目',this.$parent)
           } else {
             this.map.setCenter(point)
             this.map.setZoom(zoom)
@@ -233,13 +224,13 @@
               _this.addMapLabel(p, 8);
               break
             case 2:
-              _this.addMapLabel(p, 11);
-              break;
-            case 3:
               _this.addMapLabel(p, 13);
               break;
+            case 3:
+              _this.addMapLabel(p, 15);
+              break;
             case 4:
-              _this.addMapLabel(p, 14);
+              _this.addMapLabel(p, 15);
               break;
           }
 

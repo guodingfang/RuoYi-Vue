@@ -95,9 +95,9 @@
     },
     data() {
       return {
-        type: this.$store.state.user.selectRole.type,
-        projectId: this.$store.state.user.selectRole.id,
-        companyId: this.$store.state.user.selectRole.id,
+        type: this.$store.state.user.curRole.type,
+        projectId: this.$store.state.user.curRole.id,
+        companyId: this.$store.state.user.curRole.id,
         defaultProps: {
           children: "children",
           label: "regionName",
@@ -473,10 +473,6 @@
       this.getViolationsRankE();
       this.getViolationsPerE();
     },
-    beforeDestroy() {
-      console.log('销毁');
-      this.$store.dispatch('SetSelectRole', this.$store.state.user.curRole)
-    },
     methods: {
       getEquipAnaE() {
         getEquipAnaE(this.queryParams).then(res => {
@@ -533,17 +529,6 @@
           this.getViolationsPerE();
         }
       },
-    },
-    computed: {
-      queryParams() {
-        const params = {
-          days: 7,
-        }
-        this.type === 0 ? params.companyId = this.companyId : params.projectId = this.projectId;
-        return {
-          ...params
-        }
-      }
     }
   }
 </script>

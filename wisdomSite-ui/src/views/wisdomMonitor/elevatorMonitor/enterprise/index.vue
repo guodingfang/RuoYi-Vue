@@ -2,7 +2,7 @@
   <div class="wrap">
     <el-tabs v-model="activeName">
       <el-tab-pane label="实时监控" name="first">
-        <real-time v-if="activeName === 'first'" @click-stats="clickStats"/>
+        <real-time v-if="activeName === 'first'"/>
       </el-tab-pane>
       <el-tab-pane label="监控统计" name="second">
         <statistic ref="statistic" v-if="activeName === 'second'"/>
@@ -29,11 +29,7 @@
     mounted() {
     },
     methods: {
-      clickStats(e) {
-        const { projectId = '' } = e;
-        this.activeName = 'second';
-        this.projectId = projectId;
-      }
+
     },
   }
 </script>

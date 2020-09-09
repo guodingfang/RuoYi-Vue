@@ -47,10 +47,16 @@
       Customize,
       MoreDialog
     },
+    props: {
+      defaultId: {
+        type: String,
+        default: '',
+      }
+    },
     data() {
       return {
         queryDate: moment().format("yyyy-MM-DD"),
-        projectId: '',
+        projectId: this.defaultId,
         companyId: '',
         pickerOptions: {
           disabledDate(time) {
